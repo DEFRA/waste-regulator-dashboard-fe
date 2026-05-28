@@ -49,7 +49,7 @@ export const config = convict({
   serviceName: {
     doc: 'Applications Service Name',
     format: String,
-    default: 'epr-regulator-frontend'
+    default: 'waste-regulator-dashboard-fe'
   },
   root: {
     doc: 'Project root',
@@ -183,7 +183,7 @@ export const config = convict({
     keyPrefix: {
       doc: 'Redis cache key prefix name used to isolate the cached results across multiple clients',
       format: String,
-      default: 'epr-regulator-frontend:',
+      default: 'waste-regulator-dashboard-fe:',
       env: 'REDIS_KEY_PREFIX'
     },
     useSingleInstanceCache: {
