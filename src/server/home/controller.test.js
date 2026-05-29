@@ -1,7 +1,58 @@
 import { vi } from 'vitest'
 
 import { createServer } from '../server.js'
+import { config } from '../../config/config.js'
 import { statusCodes } from '../common/constants/status-codes.js'
+
+const mockAccount = {
+  firstName: 'John',
+  lastName: 'Doe',
+  contactEmail: 'john.doe@example.org',
+  serviceRoleId: 4,
+  serviceRole: 'Regulator Admin',
+  organisationName: 'Example Environment Agency',
+  nationId: 1
+}
+
+let originalAzureBase
+
+beforeAll(() => {
+  originalAzureBase = config.get('services.regulatorAzure.baseUrl')
+  config.set('services.regulatorAzure.baseUrl', 'https://example.org')
+})
+
+afterAll(() => {
+  config.set('services.regulatorAzure.baseUrl', originalAzureBase)
+})
+
+async function getHomeAsAuthenticatedUser(server) {
+  const signinResponse = await server.inject({
+    method: 'GET',
+    url: '/regulators/signin-oidc'
+  })
+  const setCookie = signinResponse.headers['set-cookie'] ?? []
+  const sessionCookie = []
+    .concat(setCookie)
+    .map((c) => c.split(';')[0])
+    .join('; ')
+
+  return server.inject({
+    method: 'GET',
+    url: '/',
+    headers: { cookie: sessionCookie }
+  })
+}
+
+function mockGatewayAccountFetch() {
+  return vi.fn(async () => ({
+    ok: true,
+    status: 200,
+    statusText: 'OK',
+    async json() {
+      return mockAccount
+    }
+  }))
+}
 
 describe('#homeController', () => {
   describe('with default config', () => {
@@ -15,22 +66,7 @@ describe('#homeController', () => {
 
     beforeEach(() => {
       originalFetch = globalThis.fetch
-      const mockFetch = vi.fn(async () => ({
-        ok: true,
-        status: 200,
-        statusText: 'OK',
-        async json() {
-          return {
-            firstName: 'Carl',
-            lastName: 'Mason',
-            contactEmail: 'eprqatest+RegulatorNation1@gmail.com',
-            serviceRoleId: 4,
-            serviceRole: 'Regulator Admin',
-            organisationName: 'Carl_BUG_TESTING',
-            nationId: 1
-          }
-        }
-      }))
+      const mockFetch = mockGatewayAccountFetch()
       globalThis.fetch = mockFetch
       global.fetch = mockFetch
     })
@@ -55,35 +91,103 @@ describe('#homeController', () => {
     })
 
     test('Should render dashboard when authenticated', async () => {
-      const signinResponse = await server.inject({
-        method: 'GET',
-        url: '/regulators/signin-oidc'
-      })
-      const setCookie = signinResponse.headers['set-cookie'] ?? []
-      const sessionCookie = []
-        .concat(setCookie)
-        .map((c) => c.split(';')[0])
-        .join('; ')
-
-      const { result, statusCode } = await server.inject({
-        method: 'GET',
-        url: '/',
-        headers: { cookie: sessionCookie }
-      })
+      const { result, statusCode } = await getHomeAsAuthenticatedUser(server)
 
       expect(result).toEqual(expect.stringContaining('Regulator Dashboard'))
       expect(result).toEqual(
         expect.stringContaining('regulator-home__account-details')
       )
-      expect(result).toEqual(expect.stringContaining('Carl'))
-      expect(result).toEqual(expect.stringContaining('Mason'))
-      expect(result).toEqual(expect.stringContaining('Carl_BUG_TESTING'))
+      expect(result).toEqual(expect.stringContaining('John'))
+      expect(result).toEqual(expect.stringContaining('Doe'))
+      expect(result).toEqual(
+        expect.stringContaining('Example Environment Agency')
+      )
       expect(result).toEqual(expect.stringContaining('Log out'))
       expect(result).toEqual(expect.stringContaining('href="/logout"'))
       expect(result).not.toEqual(
         expect.stringContaining('Certificate of Compliance placeholder')
       )
       expect(statusCode).toBe(statusCodes.ok)
+    })
+
+    test('Should render "Manage your account" link', async () => {
+      const { result } = await getHomeAsAuthenticatedUser(server)
+
+      expect(result).toEqual(expect.stringContaining('Manage your account'))
+      expect(result).toEqual(
+        expect.stringContaining(
+          'href="https://example.org/regulators/manage-account/manage"'
+        )
+      )
+    })
+
+    test('Should render "Manage applications for approved and delegated people" link', async () => {
+      const { result } = await getHomeAsAuthenticatedUser(server)
+
+      expect(result).toEqual(
+        expect.stringContaining(
+          'Manage applications for approved and delegated people'
+        )
+      )
+      expect(result).toEqual(
+        expect.stringContaining(
+          'href="https://example.org/regulators/applications"'
+        )
+      )
+    })
+
+    test('Should render "Manage registration submissions" link', async () => {
+      const { result } = await getHomeAsAuthenticatedUser(server)
+
+      expect(result).toEqual(
+        expect.stringContaining('Manage registration submissions')
+      )
+      expect(result).toEqual(
+        expect.stringContaining(
+          'href="https://example.org/regulators/manage-registration-submissions"'
+        )
+      )
+    })
+
+    test('Should render "Manage packaging data submissions" link', async () => {
+      const { result } = await getHomeAsAuthenticatedUser(server)
+
+      expect(result).toEqual(
+        expect.stringContaining('Manage packaging data submissions')
+      )
+      expect(result).toEqual(
+        expect.stringContaining(
+          'href="https://example.org/regulators/manage-packaging-data-submissions"'
+        )
+      )
+    })
+
+    test('Should render "Manage organisation details submissions" link', async () => {
+      const { result } = await getHomeAsAuthenticatedUser(server)
+
+      expect(result).toEqual(
+        expect.stringContaining('Manage organisation details submissions')
+      )
+      expect(result).toEqual(
+        expect.stringContaining(
+          'href="https://example.org/regulators/manage-registrations"'
+        )
+      )
+    })
+
+    test('Should render "Manage organisation and their approved person" link', async () => {
+      const { result } = await getHomeAsAuthenticatedUser(server)
+
+      expect(result).toEqual(
+        expect.stringContaining(
+          'Manage organisation and their approved person'
+        )
+      )
+      expect(result).toEqual(
+        expect.stringContaining(
+          'href="https://example.org/regulators/regulator-search-page"'
+        )
+      )
     })
   })
 
@@ -101,22 +205,7 @@ describe('#homeController', () => {
 
     beforeEach(() => {
       originalFetch = globalThis.fetch
-      const mockFetch = vi.fn(async () => ({
-        ok: true,
-        status: 200,
-        statusText: 'OK',
-        async json() {
-          return {
-            firstName: 'Carl',
-            lastName: 'Mason',
-            contactEmail: 'eprqatest+RegulatorNation1@gmail.com',
-            serviceRoleId: 4,
-            serviceRole: 'Regulator Admin',
-            organisationName: 'Carl_BUG_TESTING',
-            nationId: 1
-          }
-        }
-      }))
+      const mockFetch = mockGatewayAccountFetch()
       globalThis.fetch = mockFetch
       global.fetch = mockFetch
     })
@@ -131,25 +220,13 @@ describe('#homeController', () => {
       vi.unstubAllEnvs()
     })
 
-    test('Should render Certificate of Compliance placeholder', async () => {
-      const signinResponse = await server.inject({
-        method: 'GET',
-        url: '/regulators/signin-oidc'
-      })
-      const setCookie = signinResponse.headers['set-cookie'] ?? []
-      const sessionCookie = []
-        .concat(setCookie)
-        .map((c) => c.split(';')[0])
-        .join('; ')
-
-      const { result, statusCode } = await server.inject({
-        method: 'GET',
-        url: '/',
-        headers: { cookie: sessionCookie }
-      })
+    test('Should render "View certificates and statements of compliance" link', async () => {
+      const { result, statusCode } = await getHomeAsAuthenticatedUser(server)
 
       expect(result).toEqual(
-        expect.stringContaining('Certificate of Compliance placeholder')
+        expect.stringContaining(
+          'View certificates and statements of compliance'
+        )
       )
       expect(statusCode).toBe(statusCodes.ok)
     })
