@@ -23,10 +23,7 @@ beforeAll(() => {
     'services.certificateOfCompliance.baseUrl'
   )
   config.set('services.regulatorAzure.baseUrl', 'https://example.org')
-  config.set(
-    'services.certificateOfCompliance.baseUrl',
-    'https://example.org'
-  )
+  config.set('services.certificateOfCompliance.baseUrl', 'https://example.org')
 })
 
 afterAll(() => {
@@ -191,9 +188,7 @@ describe('#homeController', () => {
       const { result } = await getHomeAsAuthenticatedUser(server)
 
       expect(result).toEqual(
-        expect.stringContaining(
-          'Manage organisation and their approved person'
-        )
+        expect.stringContaining('Manage organisation and their approved person')
       )
       expect(result).toEqual(
         expect.stringContaining(
@@ -209,10 +204,7 @@ describe('#homeController', () => {
 
     beforeAll(async () => {
       vi.stubEnv('FEATURE_CERTIFICATE_OF_COMPLIANCE', 'true')
-      vi.stubEnv(
-        'CERTIFICATE_OF_COMPLIANCE_BASE_URL',
-        'https://example.org'
-      )
+      vi.stubEnv('CERTIFICATE_OF_COMPLIANCE_BASE_URL', 'https://example.org')
       vi.resetModules()
       const { createServer: createFreshServer } = await import('../server.js')
       server = await createFreshServer()
