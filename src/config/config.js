@@ -300,6 +300,23 @@ export const config = convict({
     }
   },
   services: {
+    regulatorAzure: {
+      baseUrl: {
+        doc: 'Base URL of the existing Azure-hosted regulator service (links route here during CDP migration)',
+        format: String,
+        default: 'https://rwd-dev9.azure.defra.cloud',
+        env: 'REGULATOR_AZURE_BASE_URL'
+      }
+    },
+    certificateOfCompliance: {
+      baseUrl: {
+        doc: 'Base URL of the service hosting the certificates of compliance pages',
+        format: String,
+        default:
+          'https://waste-packaging-regulators-fe.dev.cdp-int.defra.cloud',
+        env: 'CERTIFICATE_OF_COMPLIANCE_BASE_URL'
+      }
+    },
     gatewayApi: {
       baseUrl: {
         doc: 'Regulator Gateway base URL for account endpoints (e.g. http://localhost:8085)',
