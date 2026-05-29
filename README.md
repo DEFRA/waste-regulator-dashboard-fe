@@ -12,7 +12,9 @@ Core delivery platform Node.js Frontend Template.
 - [Redis](#redis)
 - [Local Development](#local-development)
   - [Setup](#setup)
+    - [Nix dev shell (optional)](#nix-dev-shell-optional)
   - [Development](#development)
+  - [HTTPS for local development](#https-for-local-development)
   - [Production](#production)
   - [Npm scripts](#npm-scripts)
   - [Update dependencies](#update-dependencies)
@@ -31,7 +33,8 @@ Core delivery platform Node.js Frontend Template.
 
 ### Node.js
 
-Please install Node Version Manager [nvm](https://github.com/creationix/nvm)
+Please install [Node.js](http://nodejs.org/) `>= v22` and [npm](https://nodejs.org/) `>= v9`. You will find it
+easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
 
 To use the correct version of Node.js for this application, via nvm:
 
@@ -39,6 +42,8 @@ To use the correct version of Node.js for this application, via nvm:
 cd waste-regulator-dashboard-fe
 nvm use
 ```
+
+You can alternatively use [mise-en-place](https://mise.jdx.dev/) with [`idiomatic_version_file_enable_tools`](https://mise.jdx.dev/configuration.html#idiomatic-version-files) enabled which will respect the [`.nvmrc`](.nvmrc).
 
 ## Server-side Caching
 
@@ -91,13 +96,13 @@ Install application dependencies:
 npm install
 ```
 
-### Git hooks
+#### Nix dev shell (optional)
 
-Install git hooks (optional)
+[`flake.nix`](./flake.nix) provides a dev shell with tools used by this repo.
 
-```bash
-npm run git:hooks
-```
+Run `nix develop` or use [direnv](https://direnv.net/) to activate the development tools for this repo
+
+We have not added nodejs to the nix shell, preferring nvm/mise due to more precise version pinning in order to to avoid unexpected behaviour differences across minor node versions.
 
 ### Development
 
@@ -106,6 +111,37 @@ To run the application in `development` mode run:
 ```bash
 npm run dev
 ```
+
+### HTTPS for local development
+
+Azure AD B2C will only redirect back to an HTTPS URL, so the app needs to serve
+HTTPS locally for end-to-end auth flows to work.
+
+The server enables TLS automatically when **both** are true:
+
+1. `NODE_ENV=development` (set by `npm run dev` and `nodemon.json`)
+2. `certs/localhost-key.pem` and `certs/localhost-cert.pem` exist at the repo root
+
+In production the app continues to serve plain HTTP behind an edge terminator —
+this setup is dev-only.
+
+To generate a trusted local cert pair, install [mkcert] and run:
+
+```bash
+npm run setup:certs
+```
+
+Then start the app as normal:
+
+```bash
+npm run dev
+```
+
+The startup log will show `https://localhost:7154` once TLS is active. You will
+also want to set `AUTH_COOKIE_SECURE=true` in `run-dev.sh` so the session cookie
+is marked secure.
+
+[mkcert]: https://github.com/FiloSottile/mkcert
 
 ### Production
 
@@ -162,7 +198,7 @@ docker build --target development --no-cache --tag waste-regulator-dashboard-fe:
 Run:
 
 ```bash
-docker run -p 3000:3000 waste-regulator-dashboard-fe:development
+docker run -p 7154:7154 waste-regulator-dashboard-fe:development
 ```
 
 ### Production image
@@ -176,14 +212,14 @@ docker build --no-cache --tag waste-regulator-dashboard-fe .
 Run:
 
 ```bash
-docker run -p 3000:3000 waste-regulator-dashboard-fe
+docker run -p 7154:7154 waste-regulator-dashboard-fe
 ```
 
 ### Docker Compose
 
 A local environment with:
 
-- Floci (replacing Localstack) for AWS services (S3, SQS)
+- Localstack for AWS services (S3, SQS)
 - Redis
 - MongoDB
 - This service.
