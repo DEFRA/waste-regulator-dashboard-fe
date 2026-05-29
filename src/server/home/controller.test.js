@@ -15,14 +15,26 @@ const mockAccount = {
 }
 
 let originalAzureBase
+let originalCertificateOfComplianceBase
 
 beforeAll(() => {
   originalAzureBase = config.get('services.regulatorAzure.baseUrl')
+  originalCertificateOfComplianceBase = config.get(
+    'services.certificateOfCompliance.baseUrl'
+  )
   config.set('services.regulatorAzure.baseUrl', 'https://example.org')
+  config.set(
+    'services.certificateOfCompliance.baseUrl',
+    'https://example.org'
+  )
 })
 
 afterAll(() => {
   config.set('services.regulatorAzure.baseUrl', originalAzureBase)
+  config.set(
+    'services.certificateOfCompliance.baseUrl',
+    originalCertificateOfComplianceBase
+  )
 })
 
 async function getHomeAsAuthenticatedUser(server) {
@@ -197,6 +209,10 @@ describe('#homeController', () => {
 
     beforeAll(async () => {
       vi.stubEnv('FEATURE_CERTIFICATE_OF_COMPLIANCE', 'true')
+      vi.stubEnv(
+        'CERTIFICATE_OF_COMPLIANCE_BASE_URL',
+        'https://example.org'
+      )
       vi.resetModules()
       const { createServer: createFreshServer } = await import('../server.js')
       server = await createFreshServer()
@@ -226,6 +242,11 @@ describe('#homeController', () => {
       expect(result).toEqual(
         expect.stringContaining(
           'View certificates and statements of compliance'
+        )
+      )
+      expect(result).toEqual(
+        expect.stringContaining(
+          'href="https://example.org/certificates-of-compliance"'
         )
       )
       expect(statusCode).toBe(statusCodes.ok)

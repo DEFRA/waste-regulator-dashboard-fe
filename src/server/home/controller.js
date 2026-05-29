@@ -47,7 +47,10 @@ export const homeController = {
       user,
       accountDetails,
       accountDetailsError,
-      azureBaseUrl: config.get('services.regulatorAzure.baseUrl')
+      azureBaseUrl: config.get('services.regulatorAzure.baseUrl'),
+      certificateOfComplianceBaseUrl: config.get(
+        'services.certificateOfCompliance.baseUrl'
+      )
     })
   }
 }
