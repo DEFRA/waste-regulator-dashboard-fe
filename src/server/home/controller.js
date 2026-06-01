@@ -1,3 +1,4 @@
+import { config } from '../../config/config.js'
 import {
   getAccountDetails,
   getAccountUserIdFromSessionUser,
@@ -45,7 +46,11 @@ export const homeController = {
       heading: 'Regulator Dashboard',
       user,
       accountDetails,
-      accountDetailsError
+      accountDetailsError,
+      azureBaseUrl: config.get('services.regulatorAzure.baseUrl'),
+      certificateOfComplianceBaseUrl: config.get(
+        'services.certificateOfCompliance.baseUrl'
+      )
     })
   }
 }
