@@ -11,7 +11,7 @@ export const regulators = {
       server.route([
         {
           method: ['GET', 'POST'],
-          path: '/regulators/signin-oidc',
+          path: '/signin-oidc',
           options: {
             auth: 'azure-ad-b2c',
             ...signinOidcController
