@@ -16,7 +16,7 @@ describe('#regulatorsController', () => {
   test('signin-oidc should redirect to /', async () => {
     const response = await server.inject({
       method: 'GET',
-      url: '/regulators/signin-oidc'
+      url: '/signin-oidc'
     })
 
     expect(response.statusCode).toBe(statusCodes.found)

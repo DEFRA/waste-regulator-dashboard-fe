@@ -9,7 +9,7 @@ export const homeController = {
   async handler(request, h) {
     const user = request.yar?.get('user')
     if (!user) {
-      return h.redirect('/regulators/signin-oidc')
+      return h.redirect('/signin-oidc')
     }
 
     let accountDetails

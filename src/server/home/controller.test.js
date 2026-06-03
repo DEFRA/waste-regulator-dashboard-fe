@@ -37,7 +37,7 @@ afterAll(() => {
 async function getHomeAsAuthenticatedUser(server) {
   const signinResponse = await server.inject({
     method: 'GET',
-    url: '/regulators/signin-oidc'
+    url: '/signin-oidc'
   })
   const setCookie = signinResponse.headers['set-cookie'] ?? []
   const sessionCookie = []
@@ -96,7 +96,7 @@ describe('#homeController', () => {
       })
 
       expect(statusCode).toBe(statusCodes.found)
-      expect(headers.location).toBe('/regulators/signin-oidc')
+      expect(headers.location).toBe('/signin-oidc')
     })
 
     test('Should render dashboard when authenticated', async () => {
