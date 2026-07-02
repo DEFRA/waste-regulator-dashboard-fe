@@ -77,6 +77,12 @@ export const config = convict({
     format: Boolean,
     default: isTest
   },
+  useMockAuth: {
+    doc: 'Bypass Azure AD B2C with a stub Hapi auth scheme (fixed profile). Defaults on outside production so local dev works without a B2C tenant.',
+    format: Boolean,
+    default: !isProduction,
+    env: 'MOCK_AUTH'
+  },
   log: {
     enabled: {
       doc: 'Is logging enabled',
