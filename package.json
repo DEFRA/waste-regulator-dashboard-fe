@@ -15,7 +15,7 @@
     "build:frontend": "cross-env NODE_ENV=production webpack",
     "dev": "cross-env AWS_EMF_ENVIRONMENT=Local run-p frontend:watch server:watch",
     "dev:debug": "cross-env AWS_EMF_ENVIRONMENT=Local run-p frontend:watch server:debug",
-    "dev:docker-backends": "cross-env MOCK_API=false GATEWAY_API_BASE_URL=http://localhost:8085 GATEWAY_API_BASIC_AUTH_USERNAME=Developer GATEWAY_API_BASIC_AUTH_PASSWORD=developer-rpd npm run dev",
+    "dev:docker-backends": "cross-env MOCK_API=false ACCOUNT_API_BASE_URL=http://localhost:8003 ACCOUNT_API_CLIENT_ID=Developer ACCOUNT_API_CLIENT_SECRET=developer-pwd npm run dev",
     "dev:dev-backends": "cross-env MOCK_API=false MOCK_AUTH=false npm run dev",
     "docker:dev": "npm run dev",
     "format": "prettier --write \"src/**/*.js\" \"**/*.{js,cjs,md,json,config.js,test.js}\"",

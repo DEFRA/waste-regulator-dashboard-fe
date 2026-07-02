@@ -328,29 +328,45 @@ export const config = convict({
           'https://waste-packaging-regulators-fe.dev.cdp-int.defra.cloud',
         env: 'CERTIFICATE_OF_COMPLIANCE_BASE_URL'
       }
+    }
+  },
+  accountApi: {
+    baseUrl: {
+      doc: 'Account API base URL',
+      format: String,
+      default: 'http://localhost:3001',
+      env: 'ACCOUNT_API_BASE_URL'
     },
-    gatewayApi: {
-      baseUrl: {
-        doc: 'Regulator Gateway base URL for account endpoints (e.g. http://localhost:8085)',
-        format: String,
-        default: 'http://localhost:8085',
-        env: 'GATEWAY_API_BASE_URL'
-      },
-      basicAuth: {
-        username: {
-          doc: 'Optional HTTP Basic Auth username for gateway API',
-          format: String,
-          default: '',
-          env: 'GATEWAY_API_BASIC_AUTH_USERNAME'
-        },
-        password: {
-          doc: 'Optional HTTP Basic Auth password for gateway API',
-          format: String,
-          default: '',
-          env: 'GATEWAY_API_BASIC_AUTH_PASSWORD',
-          sensitive: true
-        }
-      }
+    authMode: {
+      doc: 'Authentication mode for the Account API. Deployed environments use "bearer" (OAuth client credentials).',
+      format: ['basic', 'bearer', 'none'],
+      default: 'basic',
+      env: 'ACCOUNT_API_AUTH_MODE'
+    },
+    clientId: {
+      doc: 'Client ID for the Account API. In bearer mode this is the OAuth client (application) ID.',
+      format: String,
+      default: 'Developer',
+      env: 'ACCOUNT_API_CLIENT_ID'
+    },
+    clientSecret: {
+      doc: 'Client secret for the Account API. In bearer mode this is the OAuth client secret.',
+      format: String,
+      default: 'developer-pwd',
+      env: 'ACCOUNT_API_CLIENT_SECRET',
+      sensitive: true
+    },
+    tokenEndpoint: {
+      doc: 'OAuth token endpoint for the Account API client credentials (used when authMode is "bearer").',
+      format: String,
+      default: '',
+      env: 'ACCOUNT_API_TOKEN_ENDPOINT'
+    },
+    scope: {
+      doc: 'OAuth scope for the Account API (typically {app-id}/.default). Used when authMode is "bearer".',
+      format: String,
+      default: '',
+      env: 'ACCOUNT_API_SCOPE'
     }
   }
 })

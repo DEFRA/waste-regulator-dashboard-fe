@@ -1,14 +1,5 @@
-/**
- * Gateway Account API helpers.
- *
- * - Resolves Account user id (GUID) from the session Bell credentials shape.
- * - Maps gateway `GET api/account/{userId}` JSON (Gateway `AccountDetailsResponse`,
- *   already flattened to the primary organisation) to the regulator view model.
- *   ASP.NET Core JSON uses camelCase by default.
- * - Fetches account details via `gatewayGetJson`.
- */
 import { config } from '../../../config/config.js'
-import { gatewayGetJson } from './gateway-http-client.js'
+import { BaseApiService } from './apiBaseClient/base-api.service.js'
 import { mockAccountDetails } from './account.mock.js'
 
 function asGuidString(value) {
@@ -38,7 +29,7 @@ export function getAccountUserIdFromSessionUser(sessionUser) {
 }
 
 /**
- * Map Account API DTO (Gateway `AccountDetailsResponse`, camelCase JSON from ASP.NET Core).
+ * Map Account API DTO (`AccountDetailsResponse`, camelCase JSON from ASP.NET Core).
  * @param {*} dto
  */
 export function mapAccountDetailsDtoToViewModel(dto) {
@@ -53,11 +44,38 @@ export function mapAccountDetailsDtoToViewModel(dto) {
   }
 }
 
-export async function getAccountDetails(userId, { headers, logger } = {}) {
-  if (config.get('useMockApi')) {
-    logger?.debug?.({ userId }, 'Returning mock account details (MOCK_API)')
-    return mockAccountDetails
+export class AccountApiService extends BaseApiService {
+  constructor(options = {}) {
+    super({
+      ...options,
+      serviceName: 'account'
+    })
   }
-  const path = `api/account/${encodeURIComponent(userId)}`
-  return await gatewayGetJson(path, { headers, logger })
+
+  async getAccountDetails(userId, traceId) {
+    if (config.get('useMockApi')) {
+      this.logger?.debug?.(
+        { userId },
+        'Returning mock account details (MOCK_API)'
+      )
+      return mockAccountDetails
+    }
+    return this.getJson(
+      `/api/account/${encodeURIComponent(userId)}`,
+      this.getTracingHeader(traceId)
+    )
+  }
+}
+
+export function createAccountApiService(options = {}) {
+  return new AccountApiService({
+    baseUrl: config.get('accountApi.baseUrl'),
+    authMode: config.get('accountApi.authMode'),
+    clientId: config.get('accountApi.clientId'),
+    clientSecret: config.get('accountApi.clientSecret'),
+    scope: config.get('accountApi.scope'),
+    tokenEndpoint: config.get('accountApi.tokenEndpoint'),
+    tracingHeader: config.get('tracing.header'),
+    ...options
+  })
 }
