@@ -83,6 +83,12 @@ export const config = convict({
     default: !isProduction,
     env: 'MOCK_AUTH'
   },
+  useMockApi: {
+    doc: 'Return in-memory fixtures instead of calling upstream services. Defaults on outside production so local dev works without backends.',
+    format: Boolean,
+    default: !isProduction,
+    env: 'MOCK_API'
+  },
   log: {
     enabled: {
       doc: 'Is logging enabled',

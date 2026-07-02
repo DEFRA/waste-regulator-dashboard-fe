@@ -7,7 +7,9 @@
  *   ASP.NET Core JSON uses camelCase by default.
  * - Fetches account details via `gatewayGetJson`.
  */
+import { config } from '../../../config/config.js'
 import { gatewayGetJson } from './gateway-http-client.js'
+import { mockAccountDetails } from './account.mock.js'
 
 function asGuidString(value) {
   if (typeof value !== 'string') return undefined
@@ -52,6 +54,10 @@ export function mapAccountDetailsDtoToViewModel(dto) {
 }
 
 export async function getAccountDetails(userId, { headers, logger } = {}) {
+  if (config.get('useMockApi')) {
+    logger?.debug?.({ userId }, 'Returning mock account details (MOCK_API)')
+    return mockAccountDetails
+  }
   const path = `api/account/${encodeURIComponent(userId)}`
   return await gatewayGetJson(path, { headers, logger })
 }
