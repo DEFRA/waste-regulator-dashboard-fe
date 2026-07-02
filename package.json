@@ -5,6 +5,9 @@
   "sideEffects": false,
   "main": "src/index.js",
   "type": "module",
+  "imports": {
+    "#/*": "./src/*"
+  },
   "engines": {
     "node": ">=24"
   },
