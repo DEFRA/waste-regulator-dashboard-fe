@@ -60,10 +60,24 @@ export class AccountApiService extends BaseApiService {
       )
       return mockAccountDetails
     }
-    return this.getJson(
-      `/api/account/${encodeURIComponent(userId)}`,
+    const raw = await this.getJson(
+      `/api/users/user-organisations?userId=${encodeURIComponent(userId)}`,
       this.getTracingHeader(traceId)
     )
+    const user = raw?.user
+    if (!user) {
+      return {}
+    }
+    const org = user.organisations?.[0]
+    return {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      serviceRole: user.serviceRole,
+      serviceRoleId: user.serviceRoleId,
+      contactEmail: user.email,
+      organisationName: org?.name,
+      nationId: org?.nationId
+    }
   }
 }
 
