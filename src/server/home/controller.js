@@ -1,9 +1,9 @@
 import { config } from '../../config/config.js'
 import {
-  getAccountDetails,
+  createAccountApiService,
   getAccountUserIdFromSessionUser,
   mapAccountDetailsDtoToViewModel
-} from '../common/services/gateway-account-client.js'
+} from '../common/services/account-api.service.js'
 
 export const homeController = {
   async handler(request, h) {
@@ -18,9 +18,13 @@ export const homeController = {
 
     if (userId) {
       try {
-        const dto = await getAccountDetails(userId, {
+        const accountApi = createAccountApiService({
           logger: request.logger
         })
+        const dto = await accountApi.getAccountDetails(
+          userId,
+          request.headers?.[config.get('tracing.header')]
+        )
         accountDetails = mapAccountDetailsDtoToViewModel(dto)
         if (
           !accountDetails ||

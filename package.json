@@ -5,13 +5,18 @@
   "sideEffects": false,
   "main": "src/index.js",
   "type": "module",
+  "imports": {
+    "#*": "./src/*"
+  },
   "engines": {
     "node": ">=24"
   },
   "scripts": {
     "build:frontend": "cross-env NODE_ENV=production webpack",
-    "dev": "run-p frontend:watch server:watch",
-    "dev:debug": "run-p frontend:watch server:debug",
+    "dev": "cross-env AWS_EMF_ENVIRONMENT=Local run-p frontend:watch server:watch",
+    "dev:debug": "cross-env AWS_EMF_ENVIRONMENT=Local run-p frontend:watch server:debug",
+    "dev:docker-backends": "cross-env MOCK_API=false ACCOUNT_API_BASE_URL=http://localhost:8003 ACCOUNT_API_CLIENT_ID=Developer ACCOUNT_API_CLIENT_SECRET=developer-pwd npm run dev",
+    "dev:dev-backends": "cross-env MOCK_API=false MOCK_AUTH=false npm run dev",
     "docker:dev": "npm run dev",
     "format": "prettier --write \"src/**/*.js\" \"**/*.{js,cjs,md,json,config.js,test.js}\"",
     "format:check": "prettier --check \"src/**/*.js\" \"**/*.{js,cjs,md,json,config.js,test.js}\"",
@@ -23,11 +28,11 @@
     "lint:js:fix": "eslint . --fix",
     "lint:scss": "stylelint \"src/**/*.scss\" --cache --cache-location .cache/stylelint --cache-strategy content --color --ignore-path .gitignore",
     "pretest": "npm run build:frontend",
-    "test": "cross-env TZ=UTC vitest run --coverage",
-    "test:watch": "cross-env TZ=UTC vitest",
+    "test": "cross-env AWS_EMF_ENVIRONMENT=Local TZ=UTC vitest run --coverage",
+    "test:watch": "cross-env AWS_EMF_ENVIRONMENT=Local TZ=UTC vitest",
     "security-audit": "npm audit --audit-level=high",
-    "server:watch": "nodemon --inspect=localhost:9230 --ext js,json --legacy-watch ./src",
-    "server:debug": "nodemon --inspect-brk=localhost:9230 --ext js,json --legacy-watch ./src",
+    "server:watch": "nodemon --inspect=0.0.0.0:9230 --ext js,json --legacy-watch --watch ./src/server --watch ./src/config --env-file-if-exists=.env ./src",
+    "server:debug": "nodemon --inspect-brk=0.0.0.0:9230 --ext js,json --legacy-watch --watch ./src/server --watch ./src/config --env-file-if-exists=.env ./src",
     "setup:certs": "mkdir -p certs && mkcert -install && mkcert -key-file certs/localhost-key.pem -cert-file certs/localhost-cert.pem localhost 127.0.0.1 ::1",
     "prestart": "npm run build:frontend",
     "start": "cross-env NODE_ENV=production node --use-strict .",
@@ -36,7 +41,7 @@
   "author": "Defra DDTS",
   "license": "OGL-UK-3.0",
   "dependencies": {
-    "@defra/cdp-auditing": "0.6.0",
+    "@defra/cdp-auditing": "0.6.1",
     "@defra/cdp-metrics": "0.6.0",
     "@defra/hapi-secure-context": "0.4.0",
     "@defra/hapi-tracing": "1.30.0",
@@ -59,7 +64,7 @@
     "global-agent": "3.0.0",
     "govuk-frontend": "5.14.0",
     "hapi-pino": "13.0.0",
-    "hapi-pulse": "3.0.1",
+    "hapi-pulse": "4.0.0",
     "ioredis": "5.10.1",
     "lodash": "4.18.1",
     "node-fetch": "3.3.2",
@@ -67,7 +72,7 @@
     "pino": "10.3.1",
     "pino-pretty": "13.1.3",
     "semver": "7.8.1",
-    "undici": "7.25.0"
+    "undici": "7.28.0"
   },
   "devDependencies": {
     "@babel/preset-env": "7.29.5",

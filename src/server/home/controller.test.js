@@ -4,16 +4,6 @@ import { createServer } from '../server.js'
 import { config } from '../../config/config.js'
 import { statusCodes } from '../common/constants/status-codes.js'
 
-const mockAccount = {
-  firstName: 'John',
-  lastName: 'Doe',
-  contactEmail: 'john.doe@example.org',
-  serviceRoleId: 4,
-  serviceRole: 'Regulator Admin',
-  organisationName: 'Example Environment Agency',
-  nationId: 1
-}
-
 let originalAzureBase
 let originalCertificateOfComplianceBase
 
@@ -52,37 +42,13 @@ async function getHomeAsAuthenticatedUser(server) {
   })
 }
 
-function mockGatewayAccountFetch() {
-  return vi.fn(async () => ({
-    ok: true,
-    status: 200,
-    statusText: 'OK',
-    async json() {
-      return mockAccount
-    }
-  }))
-}
-
 describe('#homeController', () => {
   describe('with default config', () => {
     let server
-    let originalFetch
 
     beforeAll(async () => {
       server = await createServer()
       await server.initialize()
-    })
-
-    beforeEach(() => {
-      originalFetch = globalThis.fetch
-      const mockFetch = mockGatewayAccountFetch()
-      globalThis.fetch = mockFetch
-      global.fetch = mockFetch
-    })
-
-    afterEach(() => {
-      globalThis.fetch = originalFetch
-      global.fetch = originalFetch
     })
 
     afterAll(async () => {
@@ -200,7 +166,6 @@ describe('#homeController', () => {
 
   describe('with FEATURE_CERTIFICATE_OF_COMPLIANCE=true', () => {
     let server
-    let originalFetch
 
     beforeAll(async () => {
       vi.stubEnv('FEATURE_CERTIFICATE_OF_COMPLIANCE', 'true')
@@ -209,18 +174,6 @@ describe('#homeController', () => {
       const { createServer: createFreshServer } = await import('../server.js')
       server = await createFreshServer()
       await server.initialize()
-    })
-
-    beforeEach(() => {
-      originalFetch = globalThis.fetch
-      const mockFetch = mockGatewayAccountFetch()
-      globalThis.fetch = mockFetch
-      global.fetch = mockFetch
-    })
-
-    afterEach(() => {
-      globalThis.fetch = originalFetch
-      global.fetch = originalFetch
     })
 
     afterAll(async () => {
