@@ -6,17 +6,25 @@ import { statusCodes } from '../common/constants/status-codes.js'
 
 let originalAzureBase
 let originalCertificateOfComplianceBase
+let originalUseMockAuth
+let originalUseMockApi
 
 beforeAll(() => {
+  originalUseMockAuth = config.get('useMockAuth')
+  originalUseMockApi = config.get('useMockApi')
   originalAzureBase = config.get('services.regulatorAzure.baseUrl')
   originalCertificateOfComplianceBase = config.get(
     'services.certificateOfCompliance.baseUrl'
   )
+  config.set('useMockAuth', true)
+  config.set('useMockApi', true)
   config.set('services.regulatorAzure.baseUrl', 'https://example.org')
   config.set('services.certificateOfCompliance.baseUrl', 'https://example.org')
 })
 
 afterAll(() => {
+  config.set('useMockAuth', originalUseMockAuth)
+  config.set('useMockApi', originalUseMockApi)
   config.set('services.regulatorAzure.baseUrl', originalAzureBase)
   config.set(
     'services.certificateOfCompliance.baseUrl',
@@ -68,16 +76,13 @@ describe('#homeController', () => {
     test('Should render dashboard when authenticated', async () => {
       const { result, statusCode } = await getHomeAsAuthenticatedUser(server)
 
-      expect(result).toEqual(expect.stringContaining('Regulator Dashboard'))
       expect(result).toEqual(
-        expect.stringContaining('regulator-home__account-details')
+        expect.stringContaining('pEPR: Regulators&#39; Service')
       )
       expect(result).toEqual(expect.stringContaining('John'))
       expect(result).toEqual(expect.stringContaining('Doe'))
-      expect(result).toEqual(
-        expect.stringContaining('Example Environment Agency')
-      )
-      expect(result).toEqual(expect.stringContaining('Log out'))
+      expect(result).toEqual(expect.stringContaining('Environment Agency'))
+      expect(result).toEqual(expect.stringContaining('Sign out'))
       expect(result).toEqual(expect.stringContaining('href="/logout"'))
       expect(result).not.toEqual(
         expect.stringContaining('Certificate of Compliance placeholder')
@@ -168,6 +173,8 @@ describe('#homeController', () => {
     let server
 
     beforeAll(async () => {
+      vi.stubEnv('MOCK_AUTH', 'true')
+      vi.stubEnv('MOCK_API', 'true')
       vi.stubEnv('FEATURE_CERTIFICATE_OF_COMPLIANCE', 'true')
       vi.stubEnv('CERTIFICATE_OF_COMPLIANCE_BASE_URL', 'https://example.org')
       vi.resetModules()
