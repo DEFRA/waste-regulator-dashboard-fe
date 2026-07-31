@@ -22,27 +22,6 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <div class="govuk-body" data-testid="regulator-home__content">
-        {% if accountDetailsError %}
-          <p class="govuk-body" data-testid="regulator-home__account-details-error">{{ accountDetailsError }}</p>
-        {% endif %}
-
-        {% if accountDetails %}
-          <dl class="govuk-summary-list" data-testid="regulator-home__account-details">
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Service role ID</dt>
-              <dd class="govuk-summary-list__value" data-testid="regulator-home__account-service-role-id">
-                {{ accountDetails.serviceRoleId }}
-              </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Nation ID</dt>
-              <dd class="govuk-summary-list__value" data-testid="regulator-home__account-nation-id">
-                {{ accountDetails.nationId }}
-              </dd>
-            </div>
-          </dl>
-        {% endif %}
-
         <div class="govuk-!-margin-bottom-2">
           <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ azureBaseUrl }}/regulators/manage-account/manage">
             Manage your account
@@ -95,11 +74,6 @@
         {% endif %}
       </div>
 
-      {{ govukButton({
-        text: "Log out",
-        href: "/logout",
-        classes: "govuk-button--secondary"
-      }) }}
     </div>
   </div>
 

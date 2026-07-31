@@ -49,7 +49,7 @@ export const config = convict({
   serviceName: {
     doc: 'Applications Service Name',
     format: String,
-    default: 'waste-regulator-dashboard-fe'
+    default: "pEPR: Regulators' Service"
   },
   root: {
     doc: 'Project root',

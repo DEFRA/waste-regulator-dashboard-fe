@@ -48,19 +48,8 @@ describe('context and cache', () => {
           assetPath: '/public/assets',
           breadcrumbs: [],
           getAssetPath: expect.any(Function),
-          navigation: [
-            {
-              current: true,
-              text: 'Home',
-              href: '/'
-            },
-            {
-              current: false,
-              text: 'About',
-              href: '/about'
-            }
-          ],
-          serviceName: 'waste-regulator-dashboard-fe',
+          navigation: [],
+          serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
           features: {
             certificateOfCompliance: false
@@ -140,19 +129,8 @@ describe('context and cache', () => {
           assetPath: '/public/assets',
           breadcrumbs: [],
           getAssetPath: expect.any(Function),
-          navigation: [
-            {
-              current: true,
-              text: 'Home',
-              href: '/'
-            },
-            {
-              current: false,
-              text: 'About',
-              href: '/about'
-            }
-          ],
-          serviceName: 'waste-regulator-dashboard-fe',
+          navigation: [],
+          serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
           features: {
             certificateOfCompliance: false
