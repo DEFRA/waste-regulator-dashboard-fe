@@ -5,35 +5,13 @@ function mockRequest(options) {
 }
 
 describe('#buildNavigation', () => {
-  test('Should provide expected navigation details', () => {
+  test('Should return empty navigation', () => {
     expect(
       buildNavigation(mockRequest({ path: '/non-existent-path' }))
-    ).toEqual([
-      {
-        current: false,
-        text: 'Home',
-        href: '/'
-      },
-      {
-        current: false,
-        text: 'About',
-        href: '/about'
-      }
-    ])
+    ).toEqual([])
   })
 
-  test('Should provide expected highlighted navigation details', () => {
-    expect(buildNavigation(mockRequest({ path: '/' }))).toEqual([
-      {
-        current: true,
-        text: 'Home',
-        href: '/'
-      },
-      {
-        current: false,
-        text: 'About',
-        href: '/about'
-      }
-    ])
+  test('Should return empty navigation regardless of path', () => {
+    expect(buildNavigation(mockRequest({ path: '/' }))).toEqual([])
   })
 })
