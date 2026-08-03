@@ -23,7 +23,7 @@ describe('#errors', () => {
     })
 
     expect(result).toEqual(
-      expect.stringContaining('Page not found | waste-regulator-dashboard-fe')
+      expect.stringContaining('Page not found | pEPR: Regulators&#39; Service')
     )
     expect(statusCode).toBe(statusCodes.notFound)
   })

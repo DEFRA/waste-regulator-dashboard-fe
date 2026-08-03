@@ -104,6 +104,10 @@
     "webpack-cli": "6.0.1"
   },
   "overrides": {
+    "eslint": {
+      "minimatch": "10.2.5"
+    },
+    "minimatch@3": "10.2.5",
     "tmp": "0.2.5"
   }
 }

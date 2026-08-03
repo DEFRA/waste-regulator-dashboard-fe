@@ -1,15 +1,20 @@
 import { createServer } from '../server.js'
+import { config } from '../../config/config.js'
 import { statusCodes } from '../common/constants/status-codes.js'
 
 describe('#regulatorsController', () => {
   let server
+  let originalUseMockAuth
 
   beforeAll(async () => {
+    originalUseMockAuth = config.get('useMockAuth')
+    config.set('useMockAuth', true)
     server = await createServer()
     await server.initialize()
   })
 
   afterAll(async () => {
+    config.set('useMockAuth', originalUseMockAuth)
     await server.stop({ timeout: 0 })
   })
 

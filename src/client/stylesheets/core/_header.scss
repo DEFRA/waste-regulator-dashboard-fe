@@ -4,4 +4,38 @@
 
 .app-header {
   border-bottom-color: $app-light-grey;
+
+  .govuk-header__content {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+
+  .govuk-header__service-name {
+    flex: 1 1 auto;
+  }
+
+  .govuk-header__navigation {
+    flex: 0 0 auto;
+    padding: 0;
+  }
+
+  .govuk-header__menu-button {
+    display: none;
+  }
+
+  .govuk-header__navigation-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .govuk-header__navigation-item {
+    padding: 0;
+
+    &::before {
+      display: none;
+    }
+  }
 }

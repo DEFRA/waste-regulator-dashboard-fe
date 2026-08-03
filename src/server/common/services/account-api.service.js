@@ -28,6 +28,16 @@ export function getAccountUserIdFromSessionUser(sessionUser) {
   )
 }
 
+const NATION_ORGANISATION_NAMES = {
+  2: 'Northern Ireland Environment Agency',
+  3: 'Scottish Environment Protection Agency',
+  4: 'Natural Resources Wales'
+}
+
+function getOrganisationNameFromNationId(nationId) {
+  return NATION_ORGANISATION_NAMES[nationId] ?? 'Environment Agency'
+}
+
 /**
  * Map Account API DTO (`AccountDetailsResponse`, camelCase JSON from ASP.NET Core).
  * @param {*} dto
@@ -39,7 +49,7 @@ export function mapAccountDetailsDtoToViewModel(dto) {
     serviceRole: trimmed(dto.serviceRole ?? ''),
     serviceRoleId: dto.serviceRoleId,
     email: trimmed(dto.contactEmail ?? ''),
-    organisationName: trimmed(dto.organisationName ?? ''),
+    organisationName: getOrganisationNameFromNationId(dto.nationId),
     nationId: dto.nationId
   }
 }

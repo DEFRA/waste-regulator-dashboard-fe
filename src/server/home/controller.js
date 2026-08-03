@@ -46,8 +46,8 @@ export const homeController = {
     }
 
     return h.view('home/index', {
-      pageTitle: 'Regulator Dashboard',
-      heading: 'Regulator Dashboard',
+      pageTitle: "pEPR: Regulators' Service  - GOV.UK",
+      heading: "pEPR: Regulators' Service",
       user,
       accountDetails,
       accountDetailsError,
