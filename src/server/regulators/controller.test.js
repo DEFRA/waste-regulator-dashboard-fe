@@ -54,5 +54,9 @@ describe('#regulatorsController', () => {
     expect(result).toEqual(
       expect.stringContaining('You have signed out of the Regulator service.')
     )
+    expect(result).toEqual(expect.stringContaining('Sign in'))
+    expect(result).toEqual(expect.stringContaining('href="/signin-oidc"'))
+    expect(result).not.toEqual(expect.stringContaining('Sign out'))
+    expect(result).not.toEqual(expect.stringContaining('href="/logout"'))
   })
 })
