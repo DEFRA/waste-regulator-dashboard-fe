@@ -5,13 +5,46 @@ function mockRequest(options) {
 }
 
 describe('#buildNavigation', () => {
-  test('Should return empty navigation', () => {
+  test('Should return sign in link when no session user', () => {
     expect(
       buildNavigation(mockRequest({ path: '/non-existent-path' }))
-    ).toEqual([])
+    ).toEqual([{ text: 'Sign in', href: '/signin-oidc' }])
   })
 
-  test('Should return empty navigation regardless of path', () => {
-    expect(buildNavigation(mockRequest({ path: '/' }))).toEqual([])
+  test('Should return sign in link regardless of path when not authenticated', () => {
+    expect(buildNavigation(mockRequest({ path: '/' }))).toEqual([
+      { text: 'Sign in', href: '/signin-oidc' }
+    ])
+  })
+
+  test('Should return sign in link when yar is not initialized', () => {
+    expect(
+      buildNavigation(
+        mockRequest({
+          yar: {
+            id: null,
+            get: () => {
+              throw new Error('yar.get should not be called')
+            }
+          }
+        })
+      )
+    ).toEqual([{ text: 'Sign in', href: '/signin-oidc' }])
+  })
+
+  test('Should return sign out link when session user is present', () => {
+    const user = { token: 'mock-token', profile: { oid: 'user-id' } }
+
+    expect(
+      buildNavigation(
+        mockRequest({
+          path: '/',
+          yar: {
+            id: 'session-id',
+            get: (key) => (key === 'user' ? user : undefined)
+          }
+        })
+      )
+    ).toEqual([{ text: 'Sign out', href: '/logout' }])
   })
 })

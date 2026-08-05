@@ -23,7 +23,10 @@ describe('context and cache', () => {
   })
 
   describe('#context', () => {
-    const mockRequest = { path: '/' }
+    const mockRequest = {
+      path: '/',
+      yar: { get: () => undefined }
+    }
 
     describe('When webpack manifest file read succeeds', () => {
       let contextImport
@@ -48,7 +51,7 @@ describe('context and cache', () => {
           assetPath: '/public/assets',
           breadcrumbs: [],
           getAssetPath: expect.any(Function),
-          navigation: [],
+          navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
           features: {
@@ -96,7 +99,10 @@ describe('context and cache', () => {
   })
 
   describe('#context cache', () => {
-    const mockRequest = { path: '/' }
+    const mockRequest = {
+      path: '/',
+      yar: { get: () => undefined }
+    }
     let contextResult
 
     describe('Webpack manifest file cache', () => {
@@ -129,7 +135,7 @@ describe('context and cache', () => {
           assetPath: '/public/assets',
           breadcrumbs: [],
           getAssetPath: expect.any(Function),
-          navigation: [],
+          navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
           features: {
