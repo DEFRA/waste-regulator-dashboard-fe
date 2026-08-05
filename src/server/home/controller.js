@@ -1,4 +1,5 @@
 import { config } from '../../config/config.js'
+import { getSessionUser } from '../common/helpers/get-session-user.js'
 import {
   createAccountApiService,
   getAccountUserIdFromSessionUser,
@@ -7,7 +8,7 @@ import {
 
 export const homeController = {
   async handler(request, h) {
-    const user = request.yar?.get('user')
+    const user = getSessionUser(request)
     if (!user) {
       return h.redirect('/signin-oidc')
     }
