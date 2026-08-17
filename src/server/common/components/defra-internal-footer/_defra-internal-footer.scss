@@ -28,7 +28,7 @@ body:has(> .defra-internal-footer) {
   @include govuk-font($size: 16);
   @include govuk-responsive-padding(6, "top");
   @include govuk-responsive-padding(6, "bottom");
-  border-top: 1px solid govuk-colour("mid-grey");
+  border-top: 1px solid $govuk-border-colour;
   background-color: govuk-colour("white");
 
   // Footer links reuse the GDS link behaviour wholesale — underline thickness

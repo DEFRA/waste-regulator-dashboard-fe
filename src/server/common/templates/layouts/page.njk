@@ -7,8 +7,8 @@
 
 {# Import custom components globally #}
 {% from "heading/macro.njk" import appHeading %}
-{% from "defra-header/macro.njk" import defraHeader %}
-{% from "defra-footer/macro.njk" import defraFooter %}
+{% from "defra-internal-header/macro.njk" import defraInternalHeader %}
+{% from "defra-internal-footer/macro.njk" import defraInternalFooter %}
 
 {% set regulatorContext %}
   <p class="defra-internal-service-navigation__context">{{ accountDetails.organisationName }}</p>
@@ -37,7 +37,7 @@
   <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet">
   {% endblock %}
   {% block header %}
-    {{ defraHeader({
+    {{ defraInternalHeader({
       user: { name: accountDetails.firstName + " " + accountDetails.lastName },
       signOut: { href: "/logout", text: "Sign out" }
     }) }}
@@ -76,7 +76,7 @@
   {% block content %}{% endblock %}
 
   {% block footer %}
-    {{ defraFooter({
+    {{ defraInternalFooter({
       getHelp: {
         email: "eprcustomerservice@defra.gov.uk",
         telephone: "0300 060 0002",
