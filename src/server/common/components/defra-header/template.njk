@@ -1,0 +1,44 @@
+{#
+  defra-internal — header
+
+  The Defra top bar: the organisation lock-up, the signed-in person and the way
+  out.
+
+  It pairs with govuk-frontend's own service navigation, rendered next to this
+  one rather than inside it — the same way the GOV.UK header and service
+  navigation are two components combined on the page. The service name, the
+  links and the regulator the person works for all belong to that component,
+  not to this one.
+
+  params:
+    organisationName  {string}  logo lock-up text; use <br> to control wrapping
+    homepageUrl       {string}  where the lock-up links to (default "/")
+    user              {object}  { name } shown top right; omit to hide the
+                                account menu
+    signOut           {object}  { href, text } as the last account menu item
+
+  Styles: app/assets/sass/_defra-internal.scss
+#}
+<header class="defra-internal-header" role="banner">
+  <div class="defra-internal-header__container govuk-width-container">
+    <div class="defra-internal-header__main">
+      <div class="defra-internal-header__logo">
+        <a class="defra-internal-header__logo-link" href="{{ params.homepageUrl | default('/') }}">
+          {{ params.organisationName | default("Department for Environment,<br>Food &amp; Rural Affairs") | safe }}
+        </a>
+      </div>
+      {% if params.user or params.signOut %}
+        <div class="defra-internal-header__account-menu">
+          <ul>
+            {% if params.user and params.user.name %}
+              <li><span class="govuk-visually-hidden">Signed in as </span>{{ params.user.name }}</li>
+            {% endif %}
+            {% if params.signOut %}
+              <li><a href="{{ params.signOut.href | default('#') }}">{{ params.signOut.text | default('Sign out') }}</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</header>

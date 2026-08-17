@@ -1,11 +1,18 @@
+{% set bodyClasses = "defra-internal" %}
 {% extends "govuk/template.njk" %}
 
 {# Import GOVUK components globally #}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+
 {# Import custom components globally #}
 {% from "heading/macro.njk" import appHeading %}
+{% from "defra-header/macro.njk" import defraHeader %}
+{% from "defra-footer/macro.njk" import defraFooter %}
 
-{% set mainClasses = "app-main-wrapper" %}
+{% set regulatorContext %}
+  <p class="defra-internal-service-navigation__context">{{ accountDetails.organisationName }}</p>
+{% endset %}
 
 {% block head %}
   {% if allowGoogleAnalytics and ga.id and ga.tag and useGoogleAnalytics %}
@@ -28,7 +35,23 @@
     <!-- End Google Tag Manager -->
   {% endif %}
   <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet">
-{% endblock %}
+  {% endblock %}
+  {% block header %}
+    {{ defraHeader({
+      user: { name: accountDetails.firstName + " " + accountDetails.lastName },
+      signOut: { href: "/logout", text: "Sign out" }
+    }) }}
+    {{ govukServiceNavigation({
+      serviceName: serviceName,
+      serviceUrl: "/v3/regulator-index",
+      navigationId: "service-navigation",
+      navigation: [
+        { href: "#", text: "Search" },
+        { href: "#", text: "Manage account" }
+      ],
+      slots: { end: regulatorContext }
+    }) }}
+  {% endblock %}
 
 {% block bodyStart %}
   {% if allowGoogleAnalytics and ga.id and ga.tag and useGoogleAnalytics %}
@@ -38,53 +61,35 @@
   {% endif %}
 {% endblock %}
 
-{% block header %}
-  {{ govukHeader({
-    homepageUrl: "https://www.gov.uk/",
-    classes: "app-header",
-    containerClasses: "govuk-width-container",
-    serviceName: serviceName,
-    serviceUrl: serviceUrl,
-    useTudorCrown: true,
-    navigation: navigation
-  }) }}
-{% endblock %}
+  {% block pageTitle %}
+    {{ pageTitle }} | {{ serviceName }}
+  {% endblock %}
 
-{% block pageTitle %}
-  {{ pageTitle }} | {{ serviceName }}
-{% endblock %}
-
-{% block beforeContent %}
-  {% if breadcrumbs.length > 1 %}
-    {{ govukBreadcrumbs({
+  {% block beforeContent %}
+    {% if breadcrumbs.length > 1 %}
+      {{ govukBreadcrumbs({
       items: breadcrumbs
     }) }}
-  {% endif %}
-{% endblock %}
+    {% endif %}
+  {% endblock %}
 
-{% block content %}{% endblock %}
+  {% block content %}{% endblock %}
 
-{% block footer %}
-  {{ govukFooter({
-    meta: {
-      items: [
-        {
-          href: "https://www.gov.uk/help/privacy-notice",
-          text: "Privacy"
-        },
-        {
-          href: "https://www.gov.uk/help/cookies",
-          text: "Cookies"
-        },
-        {
-          href: "https://www.gov.uk/help/accessibility-statement",
-          text: "Accessibility statement"
-        }
+  {% block footer %}
+    {{ defraFooter({
+      getHelp: {
+        email: "eprcustomerservice@defra.gov.uk",
+        telephone: "0300 060 0002",
+        hours: "Monday to Friday, 8am to 6pm"
+      },
+      links: [
+        { href: "https://www.gov.uk/help/accessibility-statement", text: "Accessibility statement" },
+        { href: "https://www.gov.uk/help/cookies", text: "Cookies" },
+        { href: "https://www.gov.uk/help/privacy-notice", text: "Privacy" }
       ]
-    }
-  }) }}
-{% endblock %}
+    }) }}
+  {% endblock %}
 
-{% block bodyEnd %}
-  <script type="module" src="{{ getAssetPath('application.js') }}"></script>
-{% endblock %}
+  {% block bodyEnd %}
+    <script type="module" src="{{ getAssetPath('application.js') }}"></script>
+  {% endblock %}

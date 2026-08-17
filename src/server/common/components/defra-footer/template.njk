@@ -1,0 +1,85 @@
+{#
+  defra-internal — footer
+
+  Carries the same information as the v1 GDS footer, minus the prototype tools
+  panel.
+
+  params:
+    getHelp   {object}  { email, telephone, hours }; omit to hide the block
+    meta      {string}  the departmental service line
+    links     {array}   [{ href, text }] support links
+    licence   {bool}    show the Open Government Licence line (default true)
+    copyright {bool}    show the Crown copyright line (default true)
+
+  Layout follows the GDS footer exactly: everything sits in one growing column,
+  with the crest and Crown copyright as its only sibling. The crest is 102px
+  tall, so it has to sit alongside the full column — put it next to the licence
+  line alone and `align-items: flex-end` bottom-aligns that one line against the
+  tall crest, opening a gap above it.
+
+  This reuses govuk-frontend's own `govuk-footer__*` classes rather than
+  redeclaring them. They are top-level selectors, not nested under
+  `.govuk-footer`, so they apply here and the spacing cannot drift from the GDS
+  footer. Only the link colour is ours.
+
+  Styles: app/assets/sass/_defra-internal.scss
+#}
+{# No `role="contentinfo"`. A top-level `
+` already is one, and
+   govuk-frontend dropped the explicit role from its own footer for the same
+   reason. #}
+<footer class="defra-internal-footer">
+  <div class="govuk-width-container">
+    <div class="govuk-footer__meta">
+      <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+        {% if params.getHelp %}
+          <div class="govuk-!-margin-bottom-6">
+            <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Get help</h2>
+            {% if params.getHelp.email %}
+              <p class="govuk-body-s govuk-!-margin-bottom-1">Email: <a class="defra-internal-footer__link" href="mailto:{{ params.getHelp.email }}">{{ params.getHelp.email }}</a></p>
+            {% endif %}
+            {% if params.getHelp.telephone %}
+              <p class="govuk-body-s govuk-!-margin-bottom-1">Telephone: {{ params.getHelp.telephone }}</p>
+            {% endif %}
+            {% if params.getHelp.hours %}
+              <p class="govuk-body-s govuk-!-margin-bottom-0">{{ params.getHelp.hours }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if params.meta %}
+          <p class="govuk-body-s govuk-!-margin-bottom-2">{{ params.meta }}</p>
+        {% endif %}
+
+        {% if params.links.length %}
+          <h2 class="govuk-visually-hidden">Support links</h2>
+          <ul class="govuk-footer__inline-list">
+            {% for link in params.links %}
+              <li class="govuk-footer__inline-list-item">
+                <a class="defra-internal-footer__link" href="{{ link.href }}">{{ link.text }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if params.licence !== false %}
+          <svg aria-hidden="true" focusable="false" class="govuk-footer__licence-logo" … />
+          {# `govuk-!-margin-bottom-0` matters: this span is inline-block, so the
+             15px bottom margin `govuk-body-s` brings would make the column
+             taller than its text and lift this line clear of the Crown
+             copyright it is meant to sit level with. #}
+          <span class="govuk-footer__licence-description govuk-body-s govuk-!-margin-bottom-0">
+            All content is available under the
+            <a class="defra-internal-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated
+          </span>
+        {% endif %}
+      </div>
+
+      {% if params.copyright !== false %}
+        <div class="govuk-footer__meta-item">
+          <a class="defra-internal-footer__link govuk-footer__copyright-logo govuk-body-s" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">&copy; Crown copyright</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</footer>
