@@ -31,7 +31,6 @@ export function context(request) {
     breadcrumbs: [],
     navigation: buildNavigation(request),
     ...buildGoogleTags(request),
-    isProduction: config.get('isProduction'),
     features: {
       certificateOfCompliance: config.get('features.certificateOfCompliance')
     },

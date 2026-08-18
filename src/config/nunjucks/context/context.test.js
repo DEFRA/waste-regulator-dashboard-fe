@@ -57,7 +57,6 @@ describe('context and cache', () => {
             id: 'G-9YS32BSK6B',
             tag: 'GTM-NBWSJJF2'
           },
-          isProduction: false,
           navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
@@ -101,33 +100,6 @@ describe('context and cache', () => {
         expect(mockLoggerError).toHaveBeenCalledWith(
           'Webpack assets-manifest.json not found'
         )
-      })
-    })
-
-    describe('When isProduction is true', () => {
-      let contextImport
-      let contextResult
-      let testConfig
-
-      beforeAll(async () => {
-        contextImport = await import('./context.js')
-        testConfig = (await import('../../config.js')).config
-      })
-
-      beforeEach(() => {
-        mockReadFileSync.mockReturnValue(`{}`)
-        testConfig.set('isProduction', true)
-        contextResult = contextImport.context(mockRequest)
-      })
-
-      afterEach(() => {
-        testConfig.set('isProduction', false)
-      })
-
-      test('Should provide isProduction as true in context', () => {
-        expect(contextResult.isProduction).toBe(true)
-        expect(contextResult.ga.id).toBeNull()
-        expect(contextResult.ga.tag).toBeNull()
       })
     })
   })
@@ -175,7 +147,6 @@ describe('context and cache', () => {
             id: 'G-9YS32BSK6B',
             tag: 'GTM-NBWSJJF2'
           },
-          isProduction: false,
           navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',

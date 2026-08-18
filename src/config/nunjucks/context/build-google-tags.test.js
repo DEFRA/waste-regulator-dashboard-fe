@@ -19,10 +19,10 @@ describe('buildGoogleTags', () => {
       testConfig.set('isProduction', true)
     })
 
-    test('Should return null for id and tag and false for allowGoogleAnalytics by default', () => {
+    test('Should return null for id and tag and true for allowGoogleAnalytics by default', () => {
       const tags = module.buildGoogleTags({})
       expect(tags).toEqual({
-        allowGoogleAnalytics: false,
+        allowGoogleAnalytics: true,
         ga: {
           id: null,
           tag: null
@@ -57,10 +57,10 @@ describe('buildGoogleTags', () => {
       testConfig.set('isProduction', false)
     })
 
-    test('Should return non-production tags and false for allowGoogleAnalytics by default', () => {
+    test('Should return non-production tags and true for allowGoogleAnalytics by default', () => {
       const tags = module.buildGoogleTags({})
       expect(tags).toEqual({
-        allowGoogleAnalytics: false,
+        allowGoogleAnalytics: true,
         ga: {
           id: 'G-9YS32BSK6B',
           tag: 'GTM-NBWSJJF2'
