@@ -25,7 +25,7 @@ export function buildGoogleTags(request) {
 
   return {
     allowGoogleAnalytics,
-   ga: {
+    ga: {
       id: 'G-9YS32BSK6B',
       tag: 'GTM-NBWSJJF2'
     }

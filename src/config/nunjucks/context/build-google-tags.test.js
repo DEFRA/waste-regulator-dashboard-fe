@@ -1,5 +1,4 @@
 import { describe, test, expect, beforeAll, beforeEach, vi } from 'vitest'
-import { config } from '../../config.js'
 
 describe('buildGoogleTags', () => {
   beforeEach(() => {

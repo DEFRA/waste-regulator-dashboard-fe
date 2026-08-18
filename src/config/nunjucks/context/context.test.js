@@ -127,7 +127,6 @@ describe('context and cache', () => {
     })
   })
 
-
   describe('#context cache', () => {
     const mockRequest = {
       path: '/',
