@@ -102,7 +102,31 @@ describe('context and cache', () => {
         )
       })
     })
+
+    describe('When cookies_policy.usage is false', () => {
+      let contextImport
+      let contextResult
+
+      beforeAll(async () => {
+        contextImport = await import('./context.js')
+      })
+
+      beforeEach(() => {
+        const req = {
+          path: '/',
+          yar: { get: () => undefined },
+          state: { cookies_policy: { usage: false } }
+        }
+        mockReadFileSync.mockReturnValue(`{}`)
+        contextResult = contextImport.context(req)
+      })
+
+      test('Should provide allowGoogleAnalytics as false', () => {
+        expect(contextResult.allowGoogleAnalytics).toBe(false)
+      })
+    })
   })
+
 
   describe('#context cache', () => {
     const mockRequest = {
