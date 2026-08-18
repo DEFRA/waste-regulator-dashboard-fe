@@ -25,7 +25,8 @@ describe('context and cache', () => {
   describe('#context', () => {
     const mockRequest = {
       path: '/',
-      yar: { get: () => undefined }
+      yar: { get: () => undefined },
+      state: { cookies_policy: { usage: true } }
     }
 
     describe('When webpack manifest file read succeeds', () => {
@@ -51,6 +52,12 @@ describe('context and cache', () => {
           assetPath: '/public/assets',
           breadcrumbs: [],
           getAssetPath: expect.any(Function),
+          allowGoogleAnalytics: true,
+          ga: {
+            id: 'G-9YS32BSK6B',
+            tag: 'GTM-NBWSJJF2'
+          },
+          isProduction: false,
           navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
@@ -96,12 +103,40 @@ describe('context and cache', () => {
         )
       })
     })
+
+    describe('When isProduction is true', () => {
+      let contextImport
+      let contextResult
+      let testConfig
+
+      beforeAll(async () => {
+        contextImport = await import('./context.js')
+        testConfig = (await import('../../config.js')).config
+      })
+
+      beforeEach(() => {
+        mockReadFileSync.mockReturnValue(`{}`)
+        testConfig.set('isProduction', true)
+        contextResult = contextImport.context(mockRequest)
+      })
+
+      afterEach(() => {
+        testConfig.set('isProduction', false)
+      })
+
+      test('Should provide isProduction as true in context', () => {
+        expect(contextResult.isProduction).toBe(true)
+        expect(contextResult.ga.id).toBeNull()
+        expect(contextResult.ga.tag).toBeNull()
+      })
+    })
   })
 
   describe('#context cache', () => {
     const mockRequest = {
       path: '/',
-      yar: { get: () => undefined }
+      yar: { get: () => undefined },
+      state: { cookies_policy: { usage: true } }
     }
     let contextResult
 
@@ -135,6 +170,12 @@ describe('context and cache', () => {
           assetPath: '/public/assets',
           breadcrumbs: [],
           getAssetPath: expect.any(Function),
+          allowGoogleAnalytics: true,
+          ga: {
+            id: 'G-9YS32BSK6B',
+            tag: 'GTM-NBWSJJF2'
+          },
+          isProduction: false,
           navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',

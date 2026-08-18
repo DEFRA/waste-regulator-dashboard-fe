@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs'
 
 import { config } from '../../config.js'
 import { buildNavigation } from './build-navigation.js'
+import { buildGoogleTags } from './build-google-tags.js'
 import { createLogger } from '../../../server/common/helpers/logging/logger.js'
 
 const logger = createLogger()
@@ -29,6 +30,8 @@ export function context(request) {
     serviceUrl: '/',
     breadcrumbs: [],
     navigation: buildNavigation(request),
+    ...buildGoogleTags(request),
+    isProduction: config.get('isProduction'),
     features: {
       certificateOfCompliance: config.get('features.certificateOfCompliance')
     },
