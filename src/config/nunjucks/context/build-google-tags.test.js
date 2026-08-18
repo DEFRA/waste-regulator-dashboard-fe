@@ -1,7 +1,14 @@
 import { describe, test, expect, beforeAll, beforeEach, vi } from 'vitest'
 
+const mockLoggerError = vi.fn()
+
+vi.mock('../../../server/common/helpers/logging/logger.js', () => ({
+  createLogger: () => ({ error: (...args) => mockLoggerError(...args) })
+}))
+
 describe('buildGoogleTags', () => {
   beforeEach(() => {
+    mockLoggerError.mockReset()
     vi.resetModules()
   })
 
@@ -100,6 +107,23 @@ describe('buildGoogleTags', () => {
       })
       expect(tags).toEqual({
         allowGoogleAnalytics: false,
+        ga: {
+          id: 'G-9YS32BSK6B',
+          tag: 'GTM-NBWSJJF2'
+        }
+      })
+    })
+
+    test('Should log an error if cookies_policy is invalid JSON', () => {
+      const tags = module.buildGoogleTags({
+        state: { cookies_policy: 'invalid json' }
+      })
+      expect(mockLoggerError).toHaveBeenCalledWith(
+        'Failed to parse cookies_policy from request state',
+        expect.any(SyntaxError)
+      )
+      expect(tags).toEqual({
+        allowGoogleAnalytics: true,
         ga: {
           id: 'G-9YS32BSK6B',
           tag: 'GTM-NBWSJJF2'

@@ -1,4 +1,7 @@
 import { config } from '../../config.js'
+import { createLogger } from '../../../server/common/helpers/logging/logger.js'
+
+const logger = createLogger('build-google-tags')
 
 export function buildGoogleTags(request) {
   let allowGoogleAnalytics = true
@@ -10,7 +13,7 @@ export function buildGoogleTags(request) {
       allowGoogleAnalytics = !!parsed.usage
     }
   } catch (err) {
-    // Ignore JSON parse errors
+    logger.error('Failed to parse cookies_policy from request state', err)
   }
 
   if (config.get('isProduction')) {
