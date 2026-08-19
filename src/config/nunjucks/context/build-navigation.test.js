@@ -32,7 +32,29 @@ describe('#buildNavigation', () => {
     ).toEqual([{ text: 'Sign in', href: '/signin-oidc' }])
   })
 
-  test('Should return sign out link when session user is present', () => {
+  test('Should return sign out link with user name when session user and account details are present', () => {
+    const user = { token: 'mock-token', profile: { oid: 'user-id' } }
+
+    expect(
+      buildNavigation(
+        mockRequest({
+          path: '/',
+          yar: {
+            id: 'session-id',
+            get: (key) => (key === 'user' ? user : undefined)
+          },
+          app: {
+            accountDetails: {
+              firstName: 'Test',
+              lastName: 'User'
+            }
+          }
+        })
+      )
+    ).toEqual([{ text: 'Test User' }, { text: 'Sign out', href: '/logout' }])
+  })
+
+  test('Should return only sign out link when session user is present but no account details', () => {
     const user = { token: 'mock-token', profile: { oid: 'user-id' } }
 
     expect(

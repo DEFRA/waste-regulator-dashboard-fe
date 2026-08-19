@@ -70,17 +70,6 @@
       height: 34px;
       background: #{$defra-internal-crest} no-repeat 50% 0 / auto 34px;
 
-      @supports ((-webkit-mask-position: initial) or (mask-position: initial)) {
-        background: currentcolor;
-        -webkit-mask: #{$defra-internal-crest} no-repeat 50% 0 / auto 34px;
-        mask: #{$defra-internal-crest} no-repeat 50% 0 / auto 34px;
-
-        // currentcolor is not computed correctly in forced-colours mode, so
-        // pin it to the system link colour as govuk-frontend does.
-        @media screen and (forced-colors: active) {
-          background: linktext;
-        }
-      }
     }
   }
 
@@ -124,6 +113,22 @@
     // pair look like a menu of two links.
     li + li {
       margin-left: govuk-spacing(4);
+    }
+  }
+}
+
+@supports ((-webkit-mask-position: initial) or (mask-position: initial)) {
+  .defra-internal-header__logo::before {
+    background: currentcolor;
+    -webkit-mask: #{$defra-internal-crest} no-repeat 50% 0 / auto 34px;
+    mask: #{$defra-internal-crest} no-repeat 50% 0 / auto 34px;
+  }
+
+  // currentcolor is not computed correctly in forced-colours mode, so
+  // pin it to the system link colour as govuk-frontend does.
+  @media screen and (forced-colors: active) {
+    .defra-internal-header__logo::before {
+      background: linktext;
     }
   }
 }
