@@ -25,7 +25,8 @@ describe('context and cache', () => {
   describe('#context', () => {
     const mockRequest = {
       path: '/',
-      yar: { get: () => undefined }
+      yar: { get: () => undefined },
+      state: { cookies_policy: { usage: true } }
     }
 
     describe('When webpack manifest file read succeeds', () => {
@@ -51,6 +52,11 @@ describe('context and cache', () => {
           assetPath: '/public/assets',
           breadcrumbs: [],
           getAssetPath: expect.any(Function),
+          allowGoogleAnalytics: true,
+          ga: {
+            id: 'G-9YS32BSK6B',
+            tag: 'GTM-NBWSJJF2'
+          },
           navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
@@ -96,12 +102,36 @@ describe('context and cache', () => {
         )
       })
     })
+
+    describe('When cookies_policy.usage is false', () => {
+      let contextImport
+      let contextResult
+
+      beforeAll(async () => {
+        contextImport = await import('./context.js')
+      })
+
+      beforeEach(() => {
+        const req = {
+          path: '/',
+          yar: { get: () => undefined },
+          state: { cookies_policy: { usage: false } }
+        }
+        mockReadFileSync.mockReturnValue(`{}`)
+        contextResult = contextImport.context(req)
+      })
+
+      test('Should provide allowGoogleAnalytics as false', () => {
+        expect(contextResult.allowGoogleAnalytics).toBe(false)
+      })
+    })
   })
 
   describe('#context cache', () => {
     const mockRequest = {
       path: '/',
-      yar: { get: () => undefined }
+      yar: { get: () => undefined },
+      state: { cookies_policy: { usage: true } }
     }
     let contextResult
 
@@ -135,6 +165,11 @@ describe('context and cache', () => {
           assetPath: '/public/assets',
           breadcrumbs: [],
           getAssetPath: expect.any(Function),
+          allowGoogleAnalytics: true,
+          ga: {
+            id: 'G-9YS32BSK6B',
+            tag: 'GTM-NBWSJJF2'
+          },
           navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',

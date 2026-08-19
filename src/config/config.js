@@ -89,6 +89,18 @@ export const config = convict({
     default: !isProduction,
     env: 'MOCK_API'
   },
+  googleAnalytics: {
+    id: {
+      doc: 'Google Analytics ID',
+      format: String,
+      default: 'G-9YS32BSK6B'
+    },
+    tag: {
+      doc: 'Google GTag',
+      format: String,
+      default: 'GTM-NBWSJJF2'
+    }
+  },
   log: {
     enabled: {
       doc: 'Is logging enabled',
