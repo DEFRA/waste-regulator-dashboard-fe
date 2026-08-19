@@ -16,21 +16,11 @@ export function buildGoogleTags(request) {
     logger.error('Failed to parse cookies_policy from request state', err)
   }
 
-  if (config.get('isProduction')) {
-    return {
-      allowGoogleAnalytics,
-      ga: {
-        id: null,
-        tag: null
-      }
-    }
-  }
-
   return {
     allowGoogleAnalytics,
     ga: {
-      id: 'G-9YS32BSK6B',
-      tag: 'GTM-NBWSJJF2'
+      id: config.get('googleAnalytics.id'),
+      tag: config.get('googleAnalytics.tag')
     }
   }
 }
