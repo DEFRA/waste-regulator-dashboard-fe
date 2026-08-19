@@ -54,8 +54,8 @@ describe('context and cache', () => {
           getAssetPath: expect.any(Function),
           allowGoogleAnalytics: true,
           ga: {
-            id: 'G-9YS32BSK6B',
-            tag: 'GTM-NBWSJJF2'
+            id: '',
+            tag: ''
           },
           navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
           serviceName: "pEPR: Regulators' Service",
@@ -125,6 +125,41 @@ describe('context and cache', () => {
         expect(contextResult.allowGoogleAnalytics).toBe(false)
       })
     })
+
+    describe('When ga.id and ga.tag are set in the config', () => {
+      let contextImport
+      let contextResult
+
+      beforeAll(async () => {
+        const { config } = await import('../../config.js')
+        config.set('googleAnalytics.id', 'TEST-ID')
+        config.set('googleAnalytics.tag', 'TEST-TAG')
+        contextImport = await import('./context.js')
+      })
+
+      afterAll(async () => {
+        const { config } = await import('../../config.js')
+        config.set('googleAnalytics.id', '')
+        config.set('googleAnalytics.tag', '')
+      })
+
+      beforeEach(() => {
+        const req = {
+          path: '/',
+          yar: { get: () => undefined },
+          state: { cookies_policy: { usage: true } }
+        }
+        mockReadFileSync.mockReturnValue(`{}`)
+        contextResult = contextImport.context(req)
+      })
+
+      test('Should provide expected ga object', () => {
+        expect(contextResult.ga).toEqual({
+          id: 'TEST-ID',
+          tag: 'TEST-TAG'
+        })
+      })
+    })
   })
 
   describe('#context cache', () => {
@@ -167,8 +202,8 @@ describe('context and cache', () => {
           getAssetPath: expect.any(Function),
           allowGoogleAnalytics: true,
           ga: {
-            id: 'G-9YS32BSK6B',
-            tag: 'GTM-NBWSJJF2'
+            id: '',
+            tag: ''
           },
           navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
           serviceName: "pEPR: Regulators' Service",
