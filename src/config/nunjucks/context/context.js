@@ -25,6 +25,7 @@ export function context(request) {
   }
 
   return {
+    cspNonce: request?.plugins?.blankie?.nonces?.script,
     assetPath: `${assetPath}/assets`,
     serviceName: config.get('serviceName'),
     serviceUrl: '/',

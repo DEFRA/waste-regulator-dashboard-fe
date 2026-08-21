@@ -93,12 +93,12 @@ export const config = convict({
     id: {
       doc: 'Google Analytics ID',
       format: String,
-      default: ''
+      default: 'G-4M1Z0WGY6J'
     },
     tag: {
       doc: 'Google GTag',
       format: String,
-      default: ''
+      default: 'GTM-52C6V74Q'
     }
   },
   log: {

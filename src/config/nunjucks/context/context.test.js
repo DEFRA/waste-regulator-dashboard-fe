@@ -54,8 +54,8 @@ describe('context and cache', () => {
           getAssetPath: expect.any(Function),
           allowGoogleAnalytics: true,
           ga: {
-            id: '',
-            tag: ''
+            id: 'G-4M1Z0WGY6J',
+            tag: 'GTM-52C6V74Q'
           },
           navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
           serviceName: "pEPR: Regulators' Service",
