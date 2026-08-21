@@ -32,3 +32,13 @@ export function buildNavigation(request) {
 
   return []
 }
+
+export function buildRegulatorContext(request) {
+  const accountDetails = request.app?.accountDetails
+
+  if (accountDetails?.organisationName) {
+    return `<p class="defra-internal-service-navigation__context">${accountDetails.organisationName}</p>`
+  }
+
+  return undefined
+}

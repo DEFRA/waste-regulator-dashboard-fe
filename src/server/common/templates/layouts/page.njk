@@ -10,10 +10,6 @@
 {% from "defra-internal-header/macro.njk" import defraInternalHeader %}
 {% from "defra-internal-footer/macro.njk" import defraInternalFooter %}
 
-{% set regulatorContext %}
-  <p class="defra-internal-service-navigation__context">{{ accountDetails.organisationName }}</p>
-{% endset %}
-
 {% block head %}
   {% if allowGoogleAnalytics and ga.id and ga.tag and useGoogleAnalytics %}
     <!-- Google tag (gtag.js) -->
@@ -48,7 +44,7 @@
     serviceUrl: "/",
     navigationId: "service-navigation",
     navigation: navigation,
-    slots: { end: regulatorContext }
+    slots: { end: regulatorContext | safe }
   }) }}
 {% endblock %}
 

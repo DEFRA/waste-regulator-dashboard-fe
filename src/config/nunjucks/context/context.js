@@ -2,7 +2,7 @@ import path from 'node:path'
 import { readFileSync } from 'node:fs'
 
 import { config } from '../../config.js'
-import { buildAccountNavigation, buildNavigation } from './build-navigation.js'
+import { buildAccountNavigation, buildNavigation, buildRegulatorContext } from './build-navigation.js'
 import { buildGoogleTags } from './build-google-tags.js'
 import { createLogger } from '../../../server/common/helpers/logging/logger.js'
 
@@ -32,6 +32,7 @@ export function context(request) {
     breadcrumbs: [],
     navigation: buildNavigation(request),
     accountNavigation: buildAccountNavigation(request),
+    regulatorContext: buildRegulatorContext(request),
     ...buildGoogleTags(request),
     features: {
       certificateOfCompliance: config.get('features.certificateOfCompliance')
