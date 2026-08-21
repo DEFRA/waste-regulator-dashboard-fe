@@ -10,6 +10,10 @@
 {% from "defra-internal-header/macro.njk" import defraInternalHeader %}
 {% from "defra-internal-footer/macro.njk" import defraInternalFooter %}
 
+{% block headIcons %}
+  <link rel="icon" sizes="any" href="{{ assetPath }}/images/govuk-crest.svg" type="image/svg+xml">
+{% endblock %}
+
 {% block head %}
   {% if allowGoogleAnalytics and ga.id and ga.tag and useGoogleAnalytics %}
     <!-- Google tag (gtag.js) -->
@@ -63,8 +67,8 @@
 {% block beforeContent %}
   {% if breadcrumbs.length > 1 %}
     {{ govukBreadcrumbs({
-    items: breadcrumbs
-  }) }}
+      items: breadcrumbs
+    }) }}
   {% endif %}
 {% endblock %}
 
