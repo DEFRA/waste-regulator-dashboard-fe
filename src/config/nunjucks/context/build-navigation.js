@@ -1,19 +1,34 @@
 import { getSessionUser } from '../../../server/common/helpers/get-session-user.js'
+import { config } from '../../config.js'
 
-export function buildNavigation(request) {
+export function buildAccountNavigation(request) {
   const user = getSessionUser(request)
   const accountDetails = request.app?.accountDetails
 
-  if (user) {
-    if (accountDetails && accountDetails.firstName && accountDetails.lastName) {
-      return [
-        { text: accountDetails.firstName + ' ' + accountDetails.lastName },
-        { text: 'Sign out', href: '/logout' }
-      ]
-    }
-
+  if (accountDetails) {
+    return [
+      { text: accountDetails.firstName + ' ' + accountDetails.lastName },
+      { text: 'Sign out', href: '/logout' }
+    ]
+  } else if (user) {
     return [{ text: 'Sign out', href: '/logout' }]
   }
 
   return [{ text: 'Sign in', href: '/signin-oidc' }]
+}
+
+export function buildNavigation(request) {
+  const user = getSessionUser(request)
+  const azureBaseUrl = config.get('services.regulatorAzure.baseUrl')
+
+  if (user) {
+    return [
+      {
+        href: azureBaseUrl + '/regulators/manage-account/manage',
+        text: 'Manage account'
+      }
+    ]
+  }
+
+  return []
 }

@@ -37,19 +37,16 @@
   <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet">
   {% endblock %}
   {% block header %}
-    {% set headerUser = undefined %}
-    {% if accountDetails %}
-      {% set headerUser = { name: accountDetails.firstName + " " + accountDetails.lastName } %}
-    {% endif %}
     {{ defraInternalHeader({
       organisationName: "Department for Environment,<br>Food &amp; Rural Affairs",
       homepageUrl: "/",
-      navigation: navigation
+      navigation: accountNavigation
     }) }}
     {{ govukServiceNavigation({
       serviceName: serviceName,
       serviceUrl: "/",
       navigationId: "service-navigation",
+      navigation: navigation,
       slots: { end: regulatorContext }
     }) }}
   {% endblock %}
