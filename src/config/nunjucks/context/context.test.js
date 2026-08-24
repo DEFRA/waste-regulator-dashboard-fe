@@ -57,7 +57,9 @@ describe('context and cache', () => {
             id: 'G-4M1Z0WGY6J',
             tag: 'GTM-52C6V74Q'
           },
-          navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
+          navigation: [],
+          accountNavigation: [],
+          regulatorContext: expect.any(String),
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
           features: {
@@ -205,7 +207,9 @@ describe('context and cache', () => {
             id: '',
             tag: ''
           },
-          navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
+          navigation: [],
+          accountNavigation: [],
+          regulatorContext: expect.any(String),
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
           features: {

@@ -22,11 +22,9 @@
   // navigation rather than under it. The width container is the only ancestor
   // the two share, so it becomes the flex row. From tablet only, because below
   // that everything in this band stacks anyway.
-  > .govuk-width-container {
-    @include govuk-media-query($from: tablet) {
-      display: flex;
-      align-items: center;
-    }
+  >.govuk-width-container {
+    display: flex;
+    align-items: center;
   }
 
   .govuk-service-navigation__container {
@@ -67,12 +65,8 @@
   // of the navigation items.
   .defra-internal-service-navigation__context {
     @include govuk-font($size: 16);
-    margin: govuk-spacing(2) 0;
-
-    @include govuk-media-query($from: tablet) {
-      margin: 0;
-      padding: govuk-spacing(3) 0;
-      text-align: right;
-    }
+    margin: 0;
+    padding: govuk-spacing(3) 0;
+    text-align: right;
   }
 }

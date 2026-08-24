@@ -90,10 +90,10 @@ describe('#homeController', () => {
       expect(statusCode).toBe(statusCodes.ok)
     })
 
-    test('Should render "Manage your account" link', async () => {
+    test('Should render "Manage account" link', async () => {
       const { result } = await getHomeAsAuthenticatedUser(server)
 
-      expect(result).toEqual(expect.stringContaining('Manage your account'))
+      expect(result).toEqual(expect.stringContaining('Manage account'))
       expect(result).toEqual(
         expect.stringContaining(
           'href="https://example.org/regulators/manage-account/manage"'

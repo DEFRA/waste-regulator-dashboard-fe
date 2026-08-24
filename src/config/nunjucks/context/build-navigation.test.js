@@ -1,72 +1,97 @@
-import { buildNavigation } from './build-navigation.js'
+import {
+  buildAccountNavigation,
+  buildNavigation,
+  buildRegulatorContext
+} from './build-navigation.js'
 
 function mockRequest(options) {
   return { ...options }
 }
 
-describe('#buildNavigation', () => {
-  test('Should return sign in link when no session user', () => {
+describe('#buildAccountNavigation', () => {
+  test('Should return organisationName if accountDetails is present', () => {
     expect(
-      buildNavigation(mockRequest({ path: '/non-existent-path' }))
-    ).toEqual([{ text: 'Sign in', href: '/signin-oidc' }])
+      buildAccountNavigation(
+        mockRequest({
+          app: {
+            accountDetails: {
+              organisationName: 'Test Org'
+            }
+          }
+        })
+      )
+    ).toEqual([{ text: 'Test Org' }])
   })
 
-  test('Should return sign in link regardless of path when not authenticated', () => {
-    expect(buildNavigation(mockRequest({ path: '/' }))).toEqual([
-      { text: 'Sign in', href: '/signin-oidc' }
+  test('Should return empty array if accountDetails is missing', () => {
+    expect(buildAccountNavigation(mockRequest({}))).toEqual([])
+  })
+})
+
+describe('#buildNavigation', () => {
+  test('Should return Manage account link when session user is present', () => {
+    const user = { token: 'mock-token', profile: { oid: 'user-id' } }
+    expect(
+      buildNavigation(
+        mockRequest({
+          path: '/',
+          yar: {
+            id: 'session-id',
+            get: (key) => (key === 'user' ? user : undefined)
+          }
+        })
+      )
+    ).toEqual([
+      {
+        href: 'https://rwd-dev9.azure.defra.cloud/regulators/manage-account/manage',
+        text: 'Manage account'
+      }
     ])
   })
 
-  test('Should return sign in link when yar is not initialized', () => {
+  test('Should return empty array when no session user', () => {
     expect(
       buildNavigation(
         mockRequest({
           yar: {
             id: null,
-            get: () => {
-              throw new Error('yar.get should not be called')
-            }
+            get: () => undefined
           }
         })
       )
-    ).toEqual([{ text: 'Sign in', href: '/signin-oidc' }])
+    ).toEqual([])
+  })
+})
+
+describe('#buildRegulatorContext', () => {
+  test('Should return Sign in link when no session user', () => {
+    expect(
+      buildRegulatorContext(
+        mockRequest({
+          yar: { id: null, get: () => undefined }
+        })
+      )
+    ).toContain('Sign in')
   })
 
-  test('Should return sign out link with user name when session user and account details are present', () => {
+  test('Should return name and Sign out link when session user is present', () => {
     const user = { token: 'mock-token', profile: { oid: 'user-id' } }
-
-    expect(
-      buildNavigation(
-        mockRequest({
-          path: '/',
-          yar: {
-            id: 'session-id',
-            get: (key) => (key === 'user' ? user : undefined)
-          },
-          app: {
-            accountDetails: {
-              firstName: 'Test',
-              lastName: 'User'
-            }
+    const html = buildRegulatorContext(
+      mockRequest({
+        path: '/',
+        yar: {
+          id: 'session-id',
+          get: (key) => (key === 'user' ? user : undefined)
+        },
+        app: {
+          accountDetails: {
+            firstName: 'Test',
+            lastName: 'User'
           }
-        })
-      )
-    ).toEqual([{ text: 'Test User' }, { text: 'Sign out', href: '/logout' }])
-  })
-
-  test('Should return only sign out link when session user is present but no account details', () => {
-    const user = { token: 'mock-token', profile: { oid: 'user-id' } }
-
-    expect(
-      buildNavigation(
-        mockRequest({
-          path: '/',
-          yar: {
-            id: 'session-id',
-            get: (key) => (key === 'user' ? user : undefined)
-          }
-        })
-      )
-    ).toEqual([{ text: 'Sign out', href: '/logout' }])
+        }
+      })
+    )
+    expect(html).toContain('Test User')
+    expect(html).toContain('Sign out')
   })
 })
