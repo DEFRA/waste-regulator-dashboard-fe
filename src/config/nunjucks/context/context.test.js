@@ -53,10 +53,8 @@ describe('context and cache', () => {
           breadcrumbs: [],
           getAssetPath: expect.any(Function),
           allowGoogleAnalytics: true,
-          ga: {
-            id: 'G-4M1Z0WGY6J',
-            tag: 'GTM-52C6V74Q'
-          },
+          ga4: 'G-4M1Z0WGY6J',
+          gtm: 'GTM-52C6V74Q',
           navigation: [],
           accountNavigation: [],
           regulatorContext: expect.any(String),
@@ -128,21 +126,21 @@ describe('context and cache', () => {
       })
     })
 
-    describe('When ga.id and ga.tag are set in the config', () => {
+    describe('When GA4 and GTM are set in the config', () => {
       let contextImport
       let contextResult
 
       beforeAll(async () => {
         const { config } = await import('../../config.js')
-        config.set('googleAnalytics.id', 'TEST-ID')
-        config.set('googleAnalytics.tag', 'TEST-TAG')
+        config.set('GA4', 'TEST-ID')
+        config.set('GTM', 'TEST-TAG')
         contextImport = await import('./context.js')
       })
 
       afterAll(async () => {
         const { config } = await import('../../config.js')
-        config.set('googleAnalytics.id', '')
-        config.set('googleAnalytics.tag', '')
+        config.set('GA4', '')
+        config.set('GTM', '')
       })
 
       beforeEach(() => {
@@ -155,11 +153,9 @@ describe('context and cache', () => {
         contextResult = contextImport.context(req)
       })
 
-      test('Should provide expected ga object', () => {
-        expect(contextResult.ga).toEqual({
-          id: 'TEST-ID',
-          tag: 'TEST-TAG'
-        })
+      test('Should provide expected tags object', () => {
+        expect(contextResult.ga4).toBe('TEST-ID')
+        expect(contextResult.gtm).toBe('TEST-TAG')
       })
     })
   })
@@ -203,10 +199,8 @@ describe('context and cache', () => {
           breadcrumbs: [],
           getAssetPath: expect.any(Function),
           allowGoogleAnalytics: true,
-          ga: {
-            id: '',
-            tag: ''
-          },
+          ga4: '',
+          gtm: '',
           navigation: [],
           accountNavigation: [],
           regulatorContext: expect.any(String),
