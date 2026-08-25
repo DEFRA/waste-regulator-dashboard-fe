@@ -29,7 +29,7 @@ describe('#buildAccountNavigation', () => {
 })
 
 describe('#buildNavigation', () => {
-  test('Should return Manage account link when session user is present', () => {
+  test('Should return empty array when session user is present', () => {
     const user = { token: 'mock-token', profile: { oid: 'user-id' } }
     expect(
       buildNavigation(
@@ -41,12 +41,7 @@ describe('#buildNavigation', () => {
           }
         })
       )
-    ).toEqual([
-      {
-        href: 'https://rwd-dev9.azure.defra.cloud/regulators/manage-account/manage',
-        text: 'Manage account'
-      }
-    ])
+    ).toEqual([])
   })
 
   test('Should return empty array when no session user', () => {

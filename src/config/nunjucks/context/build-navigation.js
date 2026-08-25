@@ -1,5 +1,4 @@
 import { getSessionUser } from '../../../server/common/helpers/get-session-user.js'
-import { config } from '../../config.js'
 
 export function buildAccountNavigation(request) {
   const accountDetails = request.app?.accountDetails
