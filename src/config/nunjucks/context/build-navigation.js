@@ -12,18 +12,6 @@ export function buildAccountNavigation(request) {
 }
 
 export function buildNavigation(request) {
-  const user = getSessionUser(request)
-  const azureBaseUrl = config.get('services.regulatorAzure.baseUrl')
-
-  if (user) {
-    return [
-      {
-        href: azureBaseUrl + '/regulators/manage-account/manage',
-        text: 'Manage account'
-      }
-    ]
-  }
-
   return []
 }
 
