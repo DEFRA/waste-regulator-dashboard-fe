@@ -90,12 +90,12 @@ export const config = convict({
     env: 'MOCK_API'
   },
   GA4: {
-    doc: 'Google Analytics ID',
+    doc: 'Google Analytics 4 ID',
     format: String,
     default: 'G-4M1Z0WGY6J'
   },
   GTM: {
-    doc: 'Google GTag',
+    doc: 'Google Tag Manager ID',
     format: String,
     default: 'GTM-52C6V74Q'
   },
