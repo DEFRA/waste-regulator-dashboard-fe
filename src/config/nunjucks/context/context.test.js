@@ -60,6 +60,7 @@ describe('context and cache', () => {
           navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
+          helpDeskEmail: 'eprcustomerservice@defra.gov.uk',
           features: {
             certificateOfCompliance: false
           }
@@ -208,6 +209,7 @@ describe('context and cache', () => {
           navigation: [{ text: 'Sign in', href: '/signin-oidc' }],
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
+          helpDeskEmail: 'eprcustomerservice@defra.gov.uk',
           features: {
             certificateOfCompliance: false
           }
