@@ -1,21 +1,28 @@
+{% set bodyClasses = "defra-internal" %}
 {% extends "govuk/template.njk" %}
 
 {# Import GOVUK components globally #}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+
 {# Import custom components globally #}
 {% from "heading/macro.njk" import appHeading %}
+{% from "defra-internal-header/macro.njk" import defraInternalHeader %}
+{% from "defra-internal-footer/macro.njk" import defraInternalFooter %}
 
-{% set mainClasses = "app-main-wrapper" %}
+{% block headIcons %}
+  <link rel="icon" sizes="any" href="{{ assetPath }}/images/govuk-crest.svg" type="image/svg+xml">
+{% endblock %}
 
 {% block head %}
-  {% if allowGoogleAnalytics and ga.id and ga.tag and useGoogleAnalytics %}
+  {% if allowGoogleAnalytics and ga4 and gtm and useGoogleAnalytics %}
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga.id }}" nonce="{{ cspNonce }}"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga4 }}" nonce="{{ cspNonce }}"></script>
     <script nonce="{{ cspNonce }}">
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', '{{ ga.id }}');
+      gtag('config', '{{ ga4 }}');
     </script>
     <!-- Google Tag Manager -->
     <script nonce="{{ cspNonce }}">
@@ -23,31 +30,34 @@
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;j.setAttribute('nonce', '{{ cspNonce }}');f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','{{ ga.tag }}');
+      })(window,document,'script','dataLayer','{{ gtm }}');
     </script>
     <!-- End Google Tag Manager -->
   {% endif %}
   <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet">
 {% endblock %}
 
-{% block bodyStart %}
-  {% if allowGoogleAnalytics and ga.id and ga.tag and useGoogleAnalytics %}
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ ga.tag }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-  {% endif %}
+{% block header %}
+  {{ defraInternalHeader({
+    organisationName: "Department for Environment,<br>Food &amp; Rural Affairs",
+    homepageUrl: "/",
+    navigation: accountNavigation
+  }) }}
+  {{ govukServiceNavigation({
+    serviceName: serviceName,
+    serviceUrl: "/",
+    navigationId: "service-navigation",
+    navigation: navigation,
+    slots: { end: regulatorContext | safe }
+  }) }}
 {% endblock %}
 
-{% block header %}
-  {{ govukHeader({
-    homepageUrl: "https://www.gov.uk/",
-    classes: "app-header",
-    containerClasses: "govuk-width-container",
-    serviceName: serviceName,
-    serviceUrl: serviceUrl,
-    useTudorCrown: true,
-    navigation: navigation
-  }) }}
+{% block bodyStart %}
+  {% if allowGoogleAnalytics and ga4 and gtm and useGoogleAnalytics %}
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ gtm }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+  {% endif %}
 {% endblock %}
 
 {% block pageTitle %}
@@ -65,23 +75,17 @@
 {% block content %}{% endblock %}
 
 {% block footer %}
-  {{ govukFooter({
-    meta: {
-      items: [
-        {
-          href: "https://www.gov.uk/help/privacy-notice",
-          text: "Privacy"
-        },
-        {
-          href: "https://www.gov.uk/help/cookies",
-          text: "Cookies"
-        },
-        {
-          href: "https://www.gov.uk/help/accessibility-statement",
-          text: "Accessibility statement"
-        }
-      ]
-    }
+  {{ defraInternalFooter({
+    getHelp: {
+      email: "eprcustomerservice@defra.gov.uk",
+      telephone: "0300 060 0002",
+      hours: "Monday to Friday, 8am to 6pm"
+    },
+    links: [
+      { href: "https://www.gov.uk/help/accessibility-statement", text: "Accessibility statement" },
+      { href: "https://www.gov.uk/help/cookies", text: "Cookies" },
+      { href: "https://www.gov.uk/help/privacy-notice", text: "Privacy" }
+    ]
   }) }}
 {% endblock %}
 

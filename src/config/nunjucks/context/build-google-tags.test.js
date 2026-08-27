@@ -18,18 +18,16 @@ describe('buildGoogleTags', () => {
   beforeEach(() => {
     mockLoggerError.mockReset()
     vi.resetModules()
-    testConfig.set('googleAnalytics.id', 'G-TESTID123')
-    testConfig.set('googleAnalytics.tag', 'GTM-TESTTAG123')
+    testConfig.set('GA4', 'G-TESTID123')
+    testConfig.set('GTM', 'GTM-TESTTAG123')
   })
 
   test('Should return tags from config and true for allowGoogleAnalytics by default', () => {
     const tags = module.buildGoogleTags({})
     expect(tags).toEqual({
       allowGoogleAnalytics: true,
-      ga: {
-        id: 'G-TESTID123',
-        tag: 'GTM-TESTTAG123'
-      }
+      ga4: 'G-TESTID123',
+      gtm: 'GTM-TESTTAG123'
     })
   })
 
@@ -39,10 +37,8 @@ describe('buildGoogleTags', () => {
     })
     expect(tags).toEqual({
       allowGoogleAnalytics: true,
-      ga: {
-        id: 'G-TESTID123',
-        tag: 'GTM-TESTTAG123'
-      }
+      ga4: 'G-TESTID123',
+      gtm: 'GTM-TESTTAG123'
     })
   })
 
@@ -52,10 +48,8 @@ describe('buildGoogleTags', () => {
     })
     expect(tags).toEqual({
       allowGoogleAnalytics: false,
-      ga: {
-        id: 'G-TESTID123',
-        tag: 'GTM-TESTTAG123'
-      }
+      ga4: 'G-TESTID123',
+      gtm: 'GTM-TESTTAG123'
     })
   })
 
@@ -69,10 +63,8 @@ describe('buildGoogleTags', () => {
     )
     expect(tags).toEqual({
       allowGoogleAnalytics: true,
-      ga: {
-        id: 'G-TESTID123',
-        tag: 'GTM-TESTTAG123'
-      }
+      ga4: 'G-TESTID123',
+      gtm: 'GTM-TESTTAG123'
     })
   })
 })

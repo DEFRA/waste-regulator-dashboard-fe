@@ -1,5 +1,7 @@
 @forward "pkg:govuk-frontend" with (
   $govuk-assets-path: "/public/assets/",
   $govuk-new-organisation-colours: true,
-  $govuk-global-styles: true
+  $govuk-global-styles: true,
+  $govuk-font-family: "arial",
+  $govuk-brand-colour: #00a33b
 );

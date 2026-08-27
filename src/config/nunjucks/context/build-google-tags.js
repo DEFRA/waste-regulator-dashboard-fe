@@ -18,9 +18,7 @@ export function buildGoogleTags(request) {
 
   return {
     allowGoogleAnalytics,
-    ga: {
-      id: config.get('googleAnalytics.id'),
-      tag: config.get('googleAnalytics.tag')
-    }
+    ga4: config.get('GA4'),
+    gtm: config.get('GTM')
   }
 }

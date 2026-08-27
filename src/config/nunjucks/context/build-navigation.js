@@ -1,11 +1,33 @@
 import { getSessionUser } from '../../../server/common/helpers/get-session-user.js'
 
-export function buildNavigation(request) {
-  const user = getSessionUser(request)
+export function buildAccountNavigation(request) {
+  const accountDetails = request.app?.accountDetails
 
-  if (user) {
-    return [{ text: 'Sign out', href: '/logout' }]
+  if (accountDetails?.organisationName) {
+    return [{ text: accountDetails.organisationName }]
   }
 
-  return [{ text: 'Sign in', href: '/signin-oidc' }]
+  return []
+}
+
+export function buildNavigation(request) {
+  return []
+}
+
+export function buildRegulatorContext(request) {
+  const user = getSessionUser(request)
+  const accountDetails = request.app?.accountDetails
+
+  if (user) {
+    let html = '<p class="defra-internal-service-navigation__context">'
+    if (accountDetails?.firstName && accountDetails?.lastName) {
+      html += `${accountDetails.firstName} ${accountDetails.lastName} &nbsp;|&nbsp; `
+    }
+    html += `<a class="govuk-service-navigation__link" href="/logout">Sign out</a></p>`
+    return html
+  }
+
+  return `<p class="defra-internal-service-navigation__context">
+    <a class="govuk-service-navigation__link" href="/signin-oidc">Sign in</a>
+  </p>`
 }

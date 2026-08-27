@@ -46,6 +46,8 @@ export const homeController = {
       accountDetailsError = 'We could not determine your user id.'
     }
 
+    request.app.accountDetails = accountDetails
+
     return h.view('home/index', {
       pageTitle: "pEPR: Regulators' Service  - GOV.UK",
       heading: "pEPR: Regulators' Service",
