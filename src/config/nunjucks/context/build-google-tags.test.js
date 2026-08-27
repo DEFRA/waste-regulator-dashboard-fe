@@ -33,7 +33,9 @@ describe('buildGoogleTags', () => {
 
   test('Should return allowGoogleAnalytics true if cookie usage is true', () => {
     const tags = module.buildGoogleTags({
-      state: { cookies_policy: JSON.stringify({ usage: true }) }
+      state: {
+        cookies_policy: JSON.stringify({ essential: true, usage: true })
+      }
     })
     expect(tags).toEqual({
       allowGoogleAnalytics: true,
@@ -44,7 +46,9 @@ describe('buildGoogleTags', () => {
 
   test('Should return allowGoogleAnalytics as false if cookie usage is false', () => {
     const tags = module.buildGoogleTags({
-      state: { cookies_policy: JSON.stringify({ usage: false }) }
+      state: {
+        cookies_policy: JSON.stringify({ essential: true, usage: false })
+      }
     })
     expect(tags).toEqual({
       allowGoogleAnalytics: false,

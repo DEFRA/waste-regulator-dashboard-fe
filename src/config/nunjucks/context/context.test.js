@@ -26,7 +26,7 @@ describe('context and cache', () => {
     const mockRequest = {
       path: '/',
       yar: { get: () => undefined },
-      state: { cookies_policy: { usage: true } }
+      state: { cookies_policy: { essential: true, usage: true } }
     }
 
     describe('When webpack manifest file read succeeds', () => {
@@ -60,6 +60,9 @@ describe('context and cache', () => {
           regulatorContext: expect.any(String),
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
+          cspNonce: undefined,
+          hasCookiePolicy: true,
+          cookiePreferenceSet: false,
           features: {
             certificateOfCompliance: false
           }
@@ -115,7 +118,7 @@ describe('context and cache', () => {
         const req = {
           path: '/',
           yar: { get: () => undefined },
-          state: { cookies_policy: { usage: false } }
+          state: { cookies_policy: { essential: true, usage: false } }
         }
         mockReadFileSync.mockReturnValue(`{}`)
         contextResult = contextImport.context(req)
@@ -147,7 +150,7 @@ describe('context and cache', () => {
         const req = {
           path: '/',
           yar: { get: () => undefined },
-          state: { cookies_policy: { usage: true } }
+          state: { cookies_policy: { essential: true, usage: true } }
         }
         mockReadFileSync.mockReturnValue(`{}`)
         contextResult = contextImport.context(req)
@@ -164,7 +167,7 @@ describe('context and cache', () => {
     const mockRequest = {
       path: '/',
       yar: { get: () => undefined },
-      state: { cookies_policy: { usage: true } }
+      state: { cookies_policy: { essential: true, usage: true } }
     }
     let contextResult
 
@@ -206,6 +209,9 @@ describe('context and cache', () => {
           regulatorContext: expect.any(String),
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
+          cspNonce: undefined,
+          hasCookiePolicy: true,
+          cookiePreferenceSet: false,
           features: {
             certificateOfCompliance: false
           }
