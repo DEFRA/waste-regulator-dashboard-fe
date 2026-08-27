@@ -109,17 +109,15 @@ export const config = convict({
       env: 'MAINTENANCE_AVAILABLE_FROM'
     }
   },
-  googleAnalytics: {
-    id: {
-      doc: 'Google Analytics ID',
-      format: String,
-      default: 'G-4M1Z0WGY6J'
-    },
-    tag: {
-      doc: 'Google GTag',
-      format: String,
-      default: 'GTM-52C6V74Q'
-    }
+  GA4: {
+    doc: 'Google Analytics 4 ID',
+    format: String,
+    default: 'G-4M1Z0WGY6J'
+  },
+  GTM: {
+    doc: 'Google Tag Manager ID',
+    format: String,
+    default: 'GTM-52C6V74Q'
   },
   log: {
     enabled: {
