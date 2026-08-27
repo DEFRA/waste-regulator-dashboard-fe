@@ -1,7 +1,6 @@
 {% extends 'layouts/error-page.njk' %}
-{% from "partials/help-desk-link.njk" import helpDeskLink %}
 
 {% block errorBody %}
   <p class="govuk-body">Try again later.</p>
-  <p class="govuk-body">Email {{ helpDeskLink(helpDeskEmail) }} if you need help.</p>
+  <p class="govuk-body">Email {{ helpDeskLink() }} if you need help.</p>
 {% endblock %}

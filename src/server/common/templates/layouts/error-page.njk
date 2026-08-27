@@ -2,6 +2,8 @@
    page title, so a page cannot end up with a <title> and an <h1> that disagree. #}
 {% extends 'layouts/page.njk' %}
 
+{% macro helpDeskLink() %}<a class="govuk-link" href="mailto:{{ helpDeskEmail }}">{{ helpDeskEmail }}</a>{% endmacro %}
+
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
