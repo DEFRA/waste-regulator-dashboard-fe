@@ -89,6 +89,26 @@ export const config = convict({
     default: !isProduction,
     env: 'MOCK_API'
   },
+  helpDeskEmail: {
+    doc: 'Help desk email address shown on the error pages.',
+    format: String,
+    default: 'eprcustomerservice@defra.gov.uk',
+    env: 'HELP_DESK_EMAIL'
+  },
+  maintenance: {
+    enabled: {
+      doc: 'Shutter the service: every request except the health check and static assets gets the 503 service unavailable page.',
+      format: Boolean,
+      default: false,
+      env: 'MAINTENANCE_MODE'
+    },
+    availableFrom: {
+      doc: 'When the service is expected back, as display text (e.g. "9am on 1 August 2026"). Leave empty for unplanned maintenance, where no return time is shown.',
+      format: String,
+      default: '',
+      env: 'MAINTENANCE_AVAILABLE_FROM'
+    }
+  },
   GA4: {
     doc: 'Google Analytics 4 ID',
     format: String,

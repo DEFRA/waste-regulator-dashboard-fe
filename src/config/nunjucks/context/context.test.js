@@ -63,6 +63,7 @@ describe('context and cache', () => {
           cspNonce: undefined,
           hasCookiePolicy: true,
           cookiePreferenceSet: false,
+          helpDeskEmail: 'eprcustomerservice@defra.gov.uk',
           features: {
             certificateOfCompliance: false
           }
@@ -212,6 +213,7 @@ describe('context and cache', () => {
           cspNonce: undefined,
           hasCookiePolicy: true,
           cookiePreferenceSet: false,
+          helpDeskEmail: 'eprcustomerservice@defra.gov.uk',
           features: {
             certificateOfCompliance: false
           }
