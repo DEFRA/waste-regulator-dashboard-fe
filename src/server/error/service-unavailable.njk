@@ -1,0 +1,11 @@
+{% extends 'layouts/error-page.njk' %}
+
+{% block errorBody %}
+  {# Planned maintenance states when the service is back; unplanned downtime has no return time to give. #}
+  {% if availableFrom %}
+    <p class="govuk-body">You will be able to use the service from {{ availableFrom }}.</p>
+  {% else %}
+    <p class="govuk-body">Try again later.</p>
+  {% endif %}
+  <p class="govuk-body">Email {{ helpDeskLink() }} if you need help.</p>
+{% endblock %}

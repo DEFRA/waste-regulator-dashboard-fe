@@ -33,6 +33,7 @@ export function context(request) {
     assetPath: `${assetPath}/assets`,
     serviceName: config.get('serviceName'),
     serviceUrl: '/',
+    helpDeskEmail: config.get('helpDeskEmail'),
     breadcrumbs: [],
     navigation: buildNavigation(request),
     accountNavigation: buildAccountNavigation(request),

@@ -60,6 +60,7 @@ describe('context and cache', () => {
           regulatorContext: expect.any(String),
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
+          helpDeskEmail: 'eprcustomerservice@defra.gov.uk',
           features: {
             certificateOfCompliance: false
           }
@@ -206,6 +207,7 @@ describe('context and cache', () => {
           regulatorContext: expect.any(String),
           serviceName: "pEPR: Regulators' Service",
           serviceUrl: '/',
+          helpDeskEmail: 'eprcustomerservice@defra.gov.uk',
           features: {
             certificateOfCompliance: false
           }
