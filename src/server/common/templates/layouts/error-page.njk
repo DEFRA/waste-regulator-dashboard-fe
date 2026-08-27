@@ -1,0 +1,12 @@
+{# Shared scaffolding for the service error pages. The heading is always the
+   page title, so a page cannot end up with a <title> and an <h1> that disagree. #}
+{% extends 'layouts/page.njk' %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">{{ pageTitle }}</h1>
+      {% block errorBody %}{% endblock %}
+    </div>
+  </div>
+{% endblock %}

@@ -12,6 +12,10 @@ const titleFor = (statusCode) => errorPageFor(statusCode).pageTitle
 const headingOf = (payload) =>
   payload.match(/<h1[^>]*>([^<]*)<\/h1>/)?.[1]?.trim()
 
+// The <head> title comes first in the document; the crown logo has one too.
+const titleOf = (payload) =>
+  payload.match(/<title[^>]*>([\s\S]*?)<\/title>/)?.[1]?.trim()
+
 describe('error pages — journey', () => {
   let server
 
@@ -102,6 +106,9 @@ describe('error pages — journey', () => {
       expect(response.payload).toContain(titleFor(statusCodes.notFound))
       expect(response.payload).toContain(
         'If you typed the web address, check it is correct.'
+      )
+      expect(titleOf(response.payload)).toBe(
+        'Page not found | pEPR: Regulators&#39; Service'
       )
     })
   })

@@ -1,41 +1,7 @@
 import { vi } from 'vitest'
 
 import { catchAll, errorPageFor } from './errors.js'
-import { createServer } from '../../server.js'
 import { statusCodes } from '../constants/status-codes.js'
-
-describe('#errors', () => {
-  let server
-
-  beforeAll(async () => {
-    server = await createServer()
-    await server.initialize()
-  })
-
-  afterAll(async () => {
-    await server.stop({ timeout: 0 })
-  })
-
-  test('Should provide expected Not Found page', async () => {
-    const { result, statusCode } = await server.inject({
-      method: 'GET',
-      url: '/non-existent-path'
-    })
-
-    expect(result).toEqual(
-      expect.stringContaining('Page not found | pEPR: Regulators&#39; Service')
-    )
-    expect(result).toEqual(
-      expect.stringContaining(
-        'If you typed the web address, check it is correct.'
-      )
-    )
-    expect(result).toEqual(
-      expect.stringContaining('mailto:eprcustomerservice@defra.gov.uk')
-    )
-    expect(statusCode).toBe(statusCodes.notFound)
-  })
-})
 
 describe('#errorPageFor', () => {
   test.each([
