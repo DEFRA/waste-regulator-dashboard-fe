@@ -91,26 +91,26 @@
     }) }}
   </form>
   {% elif cookiePreferenceSet %}
-  {% set actionWord = "accepted" if allowGoogleAnalytics else "rejected" %}
-  <form action="/cookies/hide-banner" method="post" novalidate>
-    {{ govukCookieBanner({
-      ariaLabel: "Cookies on " + serviceName,
-      messages: [
-        {
-          html: '<p class="govuk-body">You’ve ' + actionWord + ' analytics cookies. You can <a class="govuk-link" href="/cookies">change your cookie settings</a> at any time.</p>',
-          role: "alert",
-          actions: [
-            {
-              text: "Hide cookie message",
-              type: "submit",
-              name: "cookies[hide]",
-              value: "hide"
-            }
-          ]
-        }
-      ]
-    }) }}
-  </form>
+    {% set actionWord = "accepted" if allowGoogleAnalytics else "rejected" %}
+    <form action="/cookies/hide-banner" method="post" novalidate>
+      {{ govukCookieBanner({
+        ariaLabel: "Cookies on " + serviceName,
+        messages: [
+          {
+            html: '<p class="govuk-body">You’ve ' + actionWord + ' analytics cookies. You can <a class="govuk-link" href="/cookies">change your cookie settings</a> at any time.</p>',
+            role: "alert",
+            actions: [
+              {
+                text: "Hide cookie message",
+                type: "submit",
+                name: "cookies[hide]",
+                value: "hide"
+              }
+            ]
+          }
+        ]
+      }) }}
+    </form>
   {% endif %}
 {% endblock %}
 

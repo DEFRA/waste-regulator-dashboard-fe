@@ -39,7 +39,7 @@ export function context(request) {
     accountNavigation: buildAccountNavigation(request),
     regulatorContext: buildRegulatorContext(request),
     ...buildGoogleTags(request),
-    hasCookiePolicy: !!request?.state?.cookies_policy,
+    hasCookiePolicy: Boolean(request?.state?.cookies_policy),
     cookiePreferenceSet: request?.query?.cookie_preference === 'set',
     features: {
       certificateOfCompliance: config.get('features.certificateOfCompliance')

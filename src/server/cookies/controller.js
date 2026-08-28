@@ -1,5 +1,8 @@
 import { config } from '../../config/config.js'
 import { loadAccountDetails } from '../common/helpers/load-account-details.js'
+import { createLogger } from '../common/helpers/logging/logger.js'
+
+const logger = createLogger('cookies-controller')
 
 const cookieOptions = {
   ttl: 1000 * 60 * 60 * 24 * 365,
@@ -21,7 +24,7 @@ export const cookiesController = {
         cookiesPolicyUsage = parsedPolicy.usage ? 'yes' : 'no'
       }
     } catch (e) {
-      // Ignore
+      logger.error('Failed to parse cookies_policy from request state', e)
     }
 
     return h.view('cookies/index', {
@@ -70,7 +73,7 @@ export const cookiesController = {
 
     const referer = request.headers.referer || '/'
     try {
-      const url = new URL(referer, 'http://localhost')
+      const url = new URL(referer, request.url.origin)
       url.searchParams.set('cookie_preference', 'set')
       return h.redirect(url.pathname + url.search)
     } catch (e) {
@@ -81,7 +84,7 @@ export const cookiesController = {
   hideBannerPostHandler(request, h) {
     const referer = request.headers.referer || '/'
     try {
-      const url = new URL(referer, 'http://localhost')
+      const url = new URL(referer, request.url.origin)
       url.searchParams.delete('cookie_preference')
       return h.redirect(url.pathname + url.search)
     } catch (e) {
