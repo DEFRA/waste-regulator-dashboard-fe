@@ -4,7 +4,7 @@ import { createLogger } from '../../../server/common/helpers/logging/logger.js'
 const logger = createLogger('build-google-tags')
 
 export function buildGoogleTags(request) {
-  let allowGoogleAnalytics = true
+  let allowGoogleAnalytics = false
 
   try {
     const policy = request?.state?.cookies_policy

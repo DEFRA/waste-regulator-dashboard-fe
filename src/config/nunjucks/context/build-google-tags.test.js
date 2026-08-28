@@ -22,10 +22,10 @@ describe('buildGoogleTags', () => {
     testConfig.set('GTM', 'GTM-TESTTAG123')
   })
 
-  test('Should return tags from config and true for allowGoogleAnalytics by default', () => {
+  test('Should return tags from config and false for allowGoogleAnalytics by default', () => {
     const tags = module.buildGoogleTags({})
     expect(tags).toEqual({
-      allowGoogleAnalytics: true,
+      allowGoogleAnalytics: false,
       ga4: 'G-TESTID123',
       gtm: 'GTM-TESTTAG123'
     })
@@ -33,7 +33,9 @@ describe('buildGoogleTags', () => {
 
   test('Should return allowGoogleAnalytics true if cookie usage is true', () => {
     const tags = module.buildGoogleTags({
-      state: { cookies_policy: JSON.stringify({ usage: true }) }
+      state: {
+        cookies_policy: JSON.stringify({ essential: true, usage: true })
+      }
     })
     expect(tags).toEqual({
       allowGoogleAnalytics: true,
@@ -44,7 +46,9 @@ describe('buildGoogleTags', () => {
 
   test('Should return allowGoogleAnalytics as false if cookie usage is false', () => {
     const tags = module.buildGoogleTags({
-      state: { cookies_policy: JSON.stringify({ usage: false }) }
+      state: {
+        cookies_policy: JSON.stringify({ essential: true, usage: false })
+      }
     })
     expect(tags).toEqual({
       allowGoogleAnalytics: false,
@@ -62,7 +66,7 @@ describe('buildGoogleTags', () => {
       expect.any(SyntaxError)
     )
     expect(tags).toEqual({
-      allowGoogleAnalytics: true,
+      allowGoogleAnalytics: false,
       ga4: 'G-TESTID123',
       gtm: 'GTM-TESTTAG123'
     })
