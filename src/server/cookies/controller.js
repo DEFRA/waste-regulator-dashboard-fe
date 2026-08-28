@@ -1,4 +1,12 @@
+import { config } from '../../config/config.js'
 import { loadAccountDetails } from '../common/helpers/load-account-details.js'
+
+const cookieOptions = {
+  ttl: 1000 * 60 * 60 * 24 * 365,
+  path: '/',
+  isSecure: config.get('session.cookie.secure'),
+  isSameSite: 'Strict'
+}
 
 export const cookiesController = {
   async getHandler(request, h) {
@@ -38,12 +46,11 @@ export const cookiesController = {
 
     if (analytics === 'yes' || analytics === 'no') {
       const usage = analytics === 'yes'
-      h.state('cookies_policy', JSON.stringify({ essential: true, usage }), {
-        ttl: 1000 * 60 * 60 * 24 * 365,
-        path: '/',
-        isSecure: true,
-        isSameSite: 'Strict'
-      })
+      h.state(
+        'cookies_policy',
+        JSON.stringify({ essential: true, usage }),
+        cookieOptions
+      )
     }
 
     return h.redirect('/cookies?success=1')
@@ -54,12 +61,11 @@ export const cookiesController = {
 
     if (analytics === 'yes' || analytics === 'no') {
       const usage = analytics === 'yes'
-      h.state('cookies_policy', JSON.stringify({ essential: true, usage }), {
-        ttl: 1000 * 60 * 60 * 24 * 365,
-        path: '/',
-        isSecure: true,
-        isSameSite: 'Strict'
-      })
+      h.state(
+        'cookies_policy',
+        JSON.stringify({ essential: true, usage }),
+        cookieOptions
+      )
     }
 
     const referer = request.headers.referer || '/'

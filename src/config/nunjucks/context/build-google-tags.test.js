@@ -22,10 +22,10 @@ describe('buildGoogleTags', () => {
     testConfig.set('GTM', 'GTM-TESTTAG123')
   })
 
-  test('Should return tags from config and true for allowGoogleAnalytics by default', () => {
+  test('Should return tags from config and false for allowGoogleAnalytics by default', () => {
     const tags = module.buildGoogleTags({})
     expect(tags).toEqual({
-      allowGoogleAnalytics: true,
+      allowGoogleAnalytics: false,
       ga4: 'G-TESTID123',
       gtm: 'GTM-TESTTAG123'
     })
@@ -66,7 +66,7 @@ describe('buildGoogleTags', () => {
       expect.any(SyntaxError)
     )
     expect(tags).toEqual({
-      allowGoogleAnalytics: true,
+      allowGoogleAnalytics: false,
       ga4: 'G-TESTID123',
       gtm: 'GTM-TESTTAG123'
     })
