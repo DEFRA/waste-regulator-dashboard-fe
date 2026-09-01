@@ -8,7 +8,7 @@ const cookieOptions = {
   ttl: 1000 * 60 * 60 * 24 * 365,
   path: '/',
   isSecure: config.get('session.cookie.secure'),
-  isSameSite: 'Strict'
+  isSameSite: 'lax'
 }
 
 export const cookiesController = {
