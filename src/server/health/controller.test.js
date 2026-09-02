@@ -102,9 +102,15 @@ describe('healthController handler (non-mock mode)', () => {
 
   it('returns 200 even when checks report degraded', async () => {
     const checks = {
-      'account-token': { ok: false, error: 'OAuth token request failed (401 Unauthorized)' }
+      'account-token': {
+        ok: false,
+        error: 'OAuth token request failed (401 Unauthorized)'
+      }
     }
-    vi.mocked(runHealthChecks).mockResolvedValue({ message: 'degraded', checks })
+    vi.mocked(runHealthChecks).mockResolvedValue({
+      message: 'degraded',
+      checks
+    })
 
     const responseObj = { code: vi.fn().mockReturnThis() }
     h.response.mockReturnValue(responseObj)
