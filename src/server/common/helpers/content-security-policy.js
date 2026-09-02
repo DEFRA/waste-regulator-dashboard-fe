@@ -10,13 +10,14 @@ const contentSecurityPolicy = {
     // Hash 'sha256-GUQ5ad8JK5KmEWmROf3LZd9ge94daqNvd8xy9YS1iDw=' is to support a GOV.UK frontend script bundled within Nunjucks macros
     // https://frontend.design-system.service.gov.uk/import-javascript/#if-our-inline-javascript-snippet-is-blocked-by-a-content-security-policy
     defaultSrc: ['self'],
-    fontSrc: ['self', 'data:'],
+    fontSrc: ['self', 'data:', 'https://www.google-analytics.com'],
     connectSrc: [
       'self',
       'wss',
       'data:',
       'https://www.google-analytics.com',
-      'https://region1.google-analytics.com'
+      'https://region1.google-analytics.com',
+      'https://analytics.google.com'
     ],
     mediaSrc: ['self'],
     styleSrc: ['self'],
