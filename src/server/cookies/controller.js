@@ -102,7 +102,9 @@ export const cookiesController = {
       }
       return h.redirect(url.pathname + url.search)
     } catch (e) {
-      return redirectPreservingLang(request, h, '/', { cookie_preference: 'set' })
+      return redirectPreservingLang(request, h, '/', {
+        cookie_preference: 'set'
+      })
     }
   },
 

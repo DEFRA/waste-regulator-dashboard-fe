@@ -4,7 +4,10 @@
  */
 import { getLocale } from '../common/helpers/i18n/get-locale.js'
 import { localeUrl } from '../common/helpers/i18n/locale-url.js'
-import { buildPageViewModel, translate } from '../common/helpers/i18n/translate.js'
+import {
+  buildPageViewModel,
+  translate
+} from '../common/helpers/i18n/translate.js'
 
 export const aboutController = {
   handler(request, h) {

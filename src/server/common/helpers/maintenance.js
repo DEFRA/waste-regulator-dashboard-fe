@@ -28,7 +28,11 @@ export const maintenance = {
           return h.continue
         }
 
-        return renderErrorPage(h, statusCodes.serviceUnavailable, request).takeover()
+        return renderErrorPage(
+          h,
+          statusCodes.serviceUnavailable,
+          request
+        ).takeover()
       })
     }
   }

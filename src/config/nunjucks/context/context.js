@@ -10,7 +10,10 @@ import {
 import { buildLanguageSwitcherUrls } from './build-language-switcher.js'
 import { buildGoogleTags } from './build-google-tags.js'
 import { createLogger } from '../../../server/common/helpers/logging/logger.js'
-import { bindLocaleUrl, localeUrl } from '../../../server/common/helpers/i18n/locale-url.js'
+import {
+  bindLocaleUrl,
+  localeUrl
+} from '../../../server/common/helpers/i18n/locale-url.js'
 import { getLocale } from '../../../server/common/helpers/i18n/get-locale.js'
 import { translate } from '../../../server/common/helpers/i18n/translate.js'
 
