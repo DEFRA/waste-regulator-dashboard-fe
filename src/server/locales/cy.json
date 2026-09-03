@@ -1,0 +1,91 @@
+{
+  "common": {
+    "serviceName": "pEPR: Gwasanaeth Rheolewyr",
+    "nav": {
+      "home": "Hafan",
+      "signIn": "Mewngofnodi",
+      "signOut": "Allgofnodi"
+    },
+    "languageSwitcher": {
+      "label": "Iaith",
+      "english": "English",
+      "welsh": "Cymraeg"
+    },
+    "footer": {
+      "getHelp": "Cael help",
+      "emailLabel": "E-bost:",
+      "telephoneLabel": "Ffôn:",
+      "accessibility": "Datganiad hygyrchedd",
+      "cookies": "Cwcis",
+      "privacy": "Preifatrwydd",
+      "supportLinks": "Dolenni cymorth",
+      "oglPrefix": "Mae'r holl gynnwys ar gael o dan",
+      "oglLink": "Drwydded Llywodraeth Agored v3.0",
+      "oglSuffix": ", ac eithrio lle nodir fel arall",
+      "crownCopyright": "Hawlfraint y Goron"
+    },
+    "cookieBanner": {
+      "acceptAnalytics": "Derbyn cwcis dadansoddeg",
+      "rejectAnalytics": "Gwrthod cwcis dadansoddeg",
+      "viewCookies": "Gweld cwcis",
+      "hideMessage": "Cuddio neges cwcis"
+    },
+    "yes": "Iawn",
+    "no": "Na",
+    "success": "Llwyddiant"
+  },
+  "home": {
+    "pageTitle": "pEPR: Gwasanaeth Rheolewyr - GOV.WALES",
+    "heading": "pEPR: Gwasanaeth Rheolewyr",
+    "tasks": {
+      "manageAccount": {
+        "link": "Rheoli eich cyfrif",
+        "description": "Ychwanegu neu ddileu aelodau tîm o'ch cyfrif"
+      },
+      "manageApplications": {
+        "link": "Rheoli ceisiadau ar gyfer pobl cymeradwy a dirprwyedig",
+        "description": "Gweld, derbyn neu wrthod ceisiadau ar gyfer personau cymeradwy a dirprwyedig"
+      },
+      "manageRegistrationSubmissions": {
+        "link": "Rheoli cyflwyniadau cofrestri",
+        "description": "Gweld, derbyn neu wrthod cyflwyniadau ceisiadau cofrestri"
+      },
+      "certificatesOfCompliance": {
+        "link": "Gweld tystysgrifau ac datganiadau cydymffurfiad",
+        "description": "Gweld, derbyn neu ganslo tystysgrifau ac datganiadau cydymffurfiad"
+      }
+    }
+  },
+  "about": {
+    "pageTitle": "Ynghylch",
+    "heading": "Ynghylch"
+  },
+  "cookies": {
+    "pageTitle": "Cwcis",
+    "heading": "Cwcis",
+    "breadcrumbHome": "Hafan",
+    "breadcrumbCookies": "Cwcis",
+    "saveSettings": "Cadw gosodiadau cwcis"
+  },
+  "auth": {
+    "signedOut": {
+      "pageTitle": "Wedi allgofnodi",
+      "heading": "Wedi allgofnodi",
+      "message": "Rydych wedi allgofnodi o'r gwasanaeth Rheolewr."
+    }
+  },
+  "errors": {
+    "notFound": {
+      "pageTitle": "Heb ddod o hyd i'r dudalen"
+    },
+    "accessDenied": {
+      "pageTitle": "Nid oes gennych ganiatâd i gael mynediad i'r dudalen hon"
+    },
+    "serviceUnavailable": {
+      "pageTitle": "Mae'n ddrwg gennym, nid yw'r gwasanaeth ar gael"
+    },
+    "problemWithService": {
+      "pageTitle": "Mae'n ddrwg gennym, mae problem gyda'r gwasanaeth"
+    }
+  }
+}
