@@ -24,7 +24,13 @@
   // that everything in this band stacks anyway.
   >.govuk-width-container {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
+
+    @media #{govuk-from-breakpoint(tablet)} {
+      flex-direction: row;
+      align-items: center;
+    }
   }
 
   .govuk-service-navigation__container {
@@ -61,12 +67,84 @@
     border-color: $defra-internal-link;
   }
 
+  // Language switcher and account actions share the end slot.
+  .service-navigation-end {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: auto;
+    text-align: right;
+    width: 100%;
+
+    @media #{govuk-from-breakpoint(tablet)} {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: govuk-spacing(4);
+      width: auto;
+    }
+  }
+
+  .language-toggle-nav {
+    margin: govuk-spacing(2) 0 0;
+    padding: 0;
+
+    @media #{govuk-from-breakpoint(tablet)} {
+      margin: 0;
+      padding: govuk-spacing(3) 0;
+    }
+  }
+
+  .language-toggle {
+    @include govuk-font($size: 16);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+  }
+
+  .language-toggle__option {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &:not(:last-child)::after {
+      content: '|';
+      margin: 0 govuk-spacing(2);
+      color: govuk-colour('black');
+      font-weight: normal;
+    }
+  }
+
+  .language-toggle__active {
+    @include govuk-typography-weight-bold;
+    color: govuk-colour('black');
+  }
+
+  // Inactive language uses standard GOV.UK link styling (blue, underlined),
+  // not the green service-navigation link colour.
+  .language-toggle-nav .govuk-link {
+    @include govuk-link-common;
+    @include govuk-link-style-default;
+    @include govuk-link-style-no-visited-state;
+  }
+
   // The context in the 'end' slot needs to match the spacing and alignment
   // of the navigation items.
   .defra-internal-service-navigation__context {
     @include govuk-font($size: 16);
     margin: 0;
-    padding: govuk-spacing(3) 0;
-    text-align: right;
+    padding: govuk-spacing(2) 0 govuk-spacing(3);
+
+    @media #{govuk-from-breakpoint(tablet)} {
+      padding: govuk-spacing(3) 0;
+    }
   }
 }

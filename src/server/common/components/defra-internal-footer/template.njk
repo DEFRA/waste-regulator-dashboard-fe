@@ -34,12 +34,12 @@
       <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
         {% if params.getHelp %}
           <div class="govuk-!-margin-bottom-6">
-            <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Get help</h2>
+            <h2 class="govuk-heading-s govuk-!-margin-bottom-2">{{ params.getHelp.heading | default("Get help") }}</h2>
             {% if params.getHelp.email %}
-              <p class="govuk-body-s govuk-!-margin-bottom-1">Email: <a class="defra-internal-footer__link" href="mailto:{{ params.getHelp.email }}">{{ params.getHelp.email }}</a></p>
+              <p class="govuk-body-s govuk-!-margin-bottom-1">{{ params.getHelp.emailLabel | default("Email:") }} <a class="defra-internal-footer__link" href="mailto:{{ params.getHelp.email }}">{{ params.getHelp.email }}</a></p>
             {% endif %}
             {% if params.getHelp.telephone %}
-              <p class="govuk-body-s govuk-!-margin-bottom-1">Telephone: {{ params.getHelp.telephone }}</p>
+              <p class="govuk-body-s govuk-!-margin-bottom-1">{{ params.getHelp.telephoneLabel | default("Telephone:") }} {{ params.getHelp.telephone }}</p>
             {% endif %}
             {% if params.getHelp.hours %}
               <p class="govuk-body-s govuk-!-margin-bottom-0">{{ params.getHelp.hours }}</p>
@@ -52,7 +52,7 @@
         {% endif %}
 
         {% if params.links.length %}
-          <h2 class="govuk-visually-hidden">Support links</h2>
+          <h2 class="govuk-visually-hidden">{{ params.supportLinksLabel | default("Support links") }}</h2>
           <ul class="govuk-footer__inline-list">
             {% for link in params.links %}
               <li class="govuk-footer__inline-list-item">
@@ -71,15 +71,15 @@
              taller than its text and lift this line clear of the Crown
              copyright it is meant to sit level with. #}
           <span class="govuk-footer__licence-description govuk-body-s govuk-!-margin-bottom-0">
-            All content is available under the
-            <a class="defra-internal-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated
+            {{ params.oglPrefix | default("All content is available under the") }}
+            <a class="defra-internal-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">{{ params.oglLink | default("Open Government Licence v3.0") }}</a>{{ params.oglSuffix | default(", except where otherwise stated") }}
           </span>
         {% endif %}
       </div>
 
       {% if params.copyright !== false %}
         <div class="govuk-footer__meta-item">
-          <a class="defra-internal-footer__link govuk-footer__copyright-logo govuk-body-s" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">&copy; Crown copyright</a>
+          <a class="defra-internal-footer__link govuk-footer__copyright-logo govuk-body-s" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">&copy; {{ params.crownCopyright | default("Crown copyright") }}</a>
         </div>
       {% endif %}
     </div>
