@@ -5,7 +5,7 @@ import {
   persistAuthLocale,
   redirectWithLocale
 } from '../common/helpers/i18n/locale-url.js'
-import { pageI18n, translate } from '../common/helpers/i18n/translate.js'
+import { pageI18n } from '../common/helpers/i18n/translate.js'
 
 export const homeController = {
   async handler(request, h) {

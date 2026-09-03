@@ -1,7 +1,7 @@
 import Boom from '@hapi/boom'
 
 import { statusCodes } from '../../common/constants/status-codes.js'
-import { errorPageFor, errorPageTitle } from '../../common/helpers/errors.js'
+import { errorPageTitle } from '../../common/helpers/errors.js'
 
 const exampleMessage = 'Error page example'
 
