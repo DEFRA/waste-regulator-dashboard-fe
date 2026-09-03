@@ -8,7 +8,17 @@ vi.mock('node:fs', async () => {
 
   return {
     ...nodeFs,
-    readFileSync: () => mockReadFileSync()
+    readFileSync: (path, encoding) => {
+      if (String(path).includes('assets-manifest.json')) {
+        const result = mockReadFileSync()
+        if (result instanceof Error) {
+          throw result
+        }
+        return result
+      }
+
+      return nodeFs.readFileSync(path, encoding)
+    }
   }
 })
 vi.mock('../../../server/common/helpers/logging/logger.js', () => ({
@@ -25,6 +35,7 @@ describe('context and cache', () => {
   describe('#context', () => {
     const mockRequest = {
       path: '/',
+      url: { search: '' },
       yar: { get: () => undefined },
       state: { cookies_policy: { essential: true, usage: true } }
     }
@@ -55,6 +66,12 @@ describe('context and cache', () => {
           allowGoogleAnalytics: true,
           ga4: 'G-4M1Z0WGY6J',
           gtm: 'GTM-52C6V74Q',
+          locale: 'en',
+          localeUrl: expect.any(Function),
+          languageSwitcher: {
+            en: '/?lang=en',
+            cy: '/?lang=cy'
+          },
           navigation: [],
           accountNavigation: [],
           regulatorContext: expect.any(String),
@@ -118,6 +135,7 @@ describe('context and cache', () => {
       beforeEach(() => {
         const req = {
           path: '/',
+          url: { search: '' },
           yar: { get: () => undefined },
           state: { cookies_policy: { essential: true, usage: false } }
         }
@@ -150,6 +168,7 @@ describe('context and cache', () => {
       beforeEach(() => {
         const req = {
           path: '/',
+          url: { search: '' },
           yar: { get: () => undefined },
           state: { cookies_policy: { essential: true, usage: true } }
         }
@@ -167,6 +186,7 @@ describe('context and cache', () => {
   describe('#context cache', () => {
     const mockRequest = {
       path: '/',
+      url: { search: '' },
       yar: { get: () => undefined },
       state: { cookies_policy: { essential: true, usage: true } }
     }
@@ -205,6 +225,12 @@ describe('context and cache', () => {
           allowGoogleAnalytics: true,
           ga4: '',
           gtm: '',
+          locale: 'en',
+          localeUrl: expect.any(Function),
+          languageSwitcher: {
+            en: '/?lang=en',
+            cy: '/?lang=cy'
+          },
           navigation: [],
           accountNavigation: [],
           regulatorContext: expect.any(String),
