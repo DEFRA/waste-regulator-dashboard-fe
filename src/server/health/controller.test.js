@@ -11,17 +11,22 @@ import { healthController } from './controller.js'
 import { runHealthChecks } from './health.service.js'
 import { config } from '../../config/config.js'
 
+let originalUseMockApi
+
 describe('#healthController', () => {
   describe('with default config', () => {
     let server
 
     beforeAll(async () => {
+      originalUseMockApi = config.get('useMockApi')
+      config.set('useMockApi', true)
       server = await createServer()
       await server.initialize()
     })
 
     afterAll(async () => {
       await server.stop({ timeout: 0 })
+      config.set('useMockApi', originalUseMockApi)
     })
 
     test('returns success with feature flags without running checks when useMockApi is true', async () => {
@@ -44,6 +49,7 @@ describe('#healthController', () => {
 
     beforeAll(async () => {
       vi.stubEnv('FEATURE_CERTIFICATE_OF_COMPLIANCE', 'true')
+      vi.stubEnv('MOCK_API', 'true')
       vi.resetModules()
       const { createServer: createFreshServer } = await import('../server.js')
       server = await createFreshServer()
