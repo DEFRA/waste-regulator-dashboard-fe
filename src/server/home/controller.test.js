@@ -73,6 +73,38 @@ describe('#homeController', () => {
       expect(headers.location).toBe('/signin-oidc')
     })
 
+    test('Should persist Welsh locale and redirect to signin with lang=cy', async () => {
+      const { statusCode, headers } = await server.inject({
+        method: 'GET',
+        url: '/?lang=cy'
+      })
+
+      expect(statusCode).toBe(statusCodes.found)
+      expect(headers.location).toBe('/signin-oidc?lang=cy')
+    })
+
+    test('Should render Welsh dashboard when authenticated with lang=cy', async () => {
+      const signinResponse = await server.inject({
+        method: 'GET',
+        url: '/signin-oidc?lang=cy'
+      })
+      const setCookie = signinResponse.headers['set-cookie'] ?? []
+      const sessionCookie = []
+        .concat(setCookie)
+        .map((c) => c.split(';')[0])
+        .join('; ')
+
+      const { result, statusCode } = await server.inject({
+        method: 'GET',
+        url: '/?lang=cy',
+        headers: { cookie: sessionCookie }
+      })
+
+      expect(statusCode).toBe(statusCodes.ok)
+      expect(result).toEqual(expect.stringContaining('Gwasanaeth Rheolewyr'))
+      expect(result).toEqual(expect.stringContaining('Cymraeg'))
+    })
+
     test('Should render dashboard when authenticated', async () => {
       const { result, statusCode } = await getHomeAsAuthenticatedUser(server)
 

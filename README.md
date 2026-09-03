@@ -10,6 +10,7 @@ Core delivery platform Node.js Frontend Template.
   - [Node.js](#nodejs)
 - [Server-side Caching](#server-side-caching)
 - [Redis](#redis)
+- [Welsh language support](#welsh-language-support)
 - [Local Development](#local-development)
   - [Setup](#setup)
     - [Nix dev shell (optional)](#nix-dev-shell-optional)
@@ -63,6 +64,14 @@ matches the service name. e.g. `my-service` will have access to everything in Re
 
 If your service does not require a session cache to be shared between instances or if you don't require Redis, you can
 disable setting `SESSION_CACHE_ENGINE=false` or changing the default value in `src/config/index.js`.
+
+## Welsh language support
+
+Locale support follows the same approach as [waste-packaging-regulators-fe](https://github.com/DEFRA/waste-packaging-regulators-fe): translations live in `src/server/locales/en.json` and `cy.json`, resolved via `getLocale(request)` (`?lang=` query param, then OAuth session `authLocale`, then `Accept-Language`, default `en`).
+
+- Append `?lang=cy` to internal links when the active locale is Welsh (English uses no lang query param).
+- Welsh locale is saved to session before OAuth redirect and cleared after sign-in completes.
+- Missing Welsh keys fall back to English automatically.
 
 ## Proxy
 
