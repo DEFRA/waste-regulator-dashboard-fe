@@ -1,13 +1,13 @@
 import { createServer } from '../server.js'
 import { statusCodes } from '../common/constants/status-codes.js'
-import { errorPageFor } from '../common/helpers/errors.js'
+import { errorPageTitle } from '../common/helpers/errors.js'
 
 const HELP_DESK_EMAIL = 'eprcustomerservice@defra.gov.uk'
 
 // These are journey tests: they check a request reaches the right page, not
 // what that page says. The exact copy is pinned in errors.test.js, so the
 // heading is read from the mapping rather than restated here.
-const titleFor = (statusCode) => errorPageFor(statusCode).pageTitle
+const titleFor = (statusCode) => errorPageTitle(statusCode)
 
 const headingOf = (payload) =>
   payload.match(/<h1[^>]*>([^<]*)<\/h1>/)?.[1]?.trim()

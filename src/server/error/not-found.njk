@@ -1,7 +1,7 @@
 {% extends 'layouts/error-page.njk' %}
 
 {% block errorBody %}
-  <p class="govuk-body">If you typed the web address, check it is correct.</p>
-  <p class="govuk-body">If you pasted the web address, check you copied the entire address.</p>
-  <p class="govuk-body">If the web address is correct or you selected a link or a button, email {{ helpDeskLink() }}.</p>
+  <p class="govuk-body">{{ t(locale, 'errors.notFound.body1') }}</p>
+  <p class="govuk-body">{{ t(locale, 'errors.notFound.body2') }}</p>
+  <p class="govuk-body">{{ t(locale, 'errors.notFound.body3Prefix') }} {{ helpDeskLink() }}.</p>
 {% endblock %}
