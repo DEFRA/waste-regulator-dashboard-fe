@@ -1,4 +1,6 @@
+import Boom from '@hapi/boom'
 import { config } from '../../config/config.js'
+import { isRegulator } from '../auth/regulator-access.js'
 import { loadAccountDetails } from '../common/helpers/load-account-details.js'
 import { getLocale } from '../common/helpers/i18n/get-locale.js'
 import {
@@ -17,6 +19,10 @@ export const homeController = {
       persistAuthLocale(request, locale)
       request.yar.set('returnTo', request.url.pathname + request.url.search)
       return redirectWithLocale(h, request, '/signin-oidc')
+    }
+
+    if (!isRegulator(accountDetails)) {
+      return Boom.forbidden('User does not hold a regulator service role')
     }
 
     const i18n = pageI18n(locale, 'home')
