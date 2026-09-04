@@ -30,13 +30,9 @@
         'ad_storage': 'denied',
         'analytics_storage': 'denied'
       });
-      {% if hasCookiePolicy %}
-        {% set consent = "granted" if allowGoogleAnalytics else "denied" %}
+      {% if allowGoogleAnalytics %}
         gtag('consent', 'update', {
-          'ad_user_data': '{{ consent }}',
-          'ad_personalization': '{{ consent }}',
-          'ad_storage': '{{ consent }}',
-          'analytics_storage': '{{ consent }}'
+          'analytics_storage': 'granted'
         });
       {% endif %}
     </script>
