@@ -1,4 +1,6 @@
+import Boom from '@hapi/boom'
 import { config } from '../../config/config.js'
+import { isRegulator, isRegulatorAdmin } from '../auth/regulator-access.js'
 import { loadAccountDetails } from '../common/helpers/load-account-details.js'
 import { getLocale } from '../common/helpers/i18n/get-locale.js'
 import {
@@ -19,6 +21,10 @@ export const homeController = {
       return redirectWithLocale(h, request, '/signin-oidc')
     }
 
+    if (!isRegulator(accountDetails)) {
+      return Boom.forbidden('User does not hold a regulator service role')
+    }
+
     const i18n = pageI18n(locale, 'home')
 
     return h.view('home/index', {
@@ -27,6 +33,7 @@ export const homeController = {
       user,
       accountDetails,
       accountDetailsError,
+      isRegulatorAdmin: isRegulatorAdmin(accountDetails),
       azureBaseUrl: config.get('services.regulatorAzure.baseUrl'),
       certificateOfComplianceBaseUrl: config.get(
         'services.certificateOfCompliance.baseUrl'
