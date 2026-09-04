@@ -39,10 +39,6 @@
       margin: 0 0 0 auto;
       padding: govuk-spacing(2) 0 govuk-spacing(3);
       text-align: right;
-
-      @media #{govuk-from-breakpoint(tablet)} {
-        padding: govuk-spacing(3) 0;
-      }
     }
 
     .govuk-service-navigation__link,
@@ -111,5 +107,14 @@
       @include govuk-link-style-default;
       @include govuk-link-style-no-visited-state;
     }
+  }
+}
+
+@media #{govuk-from-breakpoint(tablet)} {
+  .defra-internal-service-header
+    .govuk-service-navigation
+    > .govuk-width-container
+    > .defra-internal-service-navigation__context {
+    padding: govuk-spacing(3) 0;
   }
 }
