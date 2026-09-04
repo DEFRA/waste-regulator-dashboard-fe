@@ -1,3 +1,4 @@
+{% set htmlLang = locale %}
 {% set bodyClasses = "defra-internal" %}
 {% extends "govuk/template.njk" %}
 
@@ -63,17 +64,44 @@
 
 {% block header %}
   {{ defraInternalHeader({
-    organisationName: "Department for Environment,<br>Food &amp; Rural Affairs",
-    homepageUrl: "/",
+    organisationName: t(locale, "common.organisationName") | safe,
+    homepageUrl: localeUrl("/"),
     navigation: accountNavigation
   }) }}
-  {{ govukServiceNavigation({
-    serviceName: serviceName,
-    serviceUrl: "/",
-    navigationId: "service-navigation",
-    navigation: navigation,
-    slots: { end: regulatorContext | safe }
-  }) }}
+  <div class="defra-internal-service-header">
+    {% set regulatorEnd %}
+      {{ regulatorContext | safe }}
+    {% endset %}
+    {{ govukServiceNavigation({
+      serviceName: serviceName,
+      serviceUrl: serviceUrl,
+      navigationId: "service-navigation",
+      navigation: navigation,
+      slots: { end: regulatorEnd }
+    }) }}
+    <div class="defra-internal-language-bar">
+      <div class="govuk-width-container">
+        <nav class="language-toggle-nav" aria-label="{{ t(locale, 'common.languageSwitcher.label') }}">
+          <ul class="language-toggle">
+            <li class="language-toggle__option">
+              {% if locale == 'cy' %}
+                <a class="govuk-link govuk-link--no-visited-state" href="{{ languageSwitcher.en }}" lang="en">{{ t(locale, "common.languageSwitcher.english") }}</a>
+              {% else %}
+                <span class="language-toggle__active" lang="en">{{ t(locale, "common.languageSwitcher.english") }}</span>
+              {% endif %}
+            </li>
+            <li class="language-toggle__option">
+              {% if locale == 'cy' %}
+                <span class="language-toggle__active" lang="cy">{{ t(locale, "common.languageSwitcher.welsh") }}</span>
+              {% else %}
+                <a class="govuk-link govuk-link--no-visited-state" href="{{ languageSwitcher.cy }}" lang="cy">{{ t(locale, "common.languageSwitcher.welsh") }}</a>
+              {% endif %}
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block bodyStart %}
@@ -89,30 +117,29 @@
     <!-- End Google Tag Manager (noscript) -->
   {% endif %}
   {% if not hasCookiePolicy and not cookiePreferenceSet %}
-    <form action="/cookies/banner" method="post" novalidate>
+    <form action="{{ localeUrl('/cookies/banner') }}" method="post" novalidate>
       {{ govukCookieBanner({
-        ariaLabel: "Cookies on " + serviceName,
+        ariaLabel: t(locale, "common.cookieBanner.ariaLabel", { serviceName: serviceName }),
         messages: [
           {
-            headingText: "Cookies on " + serviceName,
-            html: '<p class="govuk-body">We use some essential cookies to make this service work.</p>
-              <p class="govuk-body">We’d also like to use analytics cookies so we can understand how you use the service and make improvements.</p>',
+            headingText: t(locale, "common.cookieBanner.heading", { serviceName: serviceName }),
+            html: t(locale, "common.cookieBanner.essentialHtml"),
             actions: [
               {
-                text: "Accept analytics cookies",
+                text: t(locale, "common.cookieBanner.acceptAnalytics"),
                 type: "submit",
                 name: "analytics",
                 value: "yes"
               },
               {
-                text: "Reject analytics cookies",
+                text: t(locale, "common.cookieBanner.rejectAnalytics"),
                 type: "submit",
                 name: "analytics",
                 value: "no"
               },
               {
-                text: "View cookies",
-                href: "/cookies"
+                text: t(locale, "common.cookieBanner.viewCookies"),
+                href: localeUrl("/cookies")
               }
             ]
           }
@@ -120,17 +147,17 @@
       }) }}
     </form>
   {% elif cookiePreferenceSet %}
-    {% set actionWord = "accepted" if allowGoogleAnalytics else "rejected" %}
-    <form action="/cookies/hide-banner" method="post" novalidate>
+    {% set preferenceKey = "common.cookieBanner.preferenceAccepted" if allowGoogleAnalytics else "common.cookieBanner.preferenceRejected" %}
+    <form action="{{ localeUrl('/cookies/hide-banner') }}" method="post" novalidate>
       {{ govukCookieBanner({
-        ariaLabel: "Cookies on " + serviceName,
+        ariaLabel: t(locale, "common.cookieBanner.ariaLabel", { serviceName: serviceName }),
         messages: [
           {
-            html: '<p class="govuk-body">You’ve ' + actionWord + ' analytics cookies. You can <a class="govuk-link" href="/cookies">change your cookie settings</a> at any time.</p>',
+            html: t(locale, preferenceKey, { cookiesUrl: localeUrl("/cookies") }),
             role: "alert",
             actions: [
               {
-                text: "Hide cookie message",
+                text: t(locale, "common.cookieBanner.hideMessage"),
                 type: "submit",
                 name: "cookies[hide]",
                 value: "hide"
@@ -160,15 +187,23 @@
 {% block footer %}
   {{ defraInternalFooter({
     getHelp: {
+      heading: t(locale, "common.footer.getHelp"),
       email: "eprcustomerservice@defra.gov.uk",
+      emailLabel: t(locale, "common.footer.emailLabel"),
       telephone: "0300 060 0002",
-      hours: "Monday to Friday, 8am to 6pm"
+      telephoneLabel: t(locale, "common.footer.telephoneLabel"),
+      hours: t(locale, "common.footer.hours")
     },
     links: [
-      { href: "https://www.gov.uk/help/accessibility-statement", text: "Accessibility statement" },
-      { href: "/cookies", text: "Cookies" },
-      { href: "https://www.gov.uk/help/privacy-notice", text: "Privacy" }
-    ]
+      { href: "https://www.gov.uk/help/accessibility-statement", text: t(locale, "common.footer.accessibility") },
+      { href: localeUrl("/cookies"), text: t(locale, "common.footer.cookies") },
+      { href: "https://www.gov.uk/help/privacy-notice", text: t(locale, "common.footer.privacy") }
+    ],
+    supportLinksLabel: t(locale, "common.footer.supportLinks"),
+    oglPrefix: t(locale, "common.footer.oglPrefix"),
+    oglLink: t(locale, "common.footer.oglLink"),
+    oglSuffix: t(locale, "common.footer.oglSuffix"),
+    crownCopyright: t(locale, "common.footer.crownCopyright")
   }) }}
 {% endblock %}
 

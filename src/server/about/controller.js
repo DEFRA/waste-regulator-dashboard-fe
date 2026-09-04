@@ -2,18 +2,28 @@
  * A GDS styled example about page controller.
  * Provided as an example, remove or modify as required.
  */
+import { getLocale } from '../common/helpers/i18n/get-locale.js'
+import { localeUrl } from '../common/helpers/i18n/locale-url.js'
+import {
+  buildPageViewModel,
+  translate
+} from '../common/helpers/i18n/translate.js'
+
 export const aboutController = {
-  handler(_request, h) {
+  handler(request, h) {
+    const locale = getLocale(request)
+    const { pageTitle, heading } = buildPageViewModel(request, 'about')
+
     return h.view('about/index', {
-      pageTitle: 'About',
-      heading: 'About',
+      pageTitle,
+      heading,
       breadcrumbs: [
         {
-          text: 'Home',
-          href: '/'
+          text: translate(locale, 'cookies.breadcrumbHome'),
+          href: localeUrl('/', locale)
         },
         {
-          text: 'About'
+          text: translate(locale, 'about.heading')
         }
       ]
     })

@@ -7,8 +7,15 @@ import {
   buildNavigation,
   buildRegulatorContext
 } from './build-navigation.js'
+import { buildLanguageSwitcherUrls } from './build-language-switcher.js'
 import { buildGoogleTags } from './build-google-tags.js'
 import { createLogger } from '../../../server/common/helpers/logging/logger.js'
+import {
+  bindLocaleUrl,
+  localeUrl
+} from '../../../server/common/helpers/i18n/locale-url.js'
+import { getLocale } from '../../../server/common/helpers/i18n/get-locale.js'
+import { translate } from '../../../server/common/helpers/i18n/translate.js'
 
 const logger = createLogger()
 const assetPath = config.get('assetPath')
@@ -28,16 +35,21 @@ export function context(request) {
     }
   }
 
+  const locale = getLocale(request)
+
   return {
     cspNonce: request?.plugins?.blankie?.nonces?.script,
     assetPath: `${assetPath}/assets`,
-    serviceName: config.get('serviceName'),
-    serviceUrl: '/',
+    locale,
+    localeUrl: bindLocaleUrl(locale),
+    languageSwitcher: buildLanguageSwitcherUrls(request),
+    serviceName: translate(locale, 'common.serviceName'),
+    serviceUrl: localeUrl('/', locale),
     helpDeskEmail: config.get('helpDeskEmail'),
     breadcrumbs: [],
     navigation: buildNavigation(request),
     accountNavigation: buildAccountNavigation(request),
-    regulatorContext: buildRegulatorContext(request),
+    regulatorContext: buildRegulatorContext(request, locale),
     ...buildGoogleTags(request),
     hasCookiePolicy: Boolean(request?.state?.cookies_policy),
     cookiePreferenceSet: request?.query?.cookie_preference === 'set',

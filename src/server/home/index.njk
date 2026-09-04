@@ -1,4 +1,3 @@
-{% set useGoogleAnalytics = true %}
 {% extends 'layouts/page.njk' %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
@@ -8,53 +7,53 @@
       <div class="govuk-body" data-testid="regulator-home__content">
         <div class="govuk-!-margin-bottom-2">
           <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ azureBaseUrl }}/regulators/manage-account/manage">
-            Manage your account
+            {{ homeI18n.t('tasks.manageAccount.link') }}
           </a>
         </div>
-        <p class="govuk-body">Add or remove team members from your account</p>
+        <p class="govuk-body">{{ homeI18n.t('tasks.manageAccount.description') }}</p>
 
         <div class="govuk-!-margin-bottom-2">
           <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ azureBaseUrl }}/regulators/applications">
-            Manage applications for approved and delegated people
+            {{ homeI18n.t('tasks.manageApplications.link') }}
           </a>
         </div>
-        <p class="govuk-body">View, accept or reject applications for approved and delegated persons</p>
+        <p class="govuk-body">{{ homeI18n.t('tasks.manageApplications.description') }}</p>
 
         <div class="govuk-!-margin-bottom-2">
           <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ azureBaseUrl }}/regulators/manage-registration-submissions">
-            Manage registration submissions
+            {{ homeI18n.t('tasks.manageRegistrationSubmissions.link') }}
           </a>
         </div>
-        <p class="govuk-body">View, accept or reject registration application submissions</p>
+        <p class="govuk-body">{{ homeI18n.t('tasks.manageRegistrationSubmissions.description') }}</p>
 
         <div class="govuk-!-margin-bottom-2">
           <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ azureBaseUrl }}/regulators/manage-packaging-data-submissions">
-            Manage packaging data submissions
+            {{ homeI18n.t('tasks.managePackagingDataSubmissions.link') }}
           </a>
         </div>
-        <p class="govuk-body">View, accept or reject packaging data submissions</p>
+        <p class="govuk-body">{{ homeI18n.t('tasks.managePackagingDataSubmissions.description') }}</p>
 
         <div class="govuk-!-margin-bottom-2">
           <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ azureBaseUrl }}/regulators/manage-registrations">
-            Manage organisation details submissions
+            {{ homeI18n.t('tasks.manageOrganisationDetails.link') }}
           </a>
         </div>
-        <p class="govuk-body">View, accept or reject organisation details submissions</p>
+        <p class="govuk-body">{{ homeI18n.t('tasks.manageOrganisationDetails.description') }}</p>
 
         <div class="govuk-!-margin-bottom-2">
           <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ azureBaseUrl }}/regulators/regulator-search-page">
-            Manage organisation and their approved person
+            {{ homeI18n.t('tasks.manageOrganisationApprovedPerson.link') }}
           </a>
         </div>
-        <p class="govuk-body">Remove or invite approved persons</p>
+        <p class="govuk-body">{{ homeI18n.t('tasks.manageOrganisationApprovedPerson.description') }}</p>
 
         {% if features.certificateOfCompliance %}
           <div class="govuk-!-margin-bottom-2">
             <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ certificateOfComplianceBaseUrl }}/certificates-of-compliance">
-              View certificates and statements of compliance
+              {{ homeI18n.t('tasks.certificatesOfCompliance.link') }}
             </a>
           </div>
-          <p class="govuk-body">View, accept or cancel certificates and statements of compliance</p>
+          <p class="govuk-body">{{ homeI18n.t('tasks.certificatesOfCompliance.description') }}</p>
         {% endif %}
       </div>
 

@@ -1,7 +1,7 @@
 import Boom from '@hapi/boom'
 
 import { statusCodes } from '../../common/constants/status-codes.js'
-import { errorPageFor } from '../../common/helpers/errors.js'
+import { errorPageTitle } from '../../common/helpers/errors.js'
 
 const exampleMessage = 'Error page example'
 
@@ -35,7 +35,7 @@ export const errorExamples = {
               // drift from what the pages actually say.
               examples: exampleStatusCodes.map((statusCode) => ({
                 statusCode,
-                description: errorPageFor(statusCode).pageTitle
+                description: errorPageTitle(statusCode)
               }))
             })
           }

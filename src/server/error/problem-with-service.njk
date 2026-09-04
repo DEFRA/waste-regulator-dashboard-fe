@@ -1,6 +1,6 @@
 {% extends 'layouts/error-page.njk' %}
 
 {% block errorBody %}
-  <p class="govuk-body">Try again later.</p>
-  <p class="govuk-body">Email {{ helpDeskLink() }} if you need help.</p>
+  <p class="govuk-body">{{ t(locale, 'errors.problemWithService.tryAgain') }}</p>
+  <p class="govuk-body">{{ t(locale, 'errors.contactHelpDeskPrefix') }} {{ helpDeskLink() }} {{ t(locale, 'errors.helpDeskEmailText') }}</p>
 {% endblock %}

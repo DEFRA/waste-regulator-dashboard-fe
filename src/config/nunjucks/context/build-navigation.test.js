@@ -64,7 +64,8 @@ describe('#buildRegulatorContext', () => {
       buildRegulatorContext(
         mockRequest({
           yar: { id: null, get: () => undefined }
-        })
+        }),
+        'en'
       )
     ).toContain('Sign in')
   })
@@ -84,9 +85,21 @@ describe('#buildRegulatorContext', () => {
             lastName: 'User'
           }
         }
-      })
+      }),
+      'en'
     )
     expect(html).toContain('Test User')
     expect(html).toContain('Sign out')
+  })
+
+  test('Should append lang=cy to sign-in link for Welsh locale', () => {
+    expect(
+      buildRegulatorContext(
+        mockRequest({
+          yar: { id: null, get: () => undefined }
+        }),
+        'cy'
+      )
+    ).toContain('href="/signin-oidc?lang=cy"')
   })
 })
