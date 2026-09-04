@@ -1,8 +1,11 @@
+import { createLogger } from '../logging/logger.js'
 import {
   DEFAULT_LOCALE,
   isSupportedLocale,
   normaliseLocale
 } from './locales.js'
+
+const logger = createLogger('get-locale')
 
 export function getLocale(request) {
   const queryLocale = normaliseLocale(request?.query?.lang)
@@ -18,7 +21,7 @@ export function getLocale(request) {
       return sessionLocale
     }
   } catch (error) {
-    console.warn('Failed to read authLocale from session', error)
+    logger.warn({ err: error }, 'Failed to read authLocale from session')
   }
 
   const headerLocale = normaliseLocale(

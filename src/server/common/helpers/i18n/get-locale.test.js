@@ -1,5 +1,11 @@
 import { vi } from 'vitest'
 
+const mockLoggerWarn = vi.fn()
+
+vi.mock('../logging/logger.js', () => ({
+  createLogger: () => ({ warn: (...args) => mockLoggerWarn(...args) })
+}))
+
 import { getLocale } from './get-locale.js'
 
 function mockRequest({
@@ -54,7 +60,6 @@ describe('getLocale', () => {
   })
 
   test('logs when reading authLocale from session fails', () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const yar = {
       get() {
         throw new Error('session unavailable')
@@ -62,10 +67,9 @@ describe('getLocale', () => {
     }
 
     expect(getLocale(mockRequest({ yar }))).toBe('en')
-    expect(warnSpy).toHaveBeenCalledWith(
-      'Failed to read authLocale from session',
-      expect.any(Error)
+    expect(mockLoggerWarn).toHaveBeenCalledWith(
+      { err: expect.any(Error) },
+      'Failed to read authLocale from session'
     )
-    warnSpy.mockRestore()
   })
 })
