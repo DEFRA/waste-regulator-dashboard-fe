@@ -24,24 +24,15 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
+      - name: Security audit
+        run: npm run security-audit
+
       - run: |
           npm ci
           npm run build:frontend
           npm run format:check
           npm run lint
           npm test
-
-      - name: Security audit
-        run: |
-          for attempt in 1 2 3; do
-            npm run security-audit && exit 0
-            echo "Security audit attempt ${attempt} failed, retrying in 15s..."
-            sleep 15
-          done
-          exit 1
-        env:
-          npm_config_fetch_retries: "5"
-          npm_config_fetch_retry_maxtimeout: "120000"
 
       - name: Test Docker Image Build
         run: |
