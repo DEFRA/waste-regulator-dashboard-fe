@@ -10,141 +10,106 @@
 //
 // Scoped to `.defra-internal` on <body> rather than to the header, so the rules
 // hold wherever the navigation sits and the standard GDS pages are untouched.
-.defra-internal .govuk-service-navigation {
-  // The GDS grey band goes and a wash of the brand green takes its place. No
-  // line under it: the keyline on the bar above already separates identity from
-  // navigation, and a second one would bracket the band into a stripe. The tint
-  // is its own edge — where it stops, the page starts.
-  background-color: $defra-internal-nav-background;
-  border: 0;
+.defra-internal-service-header {
+  .govuk-service-navigation {
+    background-color: $defra-internal-nav-background;
+    border: 0;
+    margin-bottom: 0;
 
-  // Anything in the component's `end` slot — the regulator — sits opposite the
-  // navigation rather than under it. The width container is the only ancestor
-  // the two share, so it becomes the flex row. From tablet only, because below
-  // that everything in this band stacks anyway.
-  >.govuk-width-container {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-
-    @media #{govuk-from-breakpoint(tablet)} {
-      flex-direction: row;
-      align-items: center;
-    }
-  }
-
-  .govuk-service-navigation__container {
-    flex-grow: 1;
-  }
-
-  // Green is the interaction colour in this band, and that is the only thing
-  // changed. Everything else about these links and the mobile Menu button —
-  // no underline until hover, the thick hover underline, the yellow focus
-  // state, black while pressed — is govuk-frontend's own and is left alone.
-  //
-  // The selectors mirror the component's: it colours the resting state through
-  // `:not(:hover):not(:focus)` so that hover and focus are not fought over, and
-  // matching that is what keeps this to two declarations.
-  .govuk-service-navigation__link,
-  .govuk-service-navigation__toggle {
-    &:not(:hover):not(:focus) {
-      color: $defra-internal-link;
-    }
-
-    // govuk-frontend hands hover to dark-blue, the one place the green band
-    // would flash a second hue. Shade the green instead, the way the Design
-    // System shades its own link colour — the thick underline that comes with
-    // the hover is what signals it, the colour only backs it up.
-    &:hover {
-      color: $defra-internal-link-hover;
-    }
-  }
-
-  // The current-page indicator is a border on the item, not on the link, so it
-  // takes its colour from govuk-frontend's own link variable and has to be
-  // moved across separately.
-  .govuk-service-navigation__item {
-    border-color: $defra-internal-link;
-  }
-
-  // Language switcher and account actions share the end slot.
-  .service-navigation-end {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-left: auto;
-    text-align: right;
-    width: 100%;
-
-    @media #{govuk-from-breakpoint(tablet)} {
+    // Service name and sign-in/out share one row; the width container is the
+    // flex row they both sit in.
+    > .govuk-width-container {
+      display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       align-items: center;
+      justify-content: space-between;
+      gap: govuk-spacing(2) govuk-spacing(4);
+    }
+
+    .govuk-service-navigation__container {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    // Sign-in/out in the end slot — always on the right of the green band.
+    > .govuk-width-container > .defra-internal-service-navigation__context {
+      @include govuk-font($size: 16);
+      flex: 0 0 auto;
+      margin: 0 0 0 auto;
+      padding: govuk-spacing(2) 0 govuk-spacing(3);
+      text-align: right;
+
+      @media #{govuk-from-breakpoint(tablet)} {
+        padding: govuk-spacing(3) 0;
+      }
+    }
+
+    .govuk-service-navigation__link,
+    .govuk-service-navigation__toggle {
+      &:not(:hover):not(:focus) {
+        color: $defra-internal-link;
+      }
+
+      &:hover {
+        color: $defra-internal-link-hover;
+      }
+    }
+
+    .govuk-service-navigation__item {
+      border-color: $defra-internal-link;
+    }
+  }
+
+  // Language switcher on its own row below the green service band.
+  .defra-internal-language-bar {
+    background-color: govuk-colour("white");
+    border-top: 1px solid govuk-colour("mid-grey");
+    width: 100%;
+
+    > .govuk-width-container {
+      display: flex;
       justify-content: flex-end;
-      gap: govuk-spacing(4);
-      width: auto;
     }
-  }
 
-  .language-toggle-nav {
-    margin: govuk-spacing(2) 0 0;
-    padding: 0;
-
-    @media #{govuk-from-breakpoint(tablet)} {
+    .language-toggle-nav {
       margin: 0;
-      padding: govuk-spacing(3) 0;
+      padding: govuk-spacing(2) 0;
     }
-  }
 
-  .language-toggle {
-    @include govuk-font($size: 16);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 0;
-  }
-
-  .language-toggle__option {
-    display: flex;
-    align-items: center;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    &:not(:last-child)::after {
-      content: '|';
-      margin: 0 govuk-spacing(2);
-      color: govuk-colour('black');
-      font-weight: normal;
+    .language-toggle {
+      @include govuk-font($size: 16);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      list-style: none;
+      margin: 0;
+      padding: 0;
     }
-  }
 
-  .language-toggle__active {
-    @include govuk-typography-weight-bold;
-    color: govuk-colour('black');
-  }
+    .language-toggle__option {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
 
-  // Inactive language uses standard GOV.UK link styling (blue, underlined),
-  // not the green service-navigation link colour.
-  .language-toggle-nav .govuk-link {
-    @include govuk-link-common;
-    @include govuk-link-style-default;
-    @include govuk-link-style-no-visited-state;
-  }
+      &:not(:last-child)::after {
+        content: "|";
+        margin: 0 govuk-spacing(2);
+        color: govuk-colour("black");
+      }
+    }
 
-  // The context in the 'end' slot needs to match the spacing and alignment
-  // of the navigation items.
-  .defra-internal-service-navigation__context {
-    @include govuk-font($size: 16);
-    margin: 0;
-    padding: govuk-spacing(2) 0 govuk-spacing(3);
+    .language-toggle__active {
+      color: govuk-colour("black");
+    }
 
-    @media #{govuk-from-breakpoint(tablet)} {
-      padding: govuk-spacing(3) 0;
+    .language-toggle-nav .govuk-link {
+      @include govuk-link-common;
+      @include govuk-link-style-default;
+      @include govuk-link-style-no-visited-state;
     }
   }
 }

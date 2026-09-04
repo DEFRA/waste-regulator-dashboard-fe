@@ -72,36 +72,40 @@
     homepageUrl: localeUrl("/"),
     navigation: accountNavigation
   }) }}
-  {% set languageSwitcherEnd %}
-    <div class="service-navigation-end">
-      <nav class="language-toggle-nav" aria-label="{{ t(locale, 'common.languageSwitcher.label') }}">
-        <ul class="language-toggle">
-          <li class="language-toggle__option">
-            {% if locale == 'cy' %}
-              <a class="govuk-link govuk-link--no-visited-state" href="{{ languageSwitcher.en }}" lang="en">{{ t(locale, "common.languageSwitcher.english") }}</a>
-            {% else %}
-              <span class="language-toggle__active" lang="en">{{ t(locale, "common.languageSwitcher.english") }}</span>
-            {% endif %}
-          </li>
-          <li class="language-toggle__option">
-            {% if locale == 'cy' %}
-              <span class="language-toggle__active" lang="cy">{{ t(locale, "common.languageSwitcher.welsh") }}</span>
-            {% else %}
-              <a class="govuk-link govuk-link--no-visited-state" href="{{ languageSwitcher.cy }}" lang="cy">{{ t(locale, "common.languageSwitcher.welsh") }}</a>
-            {% endif %}
-          </li>
-        </ul>
-      </nav>
+  <div class="defra-internal-service-header">
+    {% set regulatorEnd %}
       {{ regulatorContext | safe }}
+    {% endset %}
+    {{ govukServiceNavigation({
+      serviceName: serviceName,
+      serviceUrl: serviceUrl,
+      navigationId: "service-navigation",
+      navigation: navigation,
+      slots: { end: regulatorEnd }
+    }) }}
+    <div class="defra-internal-language-bar">
+      <div class="govuk-width-container">
+        <nav class="language-toggle-nav" aria-label="{{ t(locale, 'common.languageSwitcher.label') }}">
+          <ul class="language-toggle">
+            <li class="language-toggle__option">
+              {% if locale == 'cy' %}
+                <a class="govuk-link govuk-link--no-visited-state" href="{{ languageSwitcher.en }}" lang="en">{{ t(locale, "common.languageSwitcher.english") }}</a>
+              {% else %}
+                <span class="language-toggle__active" lang="en">{{ t(locale, "common.languageSwitcher.english") }}</span>
+              {% endif %}
+            </li>
+            <li class="language-toggle__option">
+              {% if locale == 'cy' %}
+                <span class="language-toggle__active" lang="cy">{{ t(locale, "common.languageSwitcher.welsh") }}</span>
+              {% else %}
+                <a class="govuk-link govuk-link--no-visited-state" href="{{ languageSwitcher.cy }}" lang="cy">{{ t(locale, "common.languageSwitcher.welsh") }}</a>
+              {% endif %}
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
-  {% endset %}
-  {{ govukServiceNavigation({
-    serviceName: serviceName,
-    serviceUrl: serviceUrl,
-    navigationId: "service-navigation",
-    navigation: navigation,
-    slots: { end: languageSwitcherEnd }
-  }) }}
+  </div>
 {% endblock %}
 
 {% block bodyStart %}
