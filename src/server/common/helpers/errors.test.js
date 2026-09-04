@@ -1,23 +1,23 @@
 import { vi } from 'vitest'
 
-import { catchAll, errorPageFor } from './errors.js'
+import { catchAll, errorPageFor, errorPageTitle } from './errors.js'
 import { statusCodes } from '../constants/status-codes.js'
 
 describe('#errorPageFor', () => {
   test.each([
-    [statusCodes.notFound, 'error/not-found', 'Page not found'],
+    [statusCodes.notFound, 'error/not-found', 'errors.notFound.pageTitle'],
     [
       statusCodes.forbidden,
       'error/access-denied',
-      'You do not have permission to access this page'
+      'errors.accessDenied.pageTitle'
     ],
     [
       statusCodes.serviceUnavailable,
       'error/service-unavailable',
-      'Sorry, the service is unavailable'
+      'errors.serviceUnavailable.pageTitle'
     ]
-  ])('Should map %i to its own page', (statusCode, view, pageTitle) => {
-    expect(errorPageFor(statusCode)).toEqual({ view, pageTitle })
+  ])('Should map %i to its own page', (statusCode, view, pageTitleKey) => {
+    expect(errorPageFor(statusCode)).toEqual({ view, pageTitleKey })
   })
 
   test.each([
@@ -28,8 +28,14 @@ describe('#errorPageFor', () => {
   ])('Should fall back to the problem page for %i', (statusCode) => {
     expect(errorPageFor(statusCode)).toEqual({
       view: 'error/problem-with-service',
-      pageTitle: 'Sorry, there is a problem with the service'
+      pageTitleKey: 'errors.problemWithService.pageTitle'
     })
+  })
+})
+
+describe('#errorPageTitle', () => {
+  test('Should return English title by default', () => {
+    expect(errorPageTitle(statusCodes.notFound)).toBe('Page not found')
   })
 })
 
@@ -37,6 +43,9 @@ describe('#catchAll', () => {
   const mockErrorLogger = vi.fn()
   const mockStack = 'Mock error stack'
   const mockRequest = (statusCode) => ({
+    query: {},
+    headers: {},
+    yar: { get: () => null },
     response: {
       isBoom: true,
       stack: mockStack,
@@ -68,6 +77,7 @@ describe('#catchAll', () => {
     expect(mockErrorLogger).not.toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith('error/not-found', {
       pageTitle: 'Page not found',
+      locale: 'en',
       availableFrom: ''
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(statusCodes.notFound)
@@ -79,6 +89,7 @@ describe('#catchAll', () => {
     expect(mockErrorLogger).not.toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith('error/access-denied', {
       pageTitle: 'You do not have permission to access this page',
+      locale: 'en',
       availableFrom: ''
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(statusCodes.forbidden)
@@ -89,19 +100,19 @@ describe('#catchAll', () => {
 
     expect(mockToolkitView).toHaveBeenCalledWith('error/service-unavailable', {
       pageTitle: 'Sorry, the service is unavailable',
+      locale: 'en',
       availableFrom: ''
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(statusCodes.serviceUnavailable)
   })
 
-  // The user's call: an expired or missing session shows the generic problem
-  // page rather than bouncing straight to sign-in.
   test('Should provide the problem page for "Unauthorized"', () => {
     catchAll(mockRequest(statusCodes.unauthorized), mockToolkit)
 
     expect(mockErrorLogger).not.toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith('error/problem-with-service', {
       pageTitle: 'Sorry, there is a problem with the service',
+      locale: 'en',
       availableFrom: ''
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(statusCodes.unauthorized)
@@ -113,6 +124,7 @@ describe('#catchAll', () => {
     expect(mockErrorLogger).not.toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith('error/problem-with-service', {
       pageTitle: 'Sorry, there is a problem with the service',
+      locale: 'en',
       availableFrom: ''
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(statusCodes.imATeapot)
@@ -124,6 +136,7 @@ describe('#catchAll', () => {
     expect(mockErrorLogger).toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith('error/problem-with-service', {
       pageTitle: 'Sorry, there is a problem with the service',
+      locale: 'en',
       availableFrom: ''
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(

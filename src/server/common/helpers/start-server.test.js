@@ -11,6 +11,8 @@ describe('#startServer', () => {
 
   beforeAll(async () => {
     vi.stubEnv('PORT', '3097')
+    vi.stubEnv('MOCK_API', 'true')
+    vi.resetModules()
 
     createServerImport = await import('../../server.js')
     startServerImport = await import('./start-server.js')

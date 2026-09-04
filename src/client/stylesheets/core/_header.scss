@@ -1,4 +1,5 @@
 @use "variables/colours" as *;
+@use "govuk-frontend" as *;
 
 // Example namespaced custom element style CSS classes
 
@@ -39,3 +40,4 @@
     }
   }
 }
+
