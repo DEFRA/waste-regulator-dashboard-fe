@@ -8,3 +8,7 @@ export function isRegulator(accountDetails) {
     serviceRoleId === REGULATOR_BASIC_SERVICE_ROLE_ID
   )
 }
+
+export function isRegulatorAdmin(accountDetails) {
+  return accountDetails?.serviceRoleId === REGULATOR_ADMIN_SERVICE_ROLE_ID
+}

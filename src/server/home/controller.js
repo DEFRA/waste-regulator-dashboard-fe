@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom'
 import { config } from '../../config/config.js'
-import { isRegulator } from '../auth/regulator-access.js'
+import { isRegulator, isRegulatorAdmin } from '../auth/regulator-access.js'
 import { loadAccountDetails } from '../common/helpers/load-account-details.js'
 import { getLocale } from '../common/helpers/i18n/get-locale.js'
 import {
@@ -33,6 +33,7 @@ export const homeController = {
       user,
       accountDetails,
       accountDetailsError,
+      isRegulatorAdmin: isRegulatorAdmin(accountDetails),
       azureBaseUrl: config.get('services.regulatorAzure.baseUrl'),
       certificateOfComplianceBaseUrl: config.get(
         'services.certificateOfCompliance.baseUrl'
