@@ -103,6 +103,11 @@ describe('#homeController', () => {
       expect(statusCode).toBe(statusCodes.ok)
       expect(result).toEqual(expect.stringContaining('Gwasanaeth Rheolewyr'))
       expect(result).toEqual(expect.stringContaining('Cymraeg'))
+      expect(result).toEqual(
+        expect.stringContaining(
+          'href="https://example.org/regulators/applications?lang=cy"'
+        )
+      )
     })
 
     test('Should render dashboard when authenticated', async () => {
@@ -234,6 +239,36 @@ describe('#homeController', () => {
         )
       )
       expect(statusCode).toBe(statusCodes.ok)
+    })
+
+    test('Should render Welsh certificates of compliance link with lang=cy', async () => {
+      const signinResponse = await server.inject({
+        method: 'GET',
+        url: '/signin-oidc?lang=cy'
+      })
+      const setCookie = signinResponse.headers['set-cookie'] ?? []
+      const sessionCookie = []
+        .concat(setCookie)
+        .map((c) => c.split(';')[0])
+        .join('; ')
+
+      const { result, statusCode } = await server.inject({
+        method: 'GET',
+        url: '/?lang=cy',
+        headers: { cookie: sessionCookie }
+      })
+
+      expect(statusCode).toBe(statusCodes.ok)
+      expect(result).toEqual(
+        expect.stringContaining(
+          'Gweld tystysgrifau ac datganiadau cydymffurfiad'
+        )
+      )
+      expect(result).toEqual(
+        expect.stringContaining(
+          'href="https://example.org/certificates-of-compliance?lang=cy"'
+        )
+      )
     })
   })
 })

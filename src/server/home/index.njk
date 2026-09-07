@@ -8,7 +8,7 @@
       <div class="govuk-body" data-testid="regulator-home__content">
         {% if isRegulatorAdmin %}
           <div class="govuk-!-margin-bottom-2">
-            <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ azureBaseUrl }}/regulators/manage-account/manage">
+            <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ localeUrl(azureBaseUrl ~ '/regulators/manage-account/manage') }}">
               {{ homeI18n.t('tasks.manageAccount.link') }}
             </a>
           </div>
@@ -16,35 +16,35 @@
         {% endif %}
 
         <div class="govuk-!-margin-bottom-2">
-          <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ azureBaseUrl }}/regulators/applications">
+          <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ localeUrl(azureBaseUrl ~ '/regulators/applications') }}">
             {{ homeI18n.t('tasks.manageApplications.link') }}
           </a>
         </div>
         <p class="govuk-body">{{ homeI18n.t('tasks.manageApplications.description') }}</p>
 
         <div class="govuk-!-margin-bottom-2">
-          <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ azureBaseUrl }}/regulators/manage-registration-submissions">
+          <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ localeUrl(azureBaseUrl ~ '/regulators/manage-registration-submissions') }}">
             {{ homeI18n.t('tasks.manageRegistrationSubmissions.link') }}
           </a>
         </div>
         <p class="govuk-body">{{ homeI18n.t('tasks.manageRegistrationSubmissions.description') }}</p>
 
         <div class="govuk-!-margin-bottom-2">
-          <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ azureBaseUrl }}/regulators/manage-packaging-data-submissions">
+          <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ localeUrl(azureBaseUrl ~ '/regulators/manage-packaging-data-submissions') }}">
             {{ homeI18n.t('tasks.managePackagingDataSubmissions.link') }}
           </a>
         </div>
         <p class="govuk-body">{{ homeI18n.t('tasks.managePackagingDataSubmissions.description') }}</p>
 
         <div class="govuk-!-margin-bottom-2">
-          <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ azureBaseUrl }}/regulators/manage-registrations">
+          <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ localeUrl(azureBaseUrl ~ '/regulators/manage-registrations') }}">
             {{ homeI18n.t('tasks.manageOrganisationDetails.link') }}
           </a>
         </div>
         <p class="govuk-body">{{ homeI18n.t('tasks.manageOrganisationDetails.description') }}</p>
 
         <div class="govuk-!-margin-bottom-2">
-          <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ azureBaseUrl }}/regulators/regulator-search-page">
+          <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ localeUrl(azureBaseUrl ~ '/regulators/regulator-search-page') }}">
             {{ homeI18n.t('tasks.manageOrganisationApprovedPerson.link') }}
           </a>
         </div>
@@ -52,7 +52,7 @@
 
         {% if features.certificateOfCompliance %}
           <div class="govuk-!-margin-bottom-2">
-            <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ certificateOfComplianceBaseUrl }}/certificates-of-compliance">
+            <a class="govuk-link govuk-link--no-visited-state govuk-body-l govuk-!-font-weight-bold" href="{{ localeUrl(certificateOfComplianceBaseUrl ~ '/certificates-of-compliance') }}">
               {{ homeI18n.t('tasks.certificatesOfCompliance.link') }}
             </a>
           </div>
