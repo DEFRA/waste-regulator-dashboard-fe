@@ -1,6 +1,5 @@
 import { config } from '../../../config/config.js'
 import { BaseApiService } from './apiBaseClient/base-api.service.js'
-import { mockAccountDetails } from './account.mock.js'
 
 function asGuidString(value) {
   if (typeof value !== 'string') return undefined
@@ -63,13 +62,6 @@ export class AccountApiService extends BaseApiService {
   }
 
   async getAccountDetails(userId, traceId) {
-    if (config.get('useMockApi')) {
-      this.logger?.debug?.(
-        { userId },
-        'Returning mock account details (MOCK_API)'
-      )
-      return mockAccountDetails
-    }
     const raw = await this.getJson(
       `/api/users/user-organisations?userId=${encodeURIComponent(userId)}`,
       this.getTracingHeader(traceId)

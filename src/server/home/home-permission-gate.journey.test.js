@@ -1,20 +1,18 @@
-import { vi } from 'vitest'
+import { http, HttpResponse } from 'msw'
 
 import { createServer } from '../server.js'
 import { config } from '../../config/config.js'
 import { statusCodes } from '../common/constants/status-codes.js'
+import { getMockServer } from '#mocks/server.js'
 
-vi.mock('../common/services/account.mock.js', () => ({
-  mockAccountDetails: {
-    firstName: 'Percy',
-    lastName: 'Producer',
-    contactEmail: 'percy.producer@example.test',
-    serviceRoleId: 3,
-    serviceRole: 'Basic User',
-    organisationName: 'Example Producer Ltd',
-    nationId: 1
-  }
-}))
+function respondWithAccountUser(user) {
+  const base = String(config.get('accountApi.baseUrl')).replace(/\/+$/, '')
+  getMockServer().use(
+    http.get(`${base}/api/users/user-organisations`, () =>
+      HttpResponse.json({ user })
+    )
+  )
+}
 
 describe('regulator permission gate on the dashboard', () => {
   let server
@@ -28,11 +26,20 @@ describe('regulator permission gate on the dashboard', () => {
     config.set('useMockApi', true)
     server = await createServer()
     await server.initialize()
+    respondWithAccountUser({
+      firstName: 'Percy',
+      lastName: 'Producer',
+      email: 'percy.producer@example.test',
+      serviceRole: 'Basic User',
+      serviceRoleId: 3,
+      organisations: []
+    })
   })
 
   afterAll(async () => {
     config.set('useMockAuth', originalUseMockAuth)
     config.set('useMockApi', originalUseMockApi)
+    getMockServer()?.resetHandlers()
     await server.stop({ timeout: 0 })
   })
 

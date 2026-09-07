@@ -43,6 +43,14 @@ function bellRedirectOrigin(redirectUri, tls) {
 }
 
 export async function createServer() {
+  // Dev-only: intercept Account API calls with MSW so the app runs without a live
+  // Account service. The dynamic import keeps msw out of the production module
+  // graph — no deployed environment runs with MOCK_API=true.
+  if (config.get('useMockApi')) {
+    const { startMockApi } = await import('#mocks/server.js')
+    await startMockApi()
+  }
+
   setupProxy()
   const isDevelopment = config.get('isDevelopment')
   const certsDir = path.resolve(config.get('root'), 'certs')

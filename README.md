@@ -121,6 +121,16 @@ To run the application in `development` mode run:
 npm run dev
 ```
 
+### Mock API
+
+With `MOCK_API=true` (the default outside production), the dashboard's Account API
+call is intercepted in-process by [Mock Service Worker](https://mswjs.io/) and
+answered from a local fixture. The production code makes ordinary `fetch` calls and
+is unaware of the mock — nothing is branched on `MOCK_API` outside the mock layer.
+
+See [`src/mocks/README.md`](./src/mocks/README.md) for the mock layer's design and
+how to override the fixture in tests.
+
 ### HTTPS for local development
 
 Azure AD B2C will only redirect back to an HTTPS URL, so the app needs to serve
