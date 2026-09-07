@@ -14,6 +14,7 @@ export default defineConfig({
         ...configDefaults.exclude,
         '.public',
         'coverage',
+        'src/mocks/**',
         'postcss.config.js',
         'stylelint.config.js',
         'vitest.config.js',
