@@ -24,6 +24,12 @@ describe('localeUrl', () => {
   test('does not duplicate lang when already present', () => {
     expect(localeUrl('/foo?lang=cy', 'cy')).toBe('/foo?lang=cy')
   })
+
+  test('appends lang=cy to absolute URLs', () => {
+    expect(
+      localeUrl('https://example.org/certificates-of-compliance', 'cy')
+    ).toBe('https://example.org/certificates-of-compliance?lang=cy')
+  })
 })
 
 describe('bindLocaleUrl', () => {
