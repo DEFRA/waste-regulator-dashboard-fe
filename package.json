@@ -6,7 +6,8 @@
   "main": "src/index.js",
   "type": "module",
   "imports": {
-    "#*": "./src/*"
+    "#*": "./src/*",
+    "#test-helpers/*": "./test-helpers/*"
   },
   "engines": {
     "node": ">=24"

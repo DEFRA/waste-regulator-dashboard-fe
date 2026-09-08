@@ -1,18 +1,8 @@
-import { http, HttpResponse } from 'msw'
-
 import { createServer } from '../server.js'
 import { config } from '../../config/config.js'
 import { statusCodes } from '../common/constants/status-codes.js'
 import { getMockServer } from '#mocks/server.js'
-
-function respondWithAccountUser(user) {
-  const base = String(config.get('accountApi.baseUrl')).replace(/\/+$/, '')
-  getMockServer().use(
-    http.get(`${base}/api/users/user-organisations`, () =>
-      HttpResponse.json({ user })
-    )
-  )
-}
+import { respondWithAccountUser } from '#test-helpers/account-user.js'
 
 describe('manage-account link visibility for a Regulator Basic user', () => {
   let server
