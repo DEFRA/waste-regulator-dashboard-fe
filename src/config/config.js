@@ -84,7 +84,7 @@ export const config = convict({
     env: 'MOCK_AUTH'
   },
   useMockApi: {
-    doc: 'Return in-memory fixtures instead of calling upstream services. Defaults on outside production so local dev works without backends.',
+    doc: 'Intercept the Account API call with MSW and answer it from a local fixture instead of reaching the live service. Defaults on outside production so local dev works without backends.',
     format: Boolean,
     default: !isProduction,
     env: 'MOCK_API'
