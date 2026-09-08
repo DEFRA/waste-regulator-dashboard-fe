@@ -16,6 +16,9 @@ describe('regulator permission gate on the dashboard', () => {
     config.set('useMockApi', true)
     server = await createServer()
     await server.initialize()
+  })
+
+  beforeEach(() => {
     respondWithAccountUser({
       firstName: 'Percy',
       lastName: 'Producer',
@@ -26,10 +29,13 @@ describe('regulator permission gate on the dashboard', () => {
     })
   })
 
+  afterEach(() => {
+    getMockServer()?.resetHandlers()
+  })
+
   afterAll(async () => {
     config.set('useMockAuth', originalUseMockAuth)
     config.set('useMockApi', originalUseMockApi)
-    getMockServer()?.resetHandlers()
     await server.stop({ timeout: 0 })
   })
 

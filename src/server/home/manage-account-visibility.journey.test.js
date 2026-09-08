@@ -19,6 +19,9 @@ describe('manage-account link visibility for a Regulator Basic user', () => {
     config.set('services.regulatorAzure.baseUrl', 'https://example.org')
     server = await createServer()
     await server.initialize()
+  })
+
+  beforeEach(() => {
     respondWithAccountUser({
       firstName: 'Basil',
       lastName: 'Basic',
@@ -29,11 +32,14 @@ describe('manage-account link visibility for a Regulator Basic user', () => {
     })
   })
 
+  afterEach(() => {
+    getMockServer()?.resetHandlers()
+  })
+
   afterAll(async () => {
     config.set('useMockAuth', originalUseMockAuth)
     config.set('useMockApi', originalUseMockApi)
     config.set('services.regulatorAzure.baseUrl', originalAzureBase)
-    getMockServer()?.resetHandlers()
     await server.stop({ timeout: 0 })
   })
 
