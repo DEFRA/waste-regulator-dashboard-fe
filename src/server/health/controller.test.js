@@ -7,29 +7,24 @@ vi.mock('./health.service.js', () => ({
   runHealthChecks: vi.fn()
 }))
 
-import { healthController } from './controller.js'
+import { healthAllController } from './controller.js'
 import { runHealthChecks } from './health.service.js'
 import { config } from '../../config/config.js'
 
-let originalUseMockApi
-
 describe('#healthController', () => {
-  describe('with default config', () => {
+  describe('/health', () => {
     let server
 
     beforeAll(async () => {
-      originalUseMockApi = config.get('useMockApi')
-      config.set('useMockApi', true)
       server = await createServer()
       await server.initialize()
     })
 
     afterAll(async () => {
       await server.stop({ timeout: 0 })
-      config.set('useMockApi', originalUseMockApi)
     })
 
-    test('returns success with feature flags without running checks when useMockApi is true', async () => {
+    test('returns success with feature flags', async () => {
       const { result, statusCode } = await server.inject({
         method: 'GET',
         url: '/health'
@@ -44,7 +39,7 @@ describe('#healthController', () => {
     })
   })
 
-  describe('with FEATURE_CERTIFICATE_OF_COMPLIANCE=true', () => {
+  describe('/health with FEATURE_CERTIFICATE_OF_COMPLIANCE=true', () => {
     let server
 
     beforeAll(async () => {
@@ -61,7 +56,7 @@ describe('#healthController', () => {
       vi.unstubAllEnvs()
     })
 
-    test('returns success with feature flag on without running checks', async () => {
+    test('returns success with feature flag on', async () => {
       const { result, statusCode } = await server.inject({
         method: 'GET',
         url: '/health'
@@ -74,9 +69,44 @@ describe('#healthController', () => {
       expect(statusCode).toBe(statusCodes.ok)
     })
   })
+
+  describe('/health/all with useMockApi=true', () => {
+    let server
+
+    beforeAll(async () => {
+      const original = config.get('useMockApi')
+      config.set('useMockApi', true)
+      server = await createServer()
+      await server.initialize()
+      config.set('useMockApi', original)
+    })
+
+    afterAll(async () => {
+      await server.stop({ timeout: 0 })
+    })
+
+    test('returns success without running checks when useMockApi is true', async () => {
+      const originalUseMockApi = config.get('useMockApi')
+      config.set('useMockApi', true)
+
+      const { result, statusCode } = await server.inject({
+        method: 'GET',
+        url: '/health/all'
+      })
+
+      config.set('useMockApi', originalUseMockApi)
+
+      expect(result).toEqual({
+        message: 'success',
+        features: { certificateOfCompliance: false }
+      })
+      expect(statusCode).toBe(statusCodes.ok)
+      expect(runHealthChecks).not.toHaveBeenCalled()
+    })
+  })
 })
 
-describe('healthController handler (non-mock mode)', () => {
+describe('healthAllController handler (non-mock mode)', () => {
   const h = { response: vi.fn() }
 
   beforeEach(() => {
@@ -96,7 +126,7 @@ describe('healthController handler (non-mock mode)', () => {
     const checks = { 'account-token': { ok: true } }
     vi.mocked(runHealthChecks).mockResolvedValue({ message: 'success', checks })
 
-    await healthController.handler({}, h)
+    await healthAllController.handler({}, h)
 
     expect(runHealthChecks).toHaveBeenCalledOnce()
     expect(h.response).toHaveBeenCalledWith({
@@ -121,7 +151,7 @@ describe('healthController handler (non-mock mode)', () => {
     const responseObj = { code: vi.fn().mockReturnThis() }
     h.response.mockReturnValue(responseObj)
 
-    await healthController.handler({}, h)
+    await healthAllController.handler({}, h)
 
     expect(h.response).toHaveBeenCalledWith({
       message: 'degraded',
