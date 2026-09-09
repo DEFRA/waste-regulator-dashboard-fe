@@ -1,20 +1,8 @@
-import { vi } from 'vitest'
-
 import { createServer } from '../server.js'
 import { config } from '../../config/config.js'
 import { statusCodes } from '../common/constants/status-codes.js'
-
-vi.mock('../common/services/account.mock.js', () => ({
-  mockAccountDetails: {
-    firstName: 'Basil',
-    lastName: 'Basic',
-    contactEmail: 'basil.basic@example.test',
-    serviceRoleId: 5,
-    serviceRole: 'Regulator Basic',
-    organisationName: 'Example Environment Agency',
-    nationId: 1
-  }
-}))
+import { getMockServer } from '#mocks/server.js'
+import { respondWithAccountUser } from '#test-helpers/account-user.js'
 
 describe('manage-account link visibility for a Regulator Basic user', () => {
   let server
@@ -31,6 +19,21 @@ describe('manage-account link visibility for a Regulator Basic user', () => {
     config.set('services.regulatorAzure.baseUrl', 'https://example.org')
     server = await createServer()
     await server.initialize()
+  })
+
+  beforeEach(() => {
+    respondWithAccountUser({
+      firstName: 'Basil',
+      lastName: 'Basic',
+      email: 'basil.basic@example.test',
+      serviceRole: 'Regulator Basic',
+      serviceRoleId: 5,
+      organisations: [{ name: 'Example Environment Agency', nationId: 1 }]
+    })
+  })
+
+  afterEach(() => {
+    getMockServer()?.resetHandlers()
   })
 
   afterAll(async () => {

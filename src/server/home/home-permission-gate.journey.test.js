@@ -1,20 +1,8 @@
-import { vi } from 'vitest'
-
 import { createServer } from '../server.js'
 import { config } from '../../config/config.js'
 import { statusCodes } from '../common/constants/status-codes.js'
-
-vi.mock('../common/services/account.mock.js', () => ({
-  mockAccountDetails: {
-    firstName: 'Percy',
-    lastName: 'Producer',
-    contactEmail: 'percy.producer@example.test',
-    serviceRoleId: 3,
-    serviceRole: 'Basic User',
-    organisationName: 'Example Producer Ltd',
-    nationId: 1
-  }
-}))
+import { getMockServer } from '#mocks/server.js'
+import { respondWithAccountUser } from '#test-helpers/account-user.js'
 
 describe('regulator permission gate on the dashboard', () => {
   let server
@@ -28,6 +16,21 @@ describe('regulator permission gate on the dashboard', () => {
     config.set('useMockApi', true)
     server = await createServer()
     await server.initialize()
+  })
+
+  beforeEach(() => {
+    respondWithAccountUser({
+      firstName: 'Percy',
+      lastName: 'Producer',
+      email: 'percy.producer@example.test',
+      serviceRole: 'Basic User',
+      serviceRoleId: 3,
+      organisations: []
+    })
+  })
+
+  afterEach(() => {
+    getMockServer()?.resetHandlers()
   })
 
   afterAll(async () => {
