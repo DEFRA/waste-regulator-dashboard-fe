@@ -11,6 +11,7 @@ import { catchAll } from './common/helpers/errors.js'
 import { maintenance } from './common/helpers/maintenance.js'
 import { nunjucksConfig } from '../config/nunjucks/nunjucks.js'
 import { setupProxy } from './common/helpers/proxy/setup-proxy.js'
+import { forwardedPrefixRedirects } from './plugins/forwarded-prefix-redirects.js'
 import { requestTracing } from './common/helpers/request-tracing.js'
 import { requestLogger } from './common/helpers/logging/request-logger.js'
 import { sessionCache } from './common/helpers/session-cache/session-cache.js'
@@ -168,6 +169,7 @@ export async function createServer() {
   }
 
   await server.register([
+    forwardedPrefixRedirects,
     router // Register all the controllers/routes defined in src/server/router.js
   ])
 
