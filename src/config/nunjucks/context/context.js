@@ -16,6 +16,7 @@ import {
 } from '../../../server/common/helpers/i18n/locale-url.js'
 import { getLocale } from '../../../server/common/helpers/i18n/get-locale.js'
 import { translate } from '../../../server/common/helpers/i18n/translate.js'
+import { withForwardedPrefix } from '../../../server/common/helpers/proxy/forwarded-prefix.js'
 
 const logger = createLogger()
 const assetPath = config.get('assetPath')
@@ -36,15 +37,16 @@ export function context(request) {
   }
 
   const locale = getLocale(request)
+  const externalAssetPath = withForwardedPrefix(request, assetPath)
 
   return {
     cspNonce: request?.plugins?.blankie?.nonces?.script,
-    assetPath: `${assetPath}/assets`,
+    assetPath: `${externalAssetPath}/assets`,
     locale,
     localeUrl: bindLocaleUrl(locale),
     languageSwitcher: buildLanguageSwitcherUrls(request),
     serviceName: translate(locale, 'common.serviceName'),
-    serviceUrl: localeUrl('/', locale),
+    serviceUrl: localeUrl(withForwardedPrefix(request, '/home'), locale),
     helpDeskEmail: config.get('helpDeskEmail'),
     breadcrumbs: [],
     navigation: buildNavigation(request),
@@ -58,7 +60,7 @@ export function context(request) {
     },
     getAssetPath(asset) {
       const webpackAssetPath = webpackManifest?.[asset]
-      return `${assetPath}/${webpackAssetPath ?? asset}`
+      return `${externalAssetPath}/${webpackAssetPath ?? asset}`
     }
   }
 }

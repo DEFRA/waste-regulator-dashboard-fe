@@ -56,7 +56,7 @@ describe('manage-account link visibility for a Regulator Basic user', () => {
 
     return server.inject({
       method: 'GET',
-      url: '/',
+      url: '/home',
       headers: { cookie: sessionCookie }
     })
   }

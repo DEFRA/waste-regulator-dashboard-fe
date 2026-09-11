@@ -45,7 +45,7 @@ async function getHomeAsAuthenticatedUser(server) {
 
   return server.inject({
     method: 'GET',
-    url: '/',
+    url: '/home',
     headers: { cookie: sessionCookie }
   })
 }
@@ -66,7 +66,7 @@ describe('#homeController', () => {
     test('Should redirect to signin when no session user', async () => {
       const { statusCode, headers } = await server.inject({
         method: 'GET',
-        url: '/'
+        url: '/home'
       })
 
       expect(statusCode).toBe(statusCodes.found)
@@ -76,7 +76,7 @@ describe('#homeController', () => {
     test('Should persist Welsh locale and redirect to signin with lang=cy', async () => {
       const { statusCode, headers } = await server.inject({
         method: 'GET',
-        url: '/?lang=cy'
+        url: '/home?lang=cy'
       })
 
       expect(statusCode).toBe(statusCodes.found)
@@ -96,7 +96,7 @@ describe('#homeController', () => {
 
       const { result, statusCode } = await server.inject({
         method: 'GET',
-        url: '/?lang=cy',
+        url: '/home?lang=cy',
         headers: { cookie: sessionCookie }
       })
 
@@ -254,7 +254,7 @@ describe('#homeController', () => {
 
       const { result, statusCode } = await server.inject({
         method: 'GET',
-        url: '/?lang=cy',
+        url: '/home?lang=cy',
         headers: { cookie: sessionCookie }
       })
 

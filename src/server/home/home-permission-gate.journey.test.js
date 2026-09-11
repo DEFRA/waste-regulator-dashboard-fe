@@ -52,7 +52,7 @@ describe('regulator permission gate on the dashboard', () => {
 
     return server.inject({
       method: 'GET',
-      url: '/',
+      url: '/home',
       headers: { cookie: sessionCookie }
     })
   }
