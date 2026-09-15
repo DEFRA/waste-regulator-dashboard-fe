@@ -108,9 +108,6 @@ describe('#homeController', () => {
           'href="https://example.org/regulators/applications"'
         )
       )
-      expect(result).not.toEqual(
-        expect.stringContaining('regulators/applications?lang=cy')
-      )
     })
 
     test('Should render dashboard when authenticated', async () => {

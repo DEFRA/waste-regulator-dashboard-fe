@@ -82,7 +82,7 @@ describe('context and cache', () => {
           cookiePreferenceSet: false,
           helpDeskEmail: 'eprcustomerservice@defra.gov.uk',
           features: {
-            certificateOfCompliance: expect.any(Boolean)
+            certificateOfCompliance: false
           }
         })
       })
@@ -241,7 +241,7 @@ describe('context and cache', () => {
           cookiePreferenceSet: false,
           helpDeskEmail: 'eprcustomerservice@defra.gov.uk',
           features: {
-            certificateOfCompliance: expect.any(Boolean)
+            certificateOfCompliance: false
           }
         })
       })
