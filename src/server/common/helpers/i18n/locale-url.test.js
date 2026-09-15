@@ -25,10 +25,16 @@ describe('localeUrl', () => {
     expect(localeUrl('/foo?lang=cy', 'cy')).toBe('/foo?lang=cy')
   })
 
-  test('appends lang=cy to absolute URLs', () => {
+  test('appends lang=cy to absolute CDP service URLs', () => {
     expect(
       localeUrl('https://example.org/certificates-of-compliance', 'cy')
     ).toBe('https://example.org/certificates-of-compliance?lang=cy')
+  })
+
+  test('does not append lang=cy to Azure regulator service URLs', () => {
+    expect(localeUrl('https://example.org/regulators/applications', 'cy')).toBe(
+      'https://example.org/regulators/applications'
+    )
   })
 })
 

@@ -105,8 +105,11 @@ describe('#homeController', () => {
       expect(result).toEqual(expect.stringContaining('Cymraeg'))
       expect(result).toEqual(
         expect.stringContaining(
-          'href="https://example.org/regulators/applications?lang=cy"'
+          'href="https://example.org/regulators/applications"'
         )
+      )
+      expect(result).not.toEqual(
+        expect.stringContaining('regulators/applications?lang=cy')
       )
     })
 

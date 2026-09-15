@@ -69,7 +69,8 @@ disable setting `SESSION_CACHE_ENGINE=false` or changing the default value in `s
 
 Locale support follows the same approach as [waste-packaging-regulators-fe](https://github.com/DEFRA/waste-packaging-regulators-fe): translations live in `src/server/locales/en.json` and `cy.json`, resolved via `getLocale(request)` (`?lang=` query param, then OAuth session `authLocale`, then `Accept-Language`, default `en`).
 
-- Append `?lang=cy` to internal links when the active locale is Welsh (English uses no lang query param).
+- Append `?lang=cy` to CDP-internal links when the active locale is Welsh (English uses no lang query param).
+- Links to the Azure-hosted regulator service do not receive `?lang=cy` — that service manages locale via its own session culture.
 - Welsh locale is saved to session before OAuth redirect and cleared after sign-in completes.
 - Missing Welsh keys fall back to English automatically.
 
