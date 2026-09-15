@@ -15,18 +15,8 @@ function pathHasLangQuery(pathOrUrl) {
   return isSupportedLocale(lang)
 }
 
-function isAzureRegulatorServiceUrl(pathOrUrl) {
-  try {
-    const parsed = new URL(pathOrUrl, 'http://local')
-    return parsed.pathname.includes('/regulators')
-  } catch {
-    return false
-  }
-}
-
 /**
  * Appends `lang` when the locale is not English and the path has no lang query yet.
- * Azure regulator service links are excluded — that service uses session culture, not `lang`.
  *
  * @param {string} pathOrUrl
  * @param {string} locale
@@ -38,8 +28,7 @@ export function localeUrl(pathOrUrl, locale) {
   if (
     !isSupportedLocale(normalised) ||
     normalised === 'en' ||
-    pathHasLangQuery(pathOrUrl) ||
-    isAzureRegulatorServiceUrl(pathOrUrl)
+    pathHasLangQuery(pathOrUrl)
   ) {
     return pathOrUrl
   }
