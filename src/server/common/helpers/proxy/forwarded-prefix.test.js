@@ -41,9 +41,9 @@ describe('forwarded prefix helpers', () => {
   test('does not alter external or protocol-relative URLs', () => {
     const request = createRequest('/manage-waste-dashboard')
 
-    expect(
-      withForwardedPrefix(request, 'https://example.com/sign-in')
-    ).toBe('https://example.com/sign-in')
+    expect(withForwardedPrefix(request, 'https://example.com/sign-in')).toBe(
+      'https://example.com/sign-in'
+    )
     expect(withForwardedPrefix(request, '//example.com/sign-in')).toBe(
       '//example.com/sign-in'
     )
