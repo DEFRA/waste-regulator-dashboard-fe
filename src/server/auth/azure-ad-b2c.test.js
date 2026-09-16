@@ -7,6 +7,7 @@ describe('bellRedirectLocation', () => {
     host = 'localhost:7154',
     xForwardedProto,
     xForwardedHost,
+    xForwardedPrefix,
     path = '/signin-oidc'
   } = {}) {
     return {
@@ -14,6 +15,7 @@ describe('bellRedirectLocation', () => {
       headers: {
         ...(xForwardedProto ? { 'x-forwarded-proto': xForwardedProto } : {}),
         ...(xForwardedHost ? { 'x-forwarded-host': xForwardedHost } : {}),
+        ...(xForwardedPrefix ? { 'x-forwarded-prefix': xForwardedPrefix } : {}),
         host
       },
       server: { info: { protocol } },
@@ -21,7 +23,19 @@ describe('bellRedirectLocation', () => {
     }
   }
 
-  it('uses x-forwarded-host and proto when behind the proxy', () => {
+  it('uses x-forwarded-host, prefix and proto when behind the proxy', () => {
+    const request = makeRequest({
+      xForwardedProto: 'https',
+      xForwardedHost: 'proxy.example.com',
+      xForwardedPrefix: '/dashboard'
+    })
+
+    expect(bellRedirectLocation(request)).toBe(
+      'https://proxy.example.com/dashboard/signin-oidc'
+    )
+  })
+
+  it('uses x-forwarded-host and proto without prefix when no prefix header is set', () => {
     const request = makeRequest({
       xForwardedProto: 'https',
       xForwardedHost: 'proxy.example.com'

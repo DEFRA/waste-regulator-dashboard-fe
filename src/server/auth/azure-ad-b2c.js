@@ -2,6 +2,8 @@
  * Azure AD B2C OpenID Connect helpers (authority URL and end-session / logout).
  */
 
+import { withForwardedPrefix } from '../common/helpers/proxy/forwarded-prefix.js'
+
 /** Bell registers the OAuth state cookie as `bell-${provider.name}`. */
 export const BELL_AZURE_AD_B2C_COOKIE = 'bell-azure-ad-b2c'
 
@@ -105,5 +107,6 @@ export function bellRedirectLocation(request) {
     request.headers.host ||
     request.info.host
   const scheme = proto === 'https' ? 'https' : 'http'
-  return `${scheme}://${host}${request.path}`
+  const path = withForwardedPrefix(request, request.path)
+  return `${scheme}://${host}${path}`
 }
