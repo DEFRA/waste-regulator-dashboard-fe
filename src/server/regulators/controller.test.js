@@ -25,7 +25,7 @@ describe('#regulatorsController', () => {
     })
 
     expect(response.statusCode).toBe(statusCodes.found)
-    expect(response.headers.location).toBe('/')
+    expect(response.headers.location).toBe('/home')
   })
 
   test('Should sign out (B2C logout URL or /signed-out)', async () => {

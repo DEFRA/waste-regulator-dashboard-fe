@@ -17,7 +17,7 @@ export const signinOidcController = {
     if (request.auth?.credentials) {
       request.yar.set('user', request.auth.credentials)
     }
-    const returnTo = request.yar.get('returnTo') || '/'
+    const returnTo = request.yar.get('returnTo') || '/home'
     request.yar.clear('returnTo')
     const response = redirectWithLocale(h, request, returnTo)
     clearAuthLocale(request)

@@ -4,6 +4,7 @@ import { createLogger } from '../common/helpers/logging/logger.js'
 import { getLocale } from '../common/helpers/i18n/get-locale.js'
 import { localeUrl } from '../common/helpers/i18n/locale-url.js'
 import { pageI18n } from '../common/helpers/i18n/translate.js'
+import { withForwardedPrefix } from '../common/helpers/proxy/forwarded-prefix.js'
 
 const logger = createLogger('cookies-controller')
 
@@ -57,7 +58,7 @@ export const cookiesController = {
       breadcrumbs: [
         {
           text: i18n.t('breadcrumbHome'),
-          href: localeUrl('/', locale)
+          href: localeUrl(withForwardedPrefix(request, '/home'), locale)
         },
         {
           text: i18n.t('breadcrumbCookies')
@@ -102,7 +103,7 @@ export const cookiesController = {
       }
       return h.redirect(url.pathname + url.search)
     } catch (e) {
-      return redirectPreservingLang(request, h, '/', {
+      return redirectPreservingLang(request, h, '/home', {
         cookie_preference: 'set'
       })
     }
@@ -118,7 +119,7 @@ export const cookiesController = {
       }
       return h.redirect(url.pathname + url.search)
     } catch (e) {
-      return redirectPreservingLang(request, h, '/')
+      return redirectPreservingLang(request, h, '/home')
     }
   }
 }
