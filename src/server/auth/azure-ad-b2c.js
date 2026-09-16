@@ -86,3 +86,24 @@ export function resolvePostLogoutAbsoluteUri(request, pathOrUrl, azureConfig) {
   const scheme = proto === 'https' ? 'https' : 'http'
   return `${scheme}://${host}${path}`
 }
+
+/**
+ * Constructs the Bell `location` for this request: the origin visible to the
+ * browser (from `X-Forwarded-Host`/`X-Forwarded-Proto` when behind the proxy,
+ * else the request host) combined with the request path.  Bell appends the
+ * route path to this value to form `redirect_uri`.
+ *
+ * @param {import('@hapi/hapi').Request} request
+ * @returns {string}
+ */
+export function bellRedirectLocation(request) {
+  const proto =
+    firstForwarded(request.headers['x-forwarded-proto']) ||
+    request.server.info.protocol
+  const host =
+    firstForwarded(request.headers['x-forwarded-host']) ||
+    request.headers.host ||
+    request.info.host
+  const scheme = proto === 'https' ? 'https' : 'http'
+  return `${scheme}://${host}${request.path}`
+}
