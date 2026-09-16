@@ -148,12 +148,15 @@
     </form>
   {% elif cookiePreferenceSet %}
     {% set preferenceKey = "common.cookieBanner.preferenceAccepted" if allowGoogleAnalytics else "common.cookieBanner.preferenceRejected" %}
+    {% set acceptHtml %}
+      <p class="govuk-body">{{ t(locale, preferenceKey, { cookiesUrl: localeUrl("/cookies") }) | safe }}</p>
+    {% endset %}
     <form action="{{ localeUrl('/cookies/hide-banner') }}" method="post" novalidate>
       {{ govukCookieBanner({
         ariaLabel: t(locale, "common.cookieBanner.ariaLabel", { serviceName: serviceName }),
         messages: [
           {
-            html: t(locale, preferenceKey, { cookiesUrl: localeUrl("/cookies") }),
+            html: acceptHtml,
             role: "alert",
             actions: [
               {
