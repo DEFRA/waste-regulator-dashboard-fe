@@ -11,6 +11,7 @@ import { catchAll } from './common/helpers/errors.js'
 import { maintenance } from './common/helpers/maintenance.js'
 import { nunjucksConfig } from '../config/nunjucks/nunjucks.js'
 import { setupProxy } from './common/helpers/proxy/setup-proxy.js'
+import { applyForwardedPrefixToCookiePath } from './common/helpers/proxy/forwarded-prefix.js'
 import { forwardedPrefixRedirects } from './plugins/forwarded-prefix-redirects.js'
 import { requestTracing } from './common/helpers/request-tracing.js'
 import { requestLogger } from './common/helpers/logging/request-logger.js'
@@ -27,14 +28,14 @@ import { metrics } from '@defra/cdp-metrics'
  * If the env URL uses `http://` but this process serves HTTPS (dev certs), use `https` for the
  * origin so B2C receives a redirect_uri that matches typical registrations.
  */
-function bellRedirectOrigin(redirectUri, tls) {
+export function bellRedirectOrigin(redirectUri, tls) {
   if (!redirectUri) return undefined
   if (/^https?:\/\//i.test(redirectUri)) {
     const u = new URL(redirectUri)
     if (tls && u.protocol === 'http:') {
       u.protocol = 'https:'
     }
-    return u.origin
+    return u.origin + u.pathname.slice(0, u.pathname.lastIndexOf('/'))
   }
   const scheme = tls ? 'https' : 'http'
   const host = config.get('host')
@@ -97,7 +98,8 @@ export async function createServer() {
       }
     ],
     state: {
-      strictHeader: false
+      strictHeader: false,
+      contextualize: applyForwardedPrefixToCookiePath
     }
   })
   await server.register([

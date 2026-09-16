@@ -53,6 +53,22 @@ function removeTrailingSlashes(path) {
 }
 
 /**
+ * Scopes a Hapi cookie definition to the external path prefix supplied by a
+ * trusted reverse proxy. When the service is called directly, the cookie's
+ * existing path is preserved.
+ *
+ * @param {{ path?: string | null }} definition
+ * @param {import('@hapi/hapi').Request} request
+ */
+export function applyForwardedPrefixToCookiePath(definition, request) {
+  const prefix = getForwardedPrefix(request)
+
+  if (prefix) {
+    definition.path = prefix
+  }
+}
+
+/**
  * Adds the proxy's external path prefix to an application-local rooted URL.
  * Absolute and protocol-relative URLs are deliberately left unchanged.
  *
