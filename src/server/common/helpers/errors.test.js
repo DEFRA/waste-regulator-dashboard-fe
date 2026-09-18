@@ -78,7 +78,8 @@ describe('#catchAll', () => {
     expect(mockToolkitView).toHaveBeenCalledWith('error/not-found', {
       pageTitle: 'Page not found',
       locale: 'en',
-      availableFrom: ''
+      availableFrom: '',
+      hideCookieBanner: true
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(statusCodes.notFound)
   })
@@ -90,7 +91,8 @@ describe('#catchAll', () => {
     expect(mockToolkitView).toHaveBeenCalledWith('error/access-denied', {
       pageTitle: 'You do not have permission to access this page',
       locale: 'en',
-      availableFrom: ''
+      availableFrom: '',
+      hideCookieBanner: true
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(statusCodes.forbidden)
   })
@@ -101,7 +103,8 @@ describe('#catchAll', () => {
     expect(mockToolkitView).toHaveBeenCalledWith('error/service-unavailable', {
       pageTitle: 'Sorry, the service is unavailable',
       locale: 'en',
-      availableFrom: ''
+      availableFrom: '',
+      hideCookieBanner: true
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(statusCodes.serviceUnavailable)
   })
@@ -113,7 +116,8 @@ describe('#catchAll', () => {
     expect(mockToolkitView).toHaveBeenCalledWith('error/problem-with-service', {
       pageTitle: 'Sorry, there is a problem with the service',
       locale: 'en',
-      availableFrom: ''
+      availableFrom: '',
+      hideCookieBanner: true
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(statusCodes.unauthorized)
   })
@@ -125,7 +129,8 @@ describe('#catchAll', () => {
     expect(mockToolkitView).toHaveBeenCalledWith('error/problem-with-service', {
       pageTitle: 'Sorry, there is a problem with the service',
       locale: 'en',
-      availableFrom: ''
+      availableFrom: '',
+      hideCookieBanner: true
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(statusCodes.imATeapot)
   })
@@ -137,7 +142,8 @@ describe('#catchAll', () => {
     expect(mockToolkitView).toHaveBeenCalledWith('error/problem-with-service', {
       pageTitle: 'Sorry, there is a problem with the service',
       locale: 'en',
-      availableFrom: ''
+      availableFrom: '',
+      hideCookieBanner: true
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(
       statusCodes.internalServerError

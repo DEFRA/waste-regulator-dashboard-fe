@@ -116,60 +116,62 @@
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
   {% endif %}
-  {% if not hasCookiePolicy and not cookiePreferenceSet %}
-    <form action="{{ localeUrl('/cookies/banner') }}" method="post" novalidate>
-      {{ govukCookieBanner({
-        ariaLabel: t(locale, "common.cookieBanner.ariaLabel", { serviceName: serviceName }),
-        messages: [
-          {
-            headingText: t(locale, "common.cookieBanner.heading", { serviceName: serviceName }),
-            html: t(locale, "common.cookieBanner.essentialHtml"),
-            actions: [
-              {
-                text: t(locale, "common.cookieBanner.acceptAnalytics"),
-                type: "submit",
-                name: "analytics",
-                value: "yes"
-              },
-              {
-                text: t(locale, "common.cookieBanner.rejectAnalytics"),
-                type: "submit",
-                name: "analytics",
-                value: "no"
-              },
-              {
-                text: t(locale, "common.cookieBanner.viewCookies"),
-                href: localeUrl("/cookies")
-              }
-            ]
-          }
-        ]
-      }) }}
-    </form>
-  {% elif cookiePreferenceSet %}
-    {% set preferenceKey = "common.cookieBanner.preferenceAccepted" if allowGoogleAnalytics else "common.cookieBanner.preferenceRejected" %}
-    {% set acceptHtml %}
-      <p class="govuk-body">{{ t(locale, preferenceKey, { cookiesUrl: localeUrl("/cookies") }) | safe }}</p>
-    {% endset %}
-    <form action="{{ localeUrl('/cookies/hide-banner') }}" method="post" novalidate>
-      {{ govukCookieBanner({
-        ariaLabel: t(locale, "common.cookieBanner.ariaLabel", { serviceName: serviceName }),
-        messages: [
-          {
-            html: acceptHtml,
-            role: "alert",
-            actions: [
-              {
-                text: t(locale, "common.cookieBanner.hideMessage"),
-                type: "submit",
-                name: "cookies[hide]",
-                value: "hide"
-              }
-            ]
-          }
-        ]
-      }) }}
-    </form>
+  {% if not hideCookieBanner %}
+    {% if not hasCookiePolicy and not cookiePreferenceSet %}
+      <form action="{{ localeUrl('/cookies/banner') }}" method="post" novalidate>
+        {{ govukCookieBanner({
+          ariaLabel: t(locale, "common.cookieBanner.ariaLabel", { serviceName: serviceName }),
+          messages: [
+            {
+              headingText: t(locale, "common.cookieBanner.heading", { serviceName: serviceName }),
+              html: t(locale, "common.cookieBanner.essentialHtml"),
+              actions: [
+                {
+                  text: t(locale, "common.cookieBanner.acceptAnalytics"),
+                  type: "submit",
+                  name: "analytics",
+                  value: "yes"
+                },
+                {
+                  text: t(locale, "common.cookieBanner.rejectAnalytics"),
+                  type: "submit",
+                  name: "analytics",
+                  value: "no"
+                },
+                {
+                  text: t(locale, "common.cookieBanner.viewCookies"),
+                  href: localeUrl("/cookies")
+                }
+              ]
+            }
+          ]
+        }) }}
+      </form>
+    {% elif cookiePreferenceSet %}
+      {% set preferenceKey = "common.cookieBanner.preferenceAccepted" if allowGoogleAnalytics else "common.cookieBanner.preferenceRejected" %}
+      {% set acceptHtml %}
+        <p class="govuk-body">{{ t(locale, preferenceKey, { cookiesUrl: localeUrl("/cookies") }) | safe }}</p>
+      {% endset %}
+      <form action="{{ localeUrl('/cookies/hide-banner') }}" method="post" novalidate>
+        {{ govukCookieBanner({
+          ariaLabel: t(locale, "common.cookieBanner.ariaLabel", { serviceName: serviceName }),
+          messages: [
+            {
+              html: acceptHtml,
+              role: "alert",
+              actions: [
+                {
+                  text: t(locale, "common.cookieBanner.hideMessage"),
+                  type: "submit",
+                  name: "cookies[hide]",
+                  value: "hide"
+                }
+              ]
+            }
+          ]
+        }) }}
+      </form>
+    {% endif %}
   {% endif %}
 {% endblock %}
 

@@ -44,7 +44,8 @@ export function renderErrorPage(h, statusCode, request) {
     .view(view, {
       pageTitle: translate(locale, pageTitleKey),
       locale,
-      availableFrom: config.get('maintenance.availableFrom')
+      availableFrom: config.get('maintenance.availableFrom'),
+      hideCookieBanner: true
     })
     .code(statusCode)
 }
