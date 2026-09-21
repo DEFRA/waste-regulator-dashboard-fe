@@ -76,7 +76,7 @@ export function resolvePostLogoutAbsoluteUri(request, pathOrUrl, azureConfig) {
     if (isRequestHttps(request) && u.protocol === 'http:') {
       u.protocol = 'https:'
     }
-    return new URL(path, u.origin).href
+    return new URL(withForwardedPrefix(request, path), u.origin).href
   }
   const proto =
     firstForwarded(request.headers['x-forwarded-proto']) ||
@@ -86,7 +86,7 @@ export function resolvePostLogoutAbsoluteUri(request, pathOrUrl, azureConfig) {
     request.headers.host ||
     request.info.host
   const scheme = proto === 'https' ? 'https' : 'http'
-  return `${scheme}://${host}${path}`
+  return `${scheme}://${host}${withForwardedPrefix(request, path)}`
 }
 
 /**

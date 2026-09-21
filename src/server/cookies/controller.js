@@ -4,7 +4,10 @@ import { createLogger } from '../common/helpers/logging/logger.js'
 import { getLocale } from '../common/helpers/i18n/get-locale.js'
 import { localeUrl } from '../common/helpers/i18n/locale-url.js'
 import { pageI18n } from '../common/helpers/i18n/translate.js'
-import { withForwardedPrefix } from '../common/helpers/proxy/forwarded-prefix.js'
+import {
+  withForwardedPrefix,
+  getForwardedPrefix
+} from '../common/helpers/proxy/forwarded-prefix.js'
 
 const logger = createLogger('cookies-controller')
 
@@ -28,6 +31,20 @@ function redirectPreservingLang(request, h, pathname, extraParams = {}) {
   }
 
   return h.redirect(url.pathname + url.search)
+}
+
+/**
+ * Strips the forwarded proxy prefix from a pathname so that the
+ * forwarded-prefix-redirects plugin can re-apply it exactly once.
+ * Without this, referer URLs (which already contain the external prefix)
+ * would end up double-prefixed after the plugin runs.
+ */
+function stripForwardedPrefix(pathname, request) {
+  const prefix = getForwardedPrefix(request)
+  if (prefix && pathname.startsWith(`${prefix}/`)) {
+    return pathname.slice(prefix.length)
+  }
+  return pathname
 }
 
 export const cookiesController = {
@@ -101,7 +118,9 @@ export const cookiesController = {
       if (request.query?.lang) {
         url.searchParams.set('lang', request.query.lang)
       }
-      return h.redirect(url.pathname + url.search)
+      return h.redirect(
+        stripForwardedPrefix(url.pathname, request) + url.search
+      )
     } catch (e) {
       return redirectPreservingLang(request, h, '/home', {
         cookie_preference: 'set'
@@ -117,7 +136,9 @@ export const cookiesController = {
       if (request.query?.lang) {
         url.searchParams.set('lang', request.query.lang)
       }
-      return h.redirect(url.pathname + url.search)
+      return h.redirect(
+        stripForwardedPrefix(url.pathname, request) + url.search
+      )
     } catch (e) {
       return redirectPreservingLang(request, h, '/home')
     }
