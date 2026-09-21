@@ -96,6 +96,46 @@ describe('#cookiesController', () => {
     })
   })
 
+  describe('POST /cookies/banner (with X-Forwarded-Prefix)', () => {
+    test('Should not double-prefix the redirect when referer already contains the proxy prefix', async () => {
+      const { statusCode, headers } = await server.inject({
+        method: 'POST',
+        url: '/cookies/banner',
+        headers: {
+          'x-forwarded-prefix': '/manage-waste-dashboard',
+          referer: 'http://localhost/manage-waste-dashboard/home'
+        },
+        payload: {
+          analytics: 'yes'
+        }
+      })
+
+      expect(statusCode).toBe(statusCodes.found)
+      expect(headers.location).toBe(
+        '/manage-waste-dashboard/home?cookie_preference=set'
+      )
+    })
+
+    test('Should not double-prefix when referer has prefix and lang query param is present', async () => {
+      const { statusCode, headers } = await server.inject({
+        method: 'POST',
+        url: '/cookies/banner?lang=cy',
+        headers: {
+          'x-forwarded-prefix': '/manage-waste-dashboard',
+          referer: 'http://localhost/manage-waste-dashboard/some-page'
+        },
+        payload: {
+          analytics: 'no'
+        }
+      })
+
+      expect(statusCode).toBe(statusCodes.found)
+      expect(headers.location).toBe(
+        '/manage-waste-dashboard/some-page?cookie_preference=set&lang=cy'
+      )
+    })
+  })
+
   describe('POST /cookies/banner', () => {
     test('Should redirect to referrer with cookie_preference=set and set cookie when analytics is yes', async () => {
       const { statusCode, headers } = await server.inject({
@@ -146,6 +186,40 @@ describe('#cookiesController', () => {
 
       expect(statusCode).toBe(statusCodes.found)
       expect(headers.location).toBe('/?cookie_preference=set')
+    })
+  })
+
+  describe('POST /cookies/hide-banner (with X-Forwarded-Prefix)', () => {
+    test('Should not double-prefix the redirect when referer already contains the proxy prefix', async () => {
+      const { statusCode, headers } = await server.inject({
+        method: 'POST',
+        url: '/cookies/hide-banner',
+        headers: {
+          'x-forwarded-prefix': '/manage-waste-dashboard',
+          referer:
+            'http://localhost/manage-waste-dashboard/home?cookie_preference=set'
+        }
+      })
+
+      expect(statusCode).toBe(statusCodes.found)
+      expect(headers.location).toBe('/manage-waste-dashboard/home')
+    })
+
+    test('Should not double-prefix when other query params are preserved', async () => {
+      const { statusCode, headers } = await server.inject({
+        method: 'POST',
+        url: '/cookies/hide-banner',
+        headers: {
+          'x-forwarded-prefix': '/manage-waste-dashboard',
+          referer:
+            'http://localhost/manage-waste-dashboard/home?cookie_preference=set&other_param=1'
+        }
+      })
+
+      expect(statusCode).toBe(statusCodes.found)
+      expect(headers.location).toBe(
+        '/manage-waste-dashboard/home?other_param=1'
+      )
     })
   })
 

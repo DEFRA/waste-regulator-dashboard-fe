@@ -1,5 +1,91 @@
 import { describe, it, expect } from 'vitest'
-import { bellRedirectLocation } from './azure-ad-b2c.js'
+import {
+  bellRedirectLocation,
+  resolvePostLogoutAbsoluteUri
+} from './azure-ad-b2c.js'
+
+describe('resolvePostLogoutAbsoluteUri', () => {
+  function makeRequest({
+    protocol = 'http',
+    host = 'localhost:7154',
+    xForwardedProto,
+    xForwardedHost,
+    xForwardedPrefix
+  } = {}) {
+    return {
+      headers: {
+        ...(xForwardedProto ? { 'x-forwarded-proto': xForwardedProto } : {}),
+        ...(xForwardedHost ? { 'x-forwarded-host': xForwardedHost } : {}),
+        ...(xForwardedPrefix ? { 'x-forwarded-prefix': xForwardedPrefix } : {}),
+        host
+      },
+      server: { info: { protocol } },
+      info: { host }
+    }
+  }
+
+  it('includes the forwarded prefix in the fallback URI when behind a proxy', () => {
+    const request = makeRequest({
+      xForwardedProto: 'https',
+      xForwardedHost: 'proxy.example.com',
+      xForwardedPrefix: '/manage-waste-dashboard'
+    })
+
+    expect(resolvePostLogoutAbsoluteUri(request, '/signed-out', {})).toBe(
+      'https://proxy.example.com/manage-waste-dashboard/signed-out'
+    )
+  })
+
+  it('does not double-prefix when the fallback URI already had no prefix', () => {
+    const request = makeRequest({
+      xForwardedProto: 'https',
+      xForwardedHost: 'proxy.example.com'
+    })
+
+    expect(resolvePostLogoutAbsoluteUri(request, '/signed-out', {})).toBe(
+      'https://proxy.example.com/signed-out'
+    )
+  })
+
+  it('includes the forwarded prefix when redirectUri is an absolute URL', () => {
+    const request = makeRequest({
+      xForwardedProto: 'https',
+      xForwardedPrefix: '/manage-waste-dashboard',
+      host: 'proxy.example.com'
+    })
+
+    expect(
+      resolvePostLogoutAbsoluteUri(request, '/signed-out', {
+        redirectUri:
+          'https://proxy.example.com/manage-waste-dashboard/login/b2c/callback'
+      })
+    ).toBe('https://proxy.example.com/manage-waste-dashboard/signed-out')
+  })
+
+  it('falls back to request host without prefix when not behind a proxy', () => {
+    const request = makeRequest({ protocol: 'http', host: 'localhost:7154' })
+
+    expect(resolvePostLogoutAbsoluteUri(request, '/signed-out', {})).toBe(
+      'http://localhost:7154/signed-out'
+    )
+  })
+
+  it('returns the pathOrUrl unchanged when it is already an absolute URL', () => {
+    const request = makeRequest({
+      xForwardedProto: 'https',
+      xForwardedHost: 'proxy.example.com',
+      xForwardedPrefix: '/manage-waste-dashboard'
+    })
+
+    expect(
+      resolvePostLogoutAbsoluteUri(
+        request,
+        'https://proxy.example.com/manage-waste-dashboard/signed-out',
+        {}
+      )
+    ).toBe('https://proxy.example.com/manage-waste-dashboard/signed-out')
+  })
+})
 
 describe('bellRedirectLocation', () => {
   function makeRequest({
