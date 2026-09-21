@@ -28,6 +28,17 @@ describe('#regulatorsController', () => {
     expect(response.headers.location).toBe('/home')
   })
 
+  test('signin-oidc should redirect to prefixed /home when behind a proxy', async () => {
+    const response = await server.inject({
+      method: 'GET',
+      url: '/signin-oidc',
+      headers: { 'x-forwarded-prefix': '/manage-waste-dashboard' }
+    })
+
+    expect(response.statusCode).toBe(statusCodes.found)
+    expect(response.headers.location).toBe('/manage-waste-dashboard/home')
+  })
+
   test('Should sign out (B2C logout URL or /signed-out)', async () => {
     const response = await server.inject({
       method: 'GET',
@@ -38,6 +49,22 @@ describe('#regulatorsController', () => {
     const { location } = response.headers
     expect(
       location === '/signed-out' ||
+        (typeof location === 'string' &&
+          location.includes('oauth2/v2.0/logout'))
+    ).toBe(true)
+  })
+
+  test('Should sign out to prefixed /signed-out when behind a proxy', async () => {
+    const response = await server.inject({
+      method: 'GET',
+      url: '/logout',
+      headers: { 'x-forwarded-prefix': '/manage-waste-dashboard' }
+    })
+
+    expect(response.statusCode).toBe(statusCodes.found)
+    const { location } = response.headers
+    expect(
+      location === '/manage-waste-dashboard/signed-out' ||
         (typeof location === 'string' &&
           location.includes('oauth2/v2.0/logout'))
     ).toBe(true)

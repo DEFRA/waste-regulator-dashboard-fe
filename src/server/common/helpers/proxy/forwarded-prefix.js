@@ -71,6 +71,7 @@ export function applyForwardedPrefixToCookiePath(definition, request) {
 /**
  * Adds the proxy's external path prefix to an application-local rooted URL.
  * Absolute and protocol-relative URLs are deliberately left unchanged.
+ * Idempotent: if the path already starts with the prefix it is returned unchanged.
  *
  * @param {import('@hapi/hapi').Request} request
  * @param {string} pathOrUrl
@@ -84,6 +85,15 @@ export function withForwardedPrefix(request, pathOrUrl) {
     typeof pathOrUrl !== 'string' ||
     !pathOrUrl.startsWith('/') ||
     pathOrUrl.startsWith('//')
+  ) {
+    return pathOrUrl
+  }
+
+  if (
+    pathOrUrl === prefix ||
+    pathOrUrl.startsWith(`${prefix}/`) ||
+    pathOrUrl.startsWith(`${prefix}?`) ||
+    pathOrUrl.startsWith(`${prefix}#`)
   ) {
     return pathOrUrl
   }
