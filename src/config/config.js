@@ -262,6 +262,12 @@ export const config = convict({
     }
   },
   auth: {
+    siblingCookiePaths: {
+      doc: 'Path prefixes for sibling regulator apps whose session and Bell cookies should be cleared on logout',
+      format: Array,
+      default: ['/certificates-of-compliance'],
+      env: 'AUTH_SIBLING_COOKIE_PATHS'
+    },
     azureAdB2c: {
       clientId: {
         doc: 'Azure AD B2C Client ID',

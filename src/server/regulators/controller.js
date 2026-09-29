@@ -1,10 +1,11 @@
 import { config } from '../../config/config.js'
 import {
-  BELL_AZURE_AD_B2C_COOKIE,
   buildB2cLogoutUrl,
   getB2cAuthorityPrefix,
   resolvePostLogoutAbsoluteUri
 } from '../auth/azure-ad-b2c.js'
+import { resetAuthSession } from '../auth/reset-auth-session.js'
+import { buildSiblingLogoutRedirectUrl } from '../auth/sibling-logout-redirect.js'
 import { getLocale } from '../common/helpers/i18n/get-locale.js'
 import {
   clearAuthLocale,
@@ -27,10 +28,7 @@ export const signinOidcController = {
 
 export const signOutController = {
   handler(request, h) {
-    if (request.yar) {
-      request.yar.reset()
-    }
-    h.unstate(BELL_AZURE_AD_B2C_COOKIE)
+    resetAuthSession(request, h)
 
     const azure = config.get('auth.azureAdB2c')
     const prefix = getB2cAuthorityPrefix(azure)
@@ -41,7 +39,12 @@ export const signOutController = {
       azure
     )
 
-    if (!prefix) {
+    const siblingLogoutUrl = buildSiblingLogoutRedirectUrl(postLogoutUri)
+    if (siblingLogoutUrl) {
+      return h.redirect(siblingLogoutUrl)
+    }
+
+    if (config.get('useMockAuth') || !prefix) {
       return redirectWithLocale(h, request, '/signed-out')
     }
     return h.redirect(buildB2cLogoutUrl(prefix, postLogoutUri))
