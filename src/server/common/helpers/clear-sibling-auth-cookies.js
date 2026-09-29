@@ -5,7 +5,11 @@ const SIBLING_AUTH_COOKIES = ['session', BELL_AZURE_AD_B2C_COOKIE]
 
 const COOKIE_CLEAR_OPTIONS = {
   session: { httpOnly: true, sameSite: 'Lax' },
-  [BELL_AZURE_AD_B2C_COOKIE]: { httpOnly: true, sameSite: 'Strict', secure: true }
+  [BELL_AZURE_AD_B2C_COOKIE]: {
+    httpOnly: true,
+    sameSite: 'Strict',
+    secure: true
+  }
 }
 
 function buildExpiredSetCookie(name, path) {

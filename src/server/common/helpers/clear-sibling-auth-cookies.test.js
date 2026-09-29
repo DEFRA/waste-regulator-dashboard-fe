@@ -5,10 +5,7 @@ describe('clearSiblingAuthCookies', () => {
   it('appends expired session and Bell cookies for each sibling path', () => {
     const response = { isBoom: false, header: vi.fn() }
 
-    clearSiblingAuthCookies(
-      { response },
-      ['/certificates-of-compliance']
-    )
+    clearSiblingAuthCookies({ response }, ['/certificates-of-compliance'])
 
     expect(response.header).toHaveBeenCalledTimes(2)
     expect(response.header).toHaveBeenCalledWith(
