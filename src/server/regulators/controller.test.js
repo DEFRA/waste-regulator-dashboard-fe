@@ -5,7 +5,6 @@ import { statusCodes } from '../common/constants/status-codes.js'
 describe('#regulatorsController', () => {
   let server
   let originalUseMockAuth
-
   beforeAll(async () => {
     originalUseMockAuth = config.get('useMockAuth')
     config.set('useMockAuth', true)
@@ -40,18 +39,42 @@ describe('#regulatorsController', () => {
   })
 
   test('Should sign out (B2C logout URL or /signed-out)', async () => {
+    const signInResponse = await server.inject({
+      method: 'GET',
+      url: '/signin-oidc'
+    })
     const response = await server.inject({
       method: 'GET',
-      url: '/logout'
+      url: '/logout',
+      headers: {
+        cookie: signInResponse.headers['set-cookie']
+          .map((cookie) => cookie.split(';')[0])
+          .join('; ')
+      }
     })
 
     expect(response.statusCode).toBe(statusCodes.found)
-    const { location } = response.headers
+
+    const setCookie = response.headers['set-cookie'] ?? []
+    const cookieHeaders = Array.isArray(setCookie) ? setCookie : [setCookie]
     expect(
-      location === '/signed-out' ||
-        (typeof location === 'string' &&
-          location.includes('oauth2/v2.0/logout'))
+      cookieHeaders.some(
+        (cookie) =>
+          cookie.startsWith('session=') &&
+          cookie.includes('Path=/certificates-of-compliance') &&
+          cookie.includes('Max-Age=0')
+      )
     ).toBe(true)
+    expect(
+      cookieHeaders.some(
+        (cookie) =>
+          cookie.startsWith('session=') &&
+          /;\s*Path=\/(?:;|$)/.test(cookie) &&
+          cookie.includes('Max-Age=0')
+      )
+    ).toBe(true)
+    const { location } = response.headers
+    expect(location).toBe('/signed-out')
   })
 
   test('Should sign out to prefixed /signed-out when behind a proxy', async () => {
@@ -63,11 +86,7 @@ describe('#regulatorsController', () => {
 
     expect(response.statusCode).toBe(statusCodes.found)
     const { location } = response.headers
-    expect(
-      location === '/manage-waste-dashboard/signed-out' ||
-        (typeof location === 'string' &&
-          location.includes('oauth2/v2.0/logout'))
-    ).toBe(true)
+    expect(location).toBe('/manage-waste-dashboard/signed-out')
   })
 
   test('Should render signed-out page', async () => {
