@@ -6,14 +6,17 @@ describe('#regulatorsController', () => {
   let server
   let originalUseMockAuth
   let originalCertificateOfCompliance
+  let originalSiblingCookiePaths
 
   beforeAll(async () => {
     originalUseMockAuth = config.get('useMockAuth')
     originalCertificateOfCompliance = config.get(
       'features.certificateOfCompliance'
     )
+    originalSiblingCookiePaths = config.get('auth.siblingCookiePaths')
     config.set('useMockAuth', true)
     config.set('features.certificateOfCompliance', false)
+    config.set('auth.siblingCookiePaths', ['/certificates-of-compliance'])
     server = await createServer()
     await server.initialize()
   })
@@ -24,6 +27,7 @@ describe('#regulatorsController', () => {
       'features.certificateOfCompliance',
       originalCertificateOfCompliance
     )
+    config.set('auth.siblingCookiePaths', originalSiblingCookiePaths)
     await server.stop({ timeout: 0 })
   })
 
@@ -121,8 +125,12 @@ describe('#regulatorsController', () => {
       })
 
       expect(response.statusCode).toBe(statusCodes.found)
-      expect(response.headers.location).toBe(
-        'https://localhost:3000/logout?returnTo=https%3A%2F%2Flocalhost%3A7154%2Fsigned-out'
+
+      const location = new URL(response.headers.location)
+      expect(location.origin).toBe('https://localhost:3000')
+      expect(location.pathname).toBe('/logout')
+      expect(location.searchParams.get('returnTo')).toMatch(
+        /^https?:\/\/localhost:7154\/signed-out$/
       )
     } finally {
       config.set('features.certificateOfCompliance', originalFeature)
