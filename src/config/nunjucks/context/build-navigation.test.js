@@ -92,6 +92,26 @@ describe('#buildRegulatorContext', () => {
     expect(html).toContain('Sign out')
   })
 
+  test('Should fall back to session user name when accountDetails are absent', () => {
+    const user = {
+      token: 'mock-token',
+      profile: { oid: 'user-id' },
+      name: 'Jane Smith'
+    }
+    const html = buildRegulatorContext(
+      mockRequest({
+        path: '/',
+        yar: {
+          id: 'session-id',
+          get: (key) => (key === 'user' ? user : undefined)
+        }
+      }),
+      'en'
+    )
+    expect(html).toContain('Jane Smith')
+    expect(html).toContain('Sign out')
+  })
+
   test('Should append lang=cy to sign-in link for Welsh locale', () => {
     expect(
       buildRegulatorContext(

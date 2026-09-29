@@ -25,6 +25,8 @@ export function buildRegulatorContext(request, locale = 'en') {
     let html = '<div class="defra-internal-service-navigation__context">'
     if (accountDetails?.firstName && accountDetails?.lastName) {
       html += `${accountDetails.firstName} ${accountDetails.lastName} &nbsp;|&nbsp; `
+    } else if (user.name?.trim()) {
+      html += `${user.name.trim()} &nbsp;|&nbsp; `
     }
     html += `<a class="govuk-service-navigation__link" href="${localeUrl(withForwardedPrefix(request, '/logout'), locale)}">${translate(locale, 'common.nav.signOut')}</a></div>`
     return html
