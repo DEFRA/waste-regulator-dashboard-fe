@@ -5,15 +5,25 @@ import { statusCodes } from '../common/constants/status-codes.js'
 describe('#regulatorsController', () => {
   let server
   let originalUseMockAuth
+  let originalCertificateOfCompliance
+
   beforeAll(async () => {
     originalUseMockAuth = config.get('useMockAuth')
+    originalCertificateOfCompliance = config.get(
+      'features.certificateOfCompliance'
+    )
     config.set('useMockAuth', true)
+    config.set('features.certificateOfCompliance', false)
     server = await createServer()
     await server.initialize()
   })
 
   afterAll(async () => {
     config.set('useMockAuth', originalUseMockAuth)
+    config.set(
+      'features.certificateOfCompliance',
+      originalCertificateOfCompliance
+    )
     await server.stop({ timeout: 0 })
   })
 
@@ -87,6 +97,38 @@ describe('#regulatorsController', () => {
     expect(response.statusCode).toBe(statusCodes.found)
     const { location } = response.headers
     expect(location).toBe('/manage-waste-dashboard/signed-out')
+  })
+
+  test('Should chain logout through CSOC when the feature is enabled', async () => {
+    const originalFeature = config.get('features.certificateOfCompliance')
+    const originalBaseUrl = config.get(
+      'services.certificateOfCompliance.baseUrl'
+    )
+    const originalUseMockAuth = config.get('useMockAuth')
+
+    config.set('features.certificateOfCompliance', true)
+    config.set('useMockAuth', false)
+    config.set(
+      'services.certificateOfCompliance.baseUrl',
+      'https://localhost:3000'
+    )
+
+    try {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/logout',
+        headers: { host: 'localhost:7154' }
+      })
+
+      expect(response.statusCode).toBe(statusCodes.found)
+      expect(response.headers.location).toBe(
+        'https://localhost:3000/logout?returnTo=https%3A%2F%2Flocalhost%3A7154%2Fsigned-out'
+      )
+    } finally {
+      config.set('features.certificateOfCompliance', originalFeature)
+      config.set('services.certificateOfCompliance.baseUrl', originalBaseUrl)
+      config.set('useMockAuth', originalUseMockAuth)
+    }
   })
 
   test('Should render signed-out page', async () => {

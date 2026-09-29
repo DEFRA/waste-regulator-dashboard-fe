@@ -5,6 +5,7 @@ import {
   resolvePostLogoutAbsoluteUri
 } from '../auth/azure-ad-b2c.js'
 import { resetAuthSession } from '../auth/reset-auth-session.js'
+import { buildSiblingLogoutRedirectUrl } from '../auth/sibling-logout-redirect.js'
 import { getLocale } from '../common/helpers/i18n/get-locale.js'
 import {
   clearAuthLocale,
@@ -37,6 +38,11 @@ export const signOutController = {
       pathOrUrl,
       azure
     )
+
+    const siblingLogoutUrl = buildSiblingLogoutRedirectUrl(postLogoutUri)
+    if (siblingLogoutUrl) {
+      return h.redirect(siblingLogoutUrl)
+    }
 
     if (config.get('useMockAuth') || !prefix) {
       return redirectWithLocale(h, request, '/signed-out')
