@@ -104,6 +104,11 @@ export async function createServer() {
       contextualize: applyForwardedPrefixToCookiePath
     }
   })
+
+  // Disable the path-prefix contextualize function for the cookies policy cookie
+  // so that its path remains `/` and applies to all apps sharing the same proxy domain.
+  server.state('cookies_policy', { contextualize: (def) => {} })
+
   await server.register([
     bell,
     requestLogger,
