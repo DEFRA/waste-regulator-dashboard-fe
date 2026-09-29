@@ -18,6 +18,7 @@ import { requestTracing } from './common/helpers/request-tracing.js'
 import { requestLogger } from './common/helpers/logging/request-logger.js'
 import { sessionCache } from './common/helpers/session-cache/session-cache.js'
 import { siblingAuthLogout } from './plugins/sibling-auth-logout.js'
+import { accountDetailsContext } from './plugins/account-details-context.js'
 import { getCacheEngine } from './common/helpers/session-cache/cache-engine.js'
 import { secureContext } from '@defra/hapi-secure-context'
 import { contentSecurityPolicy } from './common/helpers/content-security-policy.js'
@@ -112,6 +113,7 @@ export async function createServer() {
     secureContext,
     pulse,
     sessionCache,
+    accountDetailsContext,
     siblingAuthLogout,
     nunjucksConfig,
     maintenance,

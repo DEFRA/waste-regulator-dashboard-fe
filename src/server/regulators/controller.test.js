@@ -103,6 +103,46 @@ describe('#regulatorsController', () => {
     expect(location).toBe('/manage-waste-dashboard/signed-out')
   })
 
+  test('Should sign out locally when CSOC shares the reverse-proxy origin', async () => {
+    const originalFeature = config.get('features.certificateOfCompliance')
+    const originalBaseUrl = config.get(
+      'services.certificateOfCompliance.baseUrl'
+    )
+    const originalUseMockAuth = config.get('useMockAuth')
+    const originalAzure = config.get('auth.azureAdB2c')
+
+    config.set('features.certificateOfCompliance', true)
+    config.set(
+      'services.certificateOfCompliance.baseUrl',
+      'https://regulators-waste-proxy.dev.cdp-int.defra.cloud'
+    )
+    config.set('auth.azureAdB2c', {
+      ...originalAzure,
+      postLogoutRedirectPath:
+        'https://regulators-waste-proxy.dev.cdp-int.defra.cloud/dashboard/signed-out'
+    })
+
+    try {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/logout',
+        headers: {
+          host: 'regulators-waste-proxy.dev.cdp-int.defra.cloud',
+          'x-forwarded-proto': 'https',
+          'x-forwarded-prefix': '/dashboard'
+        }
+      })
+
+      expect(response.statusCode).toBe(statusCodes.found)
+      expect(response.headers.location).toBe('/dashboard/signed-out')
+    } finally {
+      config.set('features.certificateOfCompliance', originalFeature)
+      config.set('services.certificateOfCompliance.baseUrl', originalBaseUrl)
+      config.set('useMockAuth', originalUseMockAuth)
+      config.set('auth.azureAdB2c', originalAzure)
+    }
+  })
+
   test('Should chain logout through CSOC when the feature is enabled', async () => {
     const originalFeature = config.get('features.certificateOfCompliance')
     const originalBaseUrl = config.get(
