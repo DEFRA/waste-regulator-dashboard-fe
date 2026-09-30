@@ -1,12 +1,12 @@
 import { vi } from 'vitest'
 
+import { getLocale } from './get-locale.js'
+
 const mockLoggerWarn = vi.fn()
 
 vi.mock('../logging/logger.js', () => ({
   createLogger: () => ({ warn: (...args) => mockLoggerWarn(...args) })
 }))
-
-import { getLocale } from './get-locale.js'
 
 function mockRequest({
   query = {},

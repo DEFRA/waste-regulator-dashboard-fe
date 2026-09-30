@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
+import { runHealthChecks } from './health.service.js'
+import { getServiceOAuthAccessToken } from '../common/services/apiBaseClient/oauth-token.js'
+
 vi.mock('../../config/config.js', () => ({
   config: {
     get: vi.fn((key) => {
@@ -17,9 +20,6 @@ vi.mock('../../config/config.js', () => ({
 vi.mock('../common/services/apiBaseClient/oauth-token.js', () => ({
   getServiceOAuthAccessToken: vi.fn()
 }))
-
-import { runHealthChecks } from './health.service.js'
-import { getServiceOAuthAccessToken } from '../common/services/apiBaseClient/oauth-token.js'
 
 describe('runHealthChecks', () => {
   beforeEach(() => {
