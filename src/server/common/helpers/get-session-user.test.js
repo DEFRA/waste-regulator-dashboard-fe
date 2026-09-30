@@ -1,44 +1,20 @@
+import { config } from '../../../config/config.js'
 import { getSessionUser } from './get-session-user.js'
 
+const USER_COOKIE_NAME = config.get('userCookie.name')
+
 describe('#getSessionUser', () => {
-  test('Should return null when yar is missing', () => {
+  test('Should return null when state is missing', () => {
     expect(getSessionUser({})).toBeNull()
   })
 
-  test('Should return null when yar is not initialized', () => {
-    expect(
-      getSessionUser({
-        yar: {
-          id: null,
-          get: () => {
-            throw new Error('yar.get should not be called')
-          }
-        }
-      })
-    ).toBeNull()
+  test('Should return null when user cookie is absent', () => {
+    expect(getSessionUser({ state: {} })).toBeNull()
   })
 
-  test('Should return null when no user is stored', () => {
-    expect(
-      getSessionUser({
-        yar: {
-          id: 'session-id',
-          get: () => null
-        }
-      })
-    ).toBeNull()
-  })
-
-  test('Should return user when session is initialized and user exists', () => {
+  test('Should return user when user cookie is present', () => {
     const user = { token: 'mock-token', profile: { oid: 'user-id' } }
 
-    expect(
-      getSessionUser({
-        yar: {
-          id: 'session-id',
-          get: (key) => (key === 'user' ? user : null)
-        }
-      })
-    ).toBe(user)
+    expect(getSessionUser({ state: { [USER_COOKIE_NAME]: user } })).toBe(user)
   })
 })

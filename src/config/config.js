@@ -112,12 +112,14 @@ export const config = convict({
   GA4: {
     doc: 'Google Analytics 4 ID',
     format: String,
-    default: 'G-4M1Z0WGY6J'
+    default: 'G-4M1Z0WGY6J',
+    env: 'GA4'
   },
   GTM: {
     doc: 'Google Tag Manager ID',
     format: String,
-    default: 'GTM-52C6V74Q'
+    default: 'GTM-52C6V74Q',
+    env: 'GTM'
   },
   log: {
     enabled: {
@@ -364,6 +366,27 @@ export const config = convict({
           'https://waste-packaging-regulators-fe.dev.cdp-int.defra.cloud',
         env: 'CERTIFICATE_OF_COMPLIANCE_BASE_URL'
       }
+    }
+  },
+  userCookie: {
+    name: {
+      doc: 'Name of the short-lived cookie used to hold the authenticated user object.',
+      format: String,
+      default: 'user_session',
+      env: 'USER_COOKIE_NAME'
+    },
+    password: {
+      doc: 'Encryption password for the user cookie (Iron). Must be at least 32 characters.',
+      format: String,
+      default: 'user-cookie-password-must-be-at-least-32-characters-long',
+      env: 'USER_COOKIE_PASSWORD',
+      sensitive: true
+    },
+    ttl: {
+      doc: 'User cookie TTL in milliseconds. When it expires the browser re-validates with B2C.',
+      format: Number,
+      default: 5000,
+      env: 'USER_COOKIE_TTL'
     }
   },
   accountApi: {

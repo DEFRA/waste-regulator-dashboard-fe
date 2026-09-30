@@ -1,8 +1,11 @@
+import { config } from '../../config.js'
 import {
   buildAccountNavigation,
   buildNavigation,
   buildRegulatorContext
 } from './build-navigation.js'
+
+const USER_COOKIE_NAME = config.get('userCookie.name')
 
 function mockRequest(options) {
   return { ...options }
@@ -35,10 +38,7 @@ describe('#buildNavigation', () => {
       buildNavigation(
         mockRequest({
           path: '/',
-          yar: {
-            id: 'session-id',
-            get: (key) => (key === 'user' ? user : undefined)
-          }
+          state: { [USER_COOKIE_NAME]: user }
         })
       )
     ).toEqual([])
@@ -75,10 +75,7 @@ describe('#buildRegulatorContext', () => {
     const html = buildRegulatorContext(
       mockRequest({
         path: '/',
-        yar: {
-          id: 'session-id',
-          get: (key) => (key === 'user' ? user : undefined)
-        },
+        state: { [USER_COOKIE_NAME]: user },
         app: {
           accountDetails: {
             firstName: 'Test',
@@ -101,10 +98,7 @@ describe('#buildRegulatorContext', () => {
     const html = buildRegulatorContext(
       mockRequest({
         path: '/',
-        yar: {
-          id: 'session-id',
-          get: (key) => (key === 'user' ? user : undefined)
-        }
+        state: { [USER_COOKIE_NAME]: user }
       }),
       'en'
     )

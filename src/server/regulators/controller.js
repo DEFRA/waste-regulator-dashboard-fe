@@ -13,10 +13,12 @@ import {
 } from '../common/helpers/i18n/locale-url.js'
 import { translate } from '../common/helpers/i18n/translate.js'
 
+const USER_COOKIE_NAME = config.get('userCookie.name')
+
 export const signinOidcController = {
   handler(request, h) {
     if (request.auth?.credentials) {
-      request.yar.set('user', request.auth.credentials)
+      h.state(USER_COOKIE_NAME, request.auth.credentials)
     }
     const returnTo = request.yar.get('returnTo') || '/home'
     request.yar.clear('returnTo')
