@@ -3,13 +3,13 @@ import { vi } from 'vitest'
 import { createServer } from '../server.js'
 import { statusCodes } from '../common/constants/status-codes.js'
 
-vi.mock('./health.service.js', () => ({
-  runHealthChecks: vi.fn()
-}))
-
 import { healthAllController } from './controller.js'
 import { runHealthChecks } from './health.service.js'
 import { config } from '../../config/config.js'
+
+vi.mock('./health.service.js', () => ({
+  runHealthChecks: vi.fn()
+}))
 
 describe('#healthController', () => {
   describe('/health', () => {
@@ -32,7 +32,11 @@ describe('#healthController', () => {
 
       expect(result).toEqual({
         message: 'success',
-        features: { certificateOfCompliance: false }
+        features: {
+          certificateOfCompliance: config.get(
+            'features.certificateOfCompliance'
+          )
+        }
       })
       expect(statusCode).toBe(statusCodes.ok)
       expect(runHealthChecks).not.toHaveBeenCalled()
@@ -98,7 +102,11 @@ describe('#healthController', () => {
 
       expect(result).toEqual({
         message: 'success',
-        features: { certificateOfCompliance: false }
+        features: {
+          certificateOfCompliance: config.get(
+            'features.certificateOfCompliance'
+          )
+        }
       })
       expect(statusCode).toBe(statusCodes.ok)
       expect(runHealthChecks).not.toHaveBeenCalled()

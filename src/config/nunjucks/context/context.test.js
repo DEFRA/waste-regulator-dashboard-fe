@@ -1,5 +1,5 @@
 import { vi } from 'vitest'
-
+import { config } from '../../config.js'
 const mockReadFileSync = vi.fn()
 const mockLoggerError = vi.fn()
 
@@ -82,7 +82,9 @@ describe('context and cache', () => {
           cookiePreferenceSet: false,
           helpDeskEmail: 'eprcustomerservice@defra.gov.uk',
           features: {
-            certificateOfCompliance: false
+            certificateOfCompliance: config.get(
+              'features.certificateOfCompliance'
+            )
           }
         })
       })
@@ -241,7 +243,9 @@ describe('context and cache', () => {
           cookiePreferenceSet: false,
           helpDeskEmail: 'eprcustomerservice@defra.gov.uk',
           features: {
-            certificateOfCompliance: false
+            certificateOfCompliance: config.get(
+              'features.certificateOfCompliance'
+            )
           }
         })
       })

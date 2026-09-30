@@ -126,7 +126,7 @@
     "signedOut": {
       "pageTitle": "Signed out",
       "heading": "Signed out",
-      "message": "You have signed out of the Regulator service."
+      "message": "You have signed out."
     }
   },
   "errors": {
