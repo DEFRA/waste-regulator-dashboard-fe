@@ -4,8 +4,6 @@ import {
   getB2cAuthorityPrefix,
   resolvePostLogoutAbsoluteUri
 } from '../auth/azure-ad-b2c.js'
-
-const USER_COOKIE_NAME = config.get('userCookie.name')
 import { resetAuthSession } from '../auth/reset-auth-session.js'
 import { buildSiblingLogoutRedirectUrl } from '../auth/sibling-logout-redirect.js'
 import { getLocale } from '../common/helpers/i18n/get-locale.js'
@@ -14,6 +12,8 @@ import {
   redirectWithLocale
 } from '../common/helpers/i18n/locale-url.js'
 import { translate } from '../common/helpers/i18n/translate.js'
+
+const USER_COOKIE_NAME = config.get('userCookie.name')
 
 export const signinOidcController = {
   handler(request, h) {
