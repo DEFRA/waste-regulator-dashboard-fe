@@ -187,12 +187,21 @@ describe('#regulatorsController', () => {
 
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(expect.stringContaining('Signed out'))
-    expect(result).toEqual(
-      expect.stringContaining('You have signed out of the Regulator service.')
-    )
-    expect(result).toEqual(expect.stringContaining('Sign in'))
-    expect(result).toEqual(expect.stringContaining('href="/signin-oidc"'))
+    expect(result).toEqual(expect.stringContaining('You have signed out.'))
     expect(result).not.toEqual(expect.stringContaining('Sign out'))
     expect(result).not.toEqual(expect.stringContaining('href="/logout"'))
+  })
+
+  test('Should render signed-out page and respect forwarded prefix for sign in link', async () => {
+    const { result, statusCode } = await server.inject({
+      method: 'GET',
+      url: '/signed-out',
+      headers: { 'x-forwarded-prefix': '/manage-waste-dashboard' }
+    })
+
+    expect(statusCode).toBe(statusCodes.ok)
+    expect(result).toEqual(
+      expect.stringContaining('href="/manage-waste-dashboard/signin-oidc"')
+    )
   })
 })
