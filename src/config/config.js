@@ -385,7 +385,7 @@ export const config = convict({
     ttl: {
       doc: 'User cookie TTL in milliseconds. When it expires the browser re-validates with B2C.',
       format: Number,
-      default: 5000,
+      default: 10000,
       env: 'USER_COOKIE_TTL'
     }
   },
