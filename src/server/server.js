@@ -110,18 +110,6 @@ export async function createServer() {
   // so that its path remains `/` and applies to all apps sharing the same proxy domain.
   server.state('cookies_policy', { contextualize: (def) => {} })
 
-  // Short-lived encrypted cookie for the authenticated user object. When it
-  // expires the browser re-validates against B2C; if the B2C session is still
-  // valid the user is silently redirected back with a fresh cookie.
-  server.state(config.get('userCookie.name'), {
-    ttl: config.get('userCookie.ttl'),
-    isSecure: config.get('session.cookie.secure'),
-    isHttpOnly: true,
-    encoding: 'iron',
-    password: config.get('userCookie.password'),
-    clearInvalid: true
-  })
-
   await server.register([
     bell,
     requestLogger,
