@@ -6,6 +6,7 @@
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 {% from "govuk/components/cookie-banner/macro.njk" import govukCookieBanner %}
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
 
 {# Import custom components globally #}
 {% from "heading/macro.njk" import appHeading %}
@@ -60,6 +61,13 @@
     <!-- End Google Tag Manager -->
   {% endif %}
   <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet">
+{% endblock %}
+
+{% block skipLink %}
+  {{ govukSkipLink({
+    text: t(locale, "common.skipLink"),
+    href: "#main-content"
+  }) }}
 {% endblock %}
 
 {% block header %}
