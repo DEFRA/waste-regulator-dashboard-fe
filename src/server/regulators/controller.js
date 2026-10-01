@@ -5,7 +5,6 @@ import {
   resolvePostLogoutAbsoluteUri
 } from '../auth/azure-ad-b2c.js'
 
-const USER_COOKIE_NAME = config.get('userCookie.name')
 import { resetAuthSession } from '../auth/reset-auth-session.js'
 import { buildSiblingLogoutRedirectUrl } from '../auth/sibling-logout-redirect.js'
 import { getLocale } from '../common/helpers/i18n/get-locale.js'
