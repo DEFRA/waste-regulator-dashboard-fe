@@ -18,7 +18,7 @@ const USER_COOKIE_NAME = config.get('userCookie.name')
 export const signinOidcController = {
   handler(request, h) {
     if (request.auth?.credentials) {
-      h.state(USER_COOKIE_NAME, request.auth.credentials)
+      request.yar.set('user', request.auth.credentials)
     }
     const returnTo = request.yar.get('returnTo') || '/home'
     request.yar.clear('returnTo')

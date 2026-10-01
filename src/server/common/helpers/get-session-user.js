@@ -1,14 +1,15 @@
-import { config } from '../../../config/config.js'
-
-const USER_COOKIE_NAME = config.get('userCookie.name')
-
 /**
- * Read the authenticated user from the short-lived user cookie.
- * Returns null when the cookie is absent or has expired.
+ * Read the authenticated user from Yar when the session has been initialized.
+ * Returns null when Yar is missing, not yet initialized (e.g. 404 before onPreAuth),
+ * or when no user is stored.
  *
  * @param {import('@hapi/hapi').Request} request
  * @returns {object|null}
  */
 export function getSessionUser(request) {
-  return request.state?.[USER_COOKIE_NAME] ?? null
+  if (!request.yar?.id) {
+    return null
+  }
+
+  return request.yar.get('user')
 }

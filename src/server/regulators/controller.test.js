@@ -87,12 +87,6 @@ describe('#regulatorsController', () => {
           cookie.includes('Max-Age=0')
       )
     ).toBe(true)
-    expect(
-      cookieHeaders.some(
-        (cookie) =>
-          cookie.startsWith('user_session=') && cookie.includes('Max-Age=0')
-      )
-    ).toBe(true)
     const { location } = response.headers
     expect(location).toBe('/signed-out')
   })
@@ -155,7 +149,6 @@ describe('#regulatorsController', () => {
       'services.certificateOfCompliance.baseUrl'
     )
     const originalUseMockAuth = config.get('useMockAuth')
-    const originalAzure = config.get('auth.azureAdB2c')
 
     config.set('features.certificateOfCompliance', true)
     config.set('useMockAuth', false)
@@ -163,11 +156,6 @@ describe('#regulatorsController', () => {
       'services.certificateOfCompliance.baseUrl',
       'https://localhost:3000'
     )
-    config.set('auth.azureAdB2c', {
-      ...originalAzure,
-      postLogoutRedirectPath: '/signed-out',
-      redirectUri: ''
-    })
 
     try {
       const response = await server.inject({
@@ -188,7 +176,6 @@ describe('#regulatorsController', () => {
       config.set('features.certificateOfCompliance', originalFeature)
       config.set('services.certificateOfCompliance.baseUrl', originalBaseUrl)
       config.set('useMockAuth', originalUseMockAuth)
-      config.set('auth.azureAdB2c', originalAzure)
     }
   })
 

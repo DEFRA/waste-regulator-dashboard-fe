@@ -1,8 +1,6 @@
 import { config } from '../../config/config.js'
 import { BELL_AZURE_AD_B2C_COOKIE } from './azure-ad-b2c.js'
 
-const USER_COOKIE_NAME = config.get('userCookie.name')
-
 /**
  * Revokes the server-side yar session and clears local auth cookies.
  * Do not call yar.reset() here — it creates a new session cookie on the response.
@@ -19,5 +17,4 @@ export function resetAuthSession(request, h) {
 
   h.unstate(BELL_AZURE_AD_B2C_COOKIE)
   h.unstate(config.get('session.cache.name'))
-  h.unstate(USER_COOKIE_NAME)
 }

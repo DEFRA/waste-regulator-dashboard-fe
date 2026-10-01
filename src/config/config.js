@@ -368,27 +368,6 @@ export const config = convict({
       }
     }
   },
-  userCookie: {
-    name: {
-      doc: 'Name of the short-lived cookie used to hold the authenticated user object.',
-      format: String,
-      default: 'user_session',
-      env: 'USER_COOKIE_NAME'
-    },
-    password: {
-      doc: 'Encryption password for the user cookie (Iron). Must be at least 32 characters.',
-      format: String,
-      default: 'user-cookie-password-must-be-at-least-32-characters-long',
-      env: 'USER_COOKIE_PASSWORD',
-      sensitive: true
-    },
-    ttl: {
-      doc: 'User cookie TTL in milliseconds. When it expires the browser re-validates with B2C.',
-      format: Number,
-      default: 10000,
-      env: 'USER_COOKIE_TTL'
-    }
-  },
   accountApi: {
     baseUrl: {
       doc: 'Account API base URL',
