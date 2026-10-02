@@ -101,7 +101,7 @@ describe('#homeController', () => {
       })
 
       expect(statusCode).toBe(statusCodes.ok)
-      expect(result).toEqual(expect.stringContaining('Gwasanaeth Rheolewyr'))
+      expect(result).toEqual(expect.stringContaining('Gwasanaeth Rheoleiddio'))
       expect(result).toEqual(expect.stringContaining('Cymraeg'))
       expect(result).toEqual(
         expect.stringContaining(
