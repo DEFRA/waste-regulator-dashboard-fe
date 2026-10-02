@@ -1,7 +1,6 @@
 {
   "common": {
-    "serviceName": "pEPR: Gwasanaeth Rheolewyr",
-    "organisationName": "Adran yr Amgylchedd,<br>Bwyd a Materion Gwledig",
+    "serviceName": "pEPR: Gwasanaeth Rheoleiddio",
     "nav": {
       "home": "Hafan",
       "signIn": "Mewngofnodi",
@@ -12,32 +11,40 @@
       "english": "English",
       "welsh": "Cymraeg"
     },
+    "skipLink": "Neidio i'r prif gynnwys",
     "footer": {
       "getHelp": "Cael help",
       "emailLabel": "E-bost:",
       "telephoneLabel": "Ffôn:",
+      "hours": "Dydd Llun i ddydd Gwener, 8am i 6pm",
       "accessibility": "Datganiad hygyrchedd",
       "cookies": "Cwcis",
       "privacy": "Preifatrwydd",
       "supportLinks": "Dolenni cymorth",
-      "oglPrefix": "Mae'r holl gynnwys ar gael o dan",
+      "oglPrefix": "Mae'r holl gynnwys ar gael o dan y",
       "oglLink": "Drwydded Llywodraeth Agored v3.0",
-      "oglSuffix": ", ac eithrio lle nodir fel arall",
+      "oglSuffix": ", oni nodir yn wahanol",
       "crownCopyright": "Hawlfraint y Goron"
     },
     "cookieBanner": {
+      "ariaLabel": "Cwcis ar {{serviceName}}",
+      "heading": "Cwcis ar {{serviceName}}",
+      "essentialHtml": "<p class=\"govuk-body\"> Rydym ni’n defnyddio rhai cwcis hanfodol i wneud i’r gwasanaeth hwn weithio. </p><p class=\"govuk-body\"> Rydym hefyd yn awyddus i ddefnyddio cwcis dadansoddi er mwyn deall sut rydych chi’n defnyddio’r gwasanaeth a sut gallwn ni ei wella.</p>",
       "acceptAnalytics": "Derbyn cwcis dadansoddeg",
       "rejectAnalytics": "Gwrthod cwcis dadansoddeg",
       "viewCookies": "Gweld cwcis",
+      "preferenceAccepted": "Rydych chi wedi derbyn cwcis dadansoddi. Gallwch <a class=\"govuk-link\" href=\"{{cookiesUrl}}\"> newid eich gosodiadau cwcis </a> ar unrhyw adeg.",
+      "preferenceRejected": "Rydych chi wedi gwrthod cwcis dadansoddi. Gallwch <a class=\"govuk-link\" href=\"{{cookiesUrl}}\"> newid eich gosodiadau cwcis </a> ar unrhyw adeg.",
       "hideMessage": "Cuddio neges cwcis"
     },
-    "yes": "Iawn",
-    "no": "Na",
+    "organisationName": "Adran yr Amgylchedd,<br>Bwyd a Materion Gwledig",
+    "yes": "Ydw",
+    "no": "Nac ydw",
     "success": "Llwyddiant"
   },
   "home": {
-    "pageTitle": "pEPR: Gwasanaeth Rheolewyr - GOV.WALES",
-    "heading": "pEPR: Gwasanaeth Rheolewyr",
+    "pageTitle": "pEPR: Gwasanaeth Rheoleiddio GOV.UK",
+    "heading": "pEPR: Gwasanaeth Rheoleiddio",
     "tasks": {
       "manageAccount": {
         "link": "Rheoli eich cyfrif",
@@ -45,27 +52,75 @@
       },
       "manageApplications": {
         "link": "Rheoli ceisiadau ar gyfer pobl cymeradwy a dirprwyedig",
-        "description": "Gweld, derbyn neu wrthod ceisiadau ar gyfer personau cymeradwy a dirprwyedig"
+        "description": "Gweld, derbyn neu wrthod ceisiadau ar gyfer personau cymeradwy a ddirprwyedig"
       },
       "manageRegistrationSubmissions": {
-        "link": "Rheoli cyflwyniadau cofrestri",
-        "description": "Gweld, derbyn neu wrthod cyflwyniadau ceisiadau cofrestri"
+        "link": "Rheoli cyflwyniadau cofrestru",
+        "description": "Gweld, derbyn neu wrthod cyflwyniadau ceisiadau am gofrestru"
+      },
+      "managePackagingDataSubmissions": {
+        "link": "Rheoli cyflwyniadau data pecynwaith",
+        "description": "Gweld, derbyn neu wrthod cyflwyniadau data pecynwaith"
+      },
+      "manageOrganisationDetails": {
+        "link": "Rheoli cyflwyniadau manylion sefydliadau",
+        "description": "Gweld, derbyn neu wrthod cyflwyniadau manylion sefydliadau"
+      },
+      "manageOrganisationApprovedPerson": {
+        "link": "Rheoli sefydliad a'u person wedi'i gymeradwyo",
+        "description": "Tynnu neu wahodd personau wedi'u cymeradwyo"
       },
       "certificatesOfCompliance": {
         "link": "Gweld tystysgrifau ac datganiadau cydymffurfiad",
-        "description": "Gweld, derbyn neu ganslo tystysgrifau ac datganiadau cydymffurfiad"
+        "description": "Gweld, derbyn neu ganslo"
       }
     }
   },
   "about": {
-    "pageTitle": "Ynghylch",
-    "heading": "Ynghylch"
+    "pageTitle": "Gwybodaeth",
+    "heading": "Gwybodaeth"
   },
   "cookies": {
     "pageTitle": "Cwcis",
     "heading": "Cwcis",
     "breadcrumbHome": "Hafan",
     "breadcrumbCookies": "Cwcis",
+    "successHeading": "Llwyddiant",
+    "successMessage": "Rydych chi wedi gosod eich dewisiadau cwcis. <a class=\"govuk-notification-banner__link\" href=\"{{cookiesUrl}}\"> Mynd yn ôl i’r dudalen roeddech chi’n edrych arni</a>.",
+    "intro1": "Mae cwcis yn ffeiliau bach sy’n cael eu cadw ar eich ffôn, eich tabled neu eich cyfrifiadur pan fyddwch chi’n ymweld â gwefan.",
+    "intro2": "Rydym yn defnyddio cwcis i wneud i'r wefan hon weithio ac i gasglu gwybodaeth am sut rydych chi'n defnyddio ein gwasanaeth.",
+    "essentialHeading": "Cwcis hanfodol",
+    "essentialIntro": "Mae cwcis hanfodol yn cadw eich gwybodaeth yn ddiogel wrth i chi ddefnyddio’r gwasanaeth hwn. Does dim angen i ni ofyn am ganiatâd i’w defnyddio.",
+    "essentialTableHeading": "Cwcis hanfodol rydym yn eu defnyddio",
+    "analyticsHeading": "Cwcis dadansoddi",
+    "analyticsIntro1": "Rydym ni’n defnyddio Google Analytics i ddeall sut mae pobl yn defnyddio gwasanaeth rheoleiddio pEPR. Mae’n ein helpu i ddeall sut rydych chi’n defnyddio’r gwasanaeth a sut gallwn ni ei wella.",
+    "analyticsIntro2": "Dydyn ni ddim yn casglu nac yn cadw unrhyw wybodaeth bersonol. Nid ydym yn caniatáu i Google rannu ein data dadansoddi.",
+    "analyticsIntro3": "Mae cwcis Google Analytics yn cadw gwybodaeth am:",
+    "analyticsList1": "y tudalennau rydych chi’n ymweld â nhw",
+    "analyticsList2": "faint o amser rydych chi’n ei dreulio ar bob tudalen",
+    "analyticsList3": "sut y gwnaethoch chi gyrraedd y safle",
+    "analyticsList4": "beth rydych chi’n clicio arno wrth ymweld â'r safle",
+    "analyticsList5": "y ddyfais a'r porwr rydych chi'n eu defnyddio",
+    "analyticsTableHeading": "Cwcis dadansoddi rydym yn eu defnyddio",
+    "tableName": "Enw",
+    "tablePurpose": "Pwrpas",
+    "tableExpires": "Yn dod i ben",
+    "essentialSessionName": "sesiwn",
+    "essentialSessionPurpose": "Yn eich cadw chi wedi mewngofnodi",
+    "essentialSessionExpires": "4 awr",
+    "essentialCsrfName": "CSRFToken",
+    "essentialCsrfPurpose": "Mae’n diogelu eich sesiwn",
+    "essentialCsrfExpires": "Ar ôl pob sesiwn",
+    "essentialB2cName": "bell-azure-ad-b2c",
+    "essentialB2cPurpose": "Mae’n caniatáu i chi gael mynediad at ddata",
+    "essentialB2cExpires": "Wedi’i glirio pan fyddwch chi’n allgofnodi",
+    "analyticsGaName": "_ga",
+    "analyticsGaPurpose": "Cyfri ymweliadau unigol â’r gwasanaeth",
+    "analyticsGaExpires": "Blwyddyn",
+    "analyticsGaStringName": "_ga_<string>",
+    "analyticsGaStringPurpose": "Olrhain gweithgarwch mewn sesiwn",
+    "analyticsGaStringExpires": "Blwyddyn",
+    "analyticsQuestion": "Ydych chi eisiau derbyn y cwcis dadansoddi?",
     "saveSettings": "Cadw gosodiadau cwcis"
   },
   "auth": {
@@ -77,16 +132,24 @@
   },
   "errors": {
     "notFound": {
-      "pageTitle": "Heb ddod o hyd i'r dudalen"
+      "pageTitle": "Heb ddod o hyd i'r dudalen",
+      "body1": "Os oeddech chi wedi teipio’r cyfeiriad gwe, gwnewch yn siŵr ei fod yn gywir.",
+      "body2": "Os oeddech chi wedi gludo’r cyfeiriad gwe, gwnewch yn siŵr eich bod wedi copïo’r cyfeiriad cyfan.",
+      "body3Prefix": "Os yw’r cyfeiriad gwe yn gywir neu os oeddech chi wedi dewis dolen neu fotwm, anfonwch e-bost at"
     },
     "accessDenied": {
-      "pageTitle": "Nid oes gennych ganiatâd i gael mynediad i'r dudalen hon"
+      "pageTitle": "Does gennych chi ddim hawl i fynd i’r dudalen hon"
     },
     "serviceUnavailable": {
-      "pageTitle": "Mae'n ddrwg gennym, nid yw'r gwasanaeth ar gael"
+      "pageTitle": "Yn anffodus, dydy'r gwasanaeth hwn ddim ar gael",
+      "availableFrom": "Byddwch yn gallu defnyddio’r gwasanaeth o {{availableFrom}}.",
+      "tryAgain": "Rhowch gynnig arall arni rywbryd eto."
     },
     "problemWithService": {
-      "pageTitle": "Mae'n ddrwg gennym, mae problem gyda'r gwasanaeth"
-    }
+      "pageTitle": "Yn anffodus, mae problem â’r gwasanaeth",
+      "tryAgain": "Rhowch gynnig arall arni rywbryd eto."
+    },
+    "contactHelpDeskPrefix": "E-bost",
+    "helpDeskEmailText": "os oes angen help arnoch."
   }
 }

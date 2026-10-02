@@ -26,6 +26,9 @@ describe('translate', () => {
   })
 
   test('falls back to English when Welsh key missing', () => {
+    clearLocaleCacheForTests()
+    seedLocaleDictionaryForTests('cy', {})
+
     expect(translate('cy', 'cookies.intro1')).toBe(
       'Cookies are small files saved on your phone, tablet or computer when you visit a website.'
     )
