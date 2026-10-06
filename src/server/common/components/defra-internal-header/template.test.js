@@ -30,6 +30,13 @@ describe('Defra Internal Header Component', () => {
       expect(link.attr('href')).toBe('/')
     })
 
+    test('Should render as span if homepageUrl is false', () => {
+      const $noLinkHeader = renderHeader({ homepageUrl: false })
+      const span = $noLinkHeader('.defra-internal-header__logo-link')
+      expect(span[0].tagName).toBe('span')
+      expect(span.attr('href')).toBeUndefined()
+    })
+
     test('Should not render navigation menu if none provided', () => {
       expect($header('.defra-internal-header__account-menu')).toHaveLength(0)
     })

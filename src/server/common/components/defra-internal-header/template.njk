@@ -45,9 +45,15 @@
   <div class="govuk-width-container">
     <div class="defra-internal-header__main">
       <div class="defra-internal-header__logo">
-        <a class="defra-internal-header__logo-link" href="{{ params.homepageUrl | default('/') }}">
-          {{ params.organisationName | default("Department for Environment,<br>Food &amp; Rural Affairs") | safe }}
-        </a>
+        {% if params.homepageUrl === false %}
+          <span class="defra-internal-header__logo-link">
+            {{ params.organisationName | default("Department for Environment,<br>Food &amp; Rural Affairs") | safe }}
+          </span>
+        {% else %}
+          <a class="defra-internal-header__logo-link" href="{{ params.homepageUrl | default('/') }}">
+            {{ params.organisationName | default("Department for Environment,<br>Food &amp; Rural Affairs") | safe }}
+          </a>
+        {% endif %}
       </div>
       {# A div, not a nav. The GOV.UK header marks its navigation up as `nav`
          because it is a set of destinations; a name and one action is not. #}
