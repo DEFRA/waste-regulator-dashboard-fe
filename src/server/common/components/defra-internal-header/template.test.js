@@ -19,15 +19,11 @@ describe('Defra Internal Header Component', () => {
     })
 
     test('Should render default organisation name', () => {
-      const link = $header('.defra-internal-header__logo-link')
-      expect(link.html()).toContain(
+      const span = $header('.defra-internal-header__logo-link')
+      expect(span.html()).toContain(
         'Department for Environment,<br>Food &amp; Rural Affairs'
       )
-    })
-
-    test('Should link to default homepageUrl', () => {
-      const link = $header('.defra-internal-header__logo-link')
-      expect(link.attr('href')).toBe('/')
+      expect(span[0].tagName).toBe('span')
     })
 
     test('Should not render navigation menu if none provided', () => {
@@ -39,7 +35,6 @@ describe('Defra Internal Header Component', () => {
     beforeEach(() => {
       $header = renderHeader({
         organisationName: 'Custom Org',
-        homepageUrl: '/custom',
         navigation: [
           { text: 'User Name' },
           {
@@ -55,11 +50,6 @@ describe('Defra Internal Header Component', () => {
     test('Should render custom organisation name', () => {
       const link = $header('.defra-internal-header__logo-link')
       expect(link.html()).toContain('Custom Org')
-    })
-
-    test('Should link to custom homepageUrl', () => {
-      const link = $header('.defra-internal-header__logo-link')
-      expect(link.attr('href')).toBe('/custom')
     })
 
     test('Should render navigation menu', () => {
