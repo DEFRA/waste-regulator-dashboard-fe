@@ -1,5 +1,8 @@
 import Blankie from 'blankie'
 
+const googleAnalyticsUrl = 'https://www.google-analytics.com'
+const googleTagManagerUrl = 'https://www.googletagmanager.com'
+
 /**
  * Manage content security policies.
  * @satisfies {import('@hapi/hapi').Plugin}
@@ -10,12 +13,13 @@ const contentSecurityPolicy = {
     // Hash 'sha256-GUQ5ad8JK5KmEWmROf3LZd9ge94daqNvd8xy9YS1iDw=' is to support a GOV.UK frontend script bundled within Nunjucks macros
     // https://frontend.design-system.service.gov.uk/import-javascript/#if-our-inline-javascript-snippet-is-blocked-by-a-content-security-policy
     defaultSrc: ['self'],
-    fontSrc: ['self', 'data:', 'https://www.google-analytics.com'],
+    fontSrc: ['self', 'data:', googleAnalyticsUrl],
     connectSrc: [
       'self',
       'wss',
       'data:',
-      'https://www.google-analytics.com',
+      googleTagManagerUrl,
+      googleAnalyticsUrl,
       'https://region1.google-analytics.com',
       'https://analytics.google.com'
     ],
@@ -24,15 +28,10 @@ const contentSecurityPolicy = {
     scriptSrc: [
       'self',
       "'sha256-GUQ5ad8JK5KmEWmROf3LZd9ge94daqNvd8xy9YS1iDw='",
-      'https://www.googletagmanager.com',
-      'https://www.google-analytics.com'
+      googleTagManagerUrl,
+      googleAnalyticsUrl
     ],
-    imgSrc: [
-      'self',
-      'data:',
-      'https://www.google-analytics.com',
-      'https://www.googletagmanager.com'
-    ],
+    imgSrc: ['self', 'data:', googleAnalyticsUrl, googleTagManagerUrl],
     frameSrc: ['self', 'data:'],
     objectSrc: ['none'],
     frameAncestors: ['none'],
