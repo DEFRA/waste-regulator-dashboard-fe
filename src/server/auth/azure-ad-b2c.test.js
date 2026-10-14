@@ -109,10 +109,7 @@ describe('bellOAuthRedirectUri', () => {
     const request = makeRequest({ host: 'localhost:7154' })
 
     expect(
-      bellOAuthRedirectUri(
-        request,
-        'https://localhost:3000/signin-oidc'
-      )
+      bellOAuthRedirectUri(request, 'https://localhost:3000/signin-oidc')
     ).toBe('https://localhost:3000/signin-oidc')
   })
 
