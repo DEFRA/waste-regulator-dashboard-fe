@@ -23,6 +23,7 @@ import { getCacheEngine } from './common/helpers/session-cache/cache-engine.js'
 import { secureContext } from '@defra/hapi-secure-context'
 import { contentSecurityPolicy } from './common/helpers/content-security-policy.js'
 import { metrics } from '@defra/cdp-metrics'
+import { crumb } from './plugins/crumb.js'
 
 /**
  * Bell `location` must be the app origin (see `@hapi/bell`: redirect_uri = location + request.path).
@@ -122,6 +123,7 @@ export async function createServer() {
     siblingAuthLogout,
     nunjucksConfig,
     maintenance,
+    crumb,
     Scooter,
     contentSecurityPolicy
   ])
