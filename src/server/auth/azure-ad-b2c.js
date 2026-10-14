@@ -110,3 +110,22 @@ export function bellRedirectLocation(request) {
   const path = withForwardedPrefix(request, request.path)
   return `${scheme}://${host}${path}`
 }
+
+/**
+ * OAuth `redirect_uri` for Bell when `location` is a function (return value is used as-is).
+ * Uses `AZURE_AD_B2C_REDIRECT_URI` when it is an absolute URL; otherwise derives from the request.
+ *
+ * @param {import('@hapi/hapi').Request} request
+ * @param {string} [configuredRedirectUri]
+ */
+export function bellOAuthRedirectUri(request, configuredRedirectUri) {
+  const configured = (configuredRedirectUri || '').trim()
+  if (/^https?:\/\//i.test(configured)) {
+    const u = new URL(configured)
+    if (isRequestHttps(request) && u.protocol === 'http:') {
+      u.protocol = 'https:'
+    }
+    return u.href
+  }
+  return bellRedirectLocation(request)
+}
