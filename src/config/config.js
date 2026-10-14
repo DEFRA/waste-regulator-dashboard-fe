@@ -272,7 +272,7 @@ export const config = convict({
     siblingCookiePaths: {
       doc: 'Path prefixes for sibling regulator apps whose session and Bell cookies should be cleared on logout',
       format: Array,
-      default: ['/certificates-of-compliance'],
+      default: ['/certificates-of-compliance', '/packaging-waste-regulators'],
       env: 'AUTH_SIBLING_COOKIE_PATHS'
     },
     azureAdB2c: {
