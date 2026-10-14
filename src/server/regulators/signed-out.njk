@@ -10,3 +10,11 @@
     </div>
   </div>
 {% endblock %}
+{% block bodyEnd %}
+  <script>
+    try {
+      localStorage.setItem('regulator-auth-revoked', String(Date.now()))
+    } catch (e) {}
+  </script>
+  {{ super() }}
+{% endblock %}

@@ -12,7 +12,7 @@ import { maintenance } from './common/helpers/maintenance.js'
 import { nunjucksConfig } from '../config/nunjucks/nunjucks.js'
 import { setupProxy } from './common/helpers/proxy/setup-proxy.js'
 import { applyForwardedPrefixToCookiePath } from './common/helpers/proxy/forwarded-prefix.js'
-import { bellRedirectLocation } from './auth/azure-ad-b2c.js'
+import { bellOAuthRedirectUri } from './auth/azure-ad-b2c.js'
 import { forwardedPrefixRedirects } from './plugins/forwarded-prefix-redirects.js'
 import { requestTracing } from './common/helpers/request-tracing.js'
 import { requestLogger } from './common/helpers/logging/request-logger.js'
@@ -171,7 +171,8 @@ export async function createServer() {
       clientId: azureAdB2cConfig.clientId,
       clientSecret: azureAdB2cConfig.clientSecret,
       isSecure: azureAdB2cConfig.isSecure,
-      location: (request) => bellRedirectLocation(request),
+      location: (request) =>
+        bellOAuthRedirectUri(request, azureAdB2cConfig.redirectUri),
       config: {
         tenant: azureAdB2cConfig.tenantId || azureAdB2cConfig.domain,
         discovery:

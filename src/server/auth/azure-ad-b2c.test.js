@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
+  bellOAuthRedirectUri,
   bellRedirectLocation,
   resolvePostLogoutAbsoluteUri
 } from './azure-ad-b2c.js'
@@ -84,6 +85,51 @@ describe('resolvePostLogoutAbsoluteUri', () => {
         {}
       )
     ).toBe('https://proxy.example.com/manage-waste-dashboard/signed-out')
+  })
+})
+
+describe('bellOAuthRedirectUri', () => {
+  function makeRequest({
+    protocol = 'http',
+    host = 'localhost:7154',
+    xForwardedProto
+  } = {}) {
+    return {
+      path: '/signin-oidc',
+      headers: {
+        ...(xForwardedProto ? { 'x-forwarded-proto': xForwardedProto } : {}),
+        host
+      },
+      server: { info: { protocol } },
+      info: { host }
+    }
+  }
+
+  it('uses AZURE_AD_B2C_REDIRECT_URI when set to an absolute URL', () => {
+    const request = makeRequest({ host: 'localhost:7154' })
+
+    expect(
+      bellOAuthRedirectUri(request, 'https://localhost:3000/signin-oidc')
+    ).toBe('https://localhost:3000/signin-oidc')
+  })
+
+  it('upgrades configured redirect URI to https when the request is secure', () => {
+    const request = makeRequest({
+      protocol: 'https',
+      xForwardedProto: 'https'
+    })
+
+    expect(
+      bellOAuthRedirectUri(request, 'http://localhost:3000/signin-oidc')
+    ).toBe('https://localhost:3000/signin-oidc')
+  })
+
+  it('falls back to bellRedirectLocation when redirect URI is not absolute', () => {
+    const request = makeRequest({ protocol: 'http', host: 'localhost:7154' })
+
+    expect(bellOAuthRedirectUri(request, '/signin-oidc')).toBe(
+      'http://localhost:7154/signin-oidc'
+    )
   })
 })
 
