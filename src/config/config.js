@@ -5,13 +5,18 @@ import { fileURLToPath } from 'node:url'
 
 import convictFormatWithValidator from 'convict-format-with-validator'
 
+import {
+  defaultSessionCookieTtlMs,
+  fourHoursMs
+} from './default-session-cookie-ttl.js'
+
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 dotenv.config({
   path: path.join(dirname, '../../.env'),
   quiet: true
 })
 
-const fourHoursMs = 14400000
+const defaultSessionCookieTtl = defaultSessionCookieTtlMs()
 const oneWeekMs = 604800000
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -184,9 +189,9 @@ export const config = convict({
     },
     cookie: {
       ttl: {
-        doc: 'Session cookie ttl',
+        doc: 'Session cookie ttl. Real B2C (MOCK_AUTH off) uses 30s so the dashboard re-runs /signin-oidc regularly; mock auth keeps 4 hours for stable local and journey tests. Override with SESSION_COOKIE_TTL.',
         format: Number,
-        default: fourHoursMs,
+        default: defaultSessionCookieTtl,
         env: 'SESSION_COOKIE_TTL'
       },
       password: {
