@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import hapi from '@hapi/hapi'
 import inert from '@hapi/inert'
@@ -55,5 +56,22 @@ describe('#serveStaticFiles', () => {
 
       expect(statusCode).toBe(statusCodes.ok)
     })
+
+    test.each(['favicon.ico', 'favicon.svg', 'apple-touch-icon.png'])(
+      'Should serve the Defra %s instead of the GOV.UK default',
+      async (icon) => {
+        const { statusCode, rawPayload } = await server.inject({
+          method: 'GET',
+          url: `/public/assets/images/${icon}`
+        })
+
+        expect(statusCode).toBe(statusCodes.ok)
+        expect(rawPayload).toEqual(
+          readFileSync(
+            path.resolve(config.get('root'), 'src/client/assets/images', icon)
+          )
+        )
+      }
+    )
   })
 })
