@@ -1,5 +1,6 @@
 import Boom from '@hapi/boom'
 import { loadAccountDetails } from '../common/helpers/load-account-details.js'
+import { SESSION_USER_STRATEGY } from './session-user.js'
 
 const REGULATOR_ADMIN_SERVICE_ROLE_ID = 4
 const REGULATOR_BASIC_SERVICE_ROLE_ID = 5
@@ -36,4 +37,14 @@ export async function requireRegulatorRole(request, h) {
   }
 
   return h.continue
+}
+
+/**
+ * Shared route options for routes restricted to authenticated regulator users.
+ * Combines the session-user authentication strategy and the regulator role prerequisite
+ * so routes cannot be half-configured or leave out role validation.
+ */
+export const regulatorRouteOptions = {
+  auth: SESSION_USER_STRATEGY,
+  pre: [requireRegulatorRole]
 }

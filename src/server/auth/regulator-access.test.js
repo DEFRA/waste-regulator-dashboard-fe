@@ -2,8 +2,10 @@ import { describe, it, expect, vi } from 'vitest'
 import {
   isRegulator,
   isRegulatorAdmin,
+  regulatorRouteOptions,
   requireRegulatorRole
 } from './regulator-access.js'
+import { SESSION_USER_STRATEGY } from './session-user.js'
 import * as loadAccountDetailsModule from '../common/helpers/load-account-details.js'
 
 describe('isRegulator', () => {
@@ -111,5 +113,14 @@ describe('requireRegulatorRole', () => {
     expect(result.isBoom).toBe(true)
     expect(result.output.statusCode).toBe(403)
     expect(result.message).toBe('User does not hold a regulator service role')
+  })
+})
+
+describe('regulatorRouteOptions', () => {
+  it('bundles session-user auth strategy and requireRegulatorRole prerequisite', () => {
+    expect(regulatorRouteOptions).toEqual({
+      auth: SESSION_USER_STRATEGY,
+      pre: [requireRegulatorRole]
+    })
   })
 })
