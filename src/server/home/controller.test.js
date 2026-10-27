@@ -3,6 +3,7 @@ import { vi } from 'vitest'
 import { createServer } from '../server.js'
 import { config } from '../../config/config.js'
 import { statusCodes } from '../common/constants/status-codes.js'
+import { AccountApiService } from '../common/services/account-api.service.js'
 
 let originalAzureBase
 let originalCertificateOfComplianceBase
@@ -203,6 +204,34 @@ describe('#homeController', () => {
           'href="https://example.org/regulators/regulator-search-page"'
         )
       )
+    })
+
+    test('Should call account API exactly once for a signed-in regulator loading /home', async () => {
+      const signinResponse = await server.inject({
+        method: 'GET',
+        url: '/signin-oidc'
+      })
+      const setCookie = signinResponse.headers['set-cookie'] ?? []
+      const sessionCookie = []
+        .concat(setCookie)
+        .map((c) => c.split(';')[0])
+        .join('; ')
+
+      const getAccountDetailsSpy = vi.spyOn(
+        AccountApiService.prototype,
+        'getAccountDetails'
+      )
+
+      const { statusCode } = await server.inject({
+        method: 'GET',
+        url: '/home',
+        headers: { cookie: sessionCookie }
+      })
+
+      expect(statusCode).toBe(statusCodes.ok)
+      expect(getAccountDetailsSpy).toHaveBeenCalledTimes(1)
+
+      getAccountDetailsSpy.mockRestore()
     })
   })
 
