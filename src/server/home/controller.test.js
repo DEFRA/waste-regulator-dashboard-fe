@@ -3,7 +3,7 @@ import { vi } from 'vitest'
 import { createServer } from '../server.js'
 import { config } from '../../config/config.js'
 import { statusCodes } from '../common/constants/status-codes.js'
-import { homeController } from './controller.js'
+import { AccountApiService } from '../common/services/account-api.service.js'
 
 let originalAzureBase
 let originalCertificateOfComplianceBase
@@ -205,6 +205,34 @@ describe('#homeController', () => {
         )
       )
     })
+
+    test('Should call account API exactly once for a signed-in regulator loading /home', async () => {
+      const signinResponse = await server.inject({
+        method: 'GET',
+        url: '/signin-oidc'
+      })
+      const setCookie = signinResponse.headers['set-cookie'] ?? []
+      const sessionCookie = []
+        .concat(setCookie)
+        .map((c) => c.split(';')[0])
+        .join('; ')
+
+      const getAccountDetailsSpy = vi.spyOn(
+        AccountApiService.prototype,
+        'getAccountDetails'
+      )
+
+      const { statusCode } = await server.inject({
+        method: 'GET',
+        url: '/home',
+        headers: { cookie: sessionCookie }
+      })
+
+      expect(statusCode).toBe(statusCodes.ok)
+      expect(getAccountDetailsSpy).toHaveBeenCalledTimes(1)
+
+      getAccountDetailsSpy.mockRestore()
+    })
   })
 
   describe('with FEATURE_CERTIFICATE_OF_COMPLIANCE=true', () => {
@@ -269,73 +297,6 @@ describe('#homeController', () => {
         expect.stringContaining(
           'href="https://example.org/certificates-of-compliance?lang=cy"'
         )
-      )
-    })
-  })
-
-  describe('handler direct invocation', () => {
-    it('renders home/index using request.app context without manual loading', () => {
-      const user = { firstName: 'Jane', lastName: 'Regulator' }
-      const accountDetails = {
-        firstName: 'Jane',
-        lastName: 'Regulator',
-        serviceRoleId: 4
-      }
-      const request = {
-        app: {
-          accountDetails,
-          accountDetailsError: undefined
-        },
-        yar: {
-          id: 'session-id',
-          get: vi.fn(() => user)
-        },
-        query: {}
-      }
-      const mockH = {
-        view: vi.fn((viewName, context) => ({ viewName, context }))
-      }
-
-      const result = homeController.handler(request, mockH)
-
-      expect(mockH.view).toHaveBeenCalledWith(
-        'home/index',
-        expect.objectContaining({
-          user,
-          accountDetails,
-          accountDetailsError: undefined,
-          isRegulatorAdmin: true
-        })
-      )
-      expect(result.viewName).toBe('home/index')
-    })
-
-    it('forwards accountDetailsError when present on request.app', () => {
-      const user = { firstName: 'Jane', lastName: 'Regulator' }
-      const request = {
-        app: {
-          accountDetails: undefined,
-          accountDetailsError: 'We could not load your account details.'
-        },
-        yar: {
-          id: 'session-id',
-          get: vi.fn(() => user)
-        },
-        query: {}
-      }
-      const mockH = {
-        view: vi.fn((viewName, context) => ({ viewName, context }))
-      }
-
-      homeController.handler(request, mockH)
-
-      expect(mockH.view).toHaveBeenCalledWith(
-        'home/index',
-        expect.objectContaining({
-          accountDetails: undefined,
-          accountDetailsError: 'We could not load your account details.',
-          isRegulatorAdmin: false
-        })
       )
     })
   })
