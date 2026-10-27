@@ -16,6 +16,18 @@ export async function loadAccountDetails(request) {
     }
   }
 
+  request.app = request.app || {}
+  if (
+    request.app.accountDetails !== undefined ||
+    request.app.accountDetailsError !== undefined
+  ) {
+    return {
+      user,
+      accountDetails: request.app.accountDetails,
+      accountDetailsError: request.app.accountDetailsError
+    }
+  }
+
   let accountDetails
   let accountDetailsError
   const userId = getAccountUserIdFromSessionUser(user)
@@ -51,6 +63,7 @@ export async function loadAccountDetails(request) {
 
   request.app = request.app || {}
   request.app.accountDetails = accountDetails
+  request.app.accountDetailsError = accountDetailsError
 
   return { user, accountDetails, accountDetailsError }
 }
