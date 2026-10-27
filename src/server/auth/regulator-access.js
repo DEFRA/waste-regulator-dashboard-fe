@@ -26,11 +26,7 @@ export function isRegulatorAdmin(accountDetails) {
  * @returns {Promise<import('@hapi/hapi').Lifecycle.ReturnValue>}
  */
 export async function requireRegulatorRole(request, h) {
-  let accountDetails = request.app?.accountDetails
-  if (accountDetails === undefined && !request.app?.accountDetailsError) {
-    const details = await loadAccountDetails(request)
-    accountDetails = details.accountDetails
-  }
+  const { accountDetails } = await loadAccountDetails(request)
 
   if (!isRegulator(accountDetails)) {
     return Boom.forbidden('User does not hold a regulator service role')

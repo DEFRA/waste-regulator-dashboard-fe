@@ -48,23 +48,27 @@ describe('isRegulatorAdmin', () => {
 describe('requireRegulatorRole', () => {
   const mockH = { continue: Symbol('continue') }
 
-  it('returns h.continue when request.app.accountDetails has a regulator role', async () => {
-    const request = {
-      app: {
-        accountDetails: { serviceRoleId: 5 }
-      }
-    }
+  it('returns h.continue when accountDetails has a regulator role', async () => {
+    const request = {}
+    vi.spyOn(
+      loadAccountDetailsModule,
+      'loadAccountDetails'
+    ).mockResolvedValueOnce({
+      accountDetails: { serviceRoleId: 5 }
+    })
 
     const result = await requireRegulatorRole(request, mockH)
     expect(result).toBe(mockH.continue)
   })
 
-  it('returns Boom.forbidden when request.app.accountDetails has a non-regulator role', async () => {
-    const request = {
-      app: {
-        accountDetails: { serviceRoleId: 3 }
-      }
-    }
+  it('returns Boom.forbidden when accountDetails has a non-regulator role', async () => {
+    const request = {}
+    vi.spyOn(
+      loadAccountDetailsModule,
+      'loadAccountDetails'
+    ).mockResolvedValueOnce({
+      accountDetails: { serviceRoleId: 3 }
+    })
 
     const result = await requireRegulatorRole(request, mockH)
     expect(result.isBoom).toBe(true)
@@ -72,41 +76,14 @@ describe('requireRegulatorRole', () => {
     expect(result.message).toBe('User does not hold a regulator service role')
   })
 
-  it('loads account details when request.app has no accountDetails', async () => {
-    const request = { app: {} }
-    vi.spyOn(
-      loadAccountDetailsModule,
-      'loadAccountDetails'
-    ).mockResolvedValueOnce({
-      accountDetails: { serviceRoleId: 4 }
-    })
-
-    const result = await requireRegulatorRole(request, mockH)
-    expect(result).toBe(mockH.continue)
-  })
-
-  it('does not re-load account details when request.app has accountDetailsError', async () => {
-    const request = {
-      app: {
-        accountDetails: undefined,
-        accountDetailsError: 'We could not load your account details.'
-      }
-    }
-    const loadSpy = vi.spyOn(loadAccountDetailsModule, 'loadAccountDetails')
-
-    const result = await requireRegulatorRole(request, mockH)
-    expect(loadSpy).not.toHaveBeenCalled()
-    expect(result.isBoom).toBe(true)
-    expect(result.output.statusCode).toBe(403)
-  })
-
-  it('returns Boom.forbidden when loaded accountDetails is not a regulator', async () => {
+  it('returns Boom.forbidden when accountDetails is undefined', async () => {
     const request = {}
     vi.spyOn(
       loadAccountDetailsModule,
       'loadAccountDetails'
     ).mockResolvedValueOnce({
-      accountDetails: { serviceRoleId: 2 }
+      accountDetails: undefined,
+      accountDetailsError: 'We could not load your account details.'
     })
 
     const result = await requireRegulatorRole(request, mockH)
