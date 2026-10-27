@@ -1,13 +1,12 @@
 import { config } from '../../config/config.js'
 import { isRegulatorAdmin } from '../auth/regulator-access.js'
-import { getSessionUser } from '../common/helpers/get-session-user.js'
 import { getLocale } from '../common/helpers/i18n/get-locale.js'
 import { pageI18n } from '../common/helpers/i18n/translate.js'
 
 export const homeController = {
   handler(request, h) {
     const locale = getLocale(request)
-    const user = getSessionUser(request)
+    const { user } = request.auth.credentials
     const accountDetails = request.app?.accountDetails
     const accountDetailsError = request.app?.accountDetailsError
     const i18n = pageI18n(locale, 'home')
