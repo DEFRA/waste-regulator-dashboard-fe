@@ -61,7 +61,6 @@ export async function loadAccountDetails(request) {
     accountDetailsError = 'We could not determine your user id.'
   }
 
-  request.app = request.app || {}
   request.app.accountDetails = accountDetails
   request.app.accountDetailsError = accountDetailsError
 
