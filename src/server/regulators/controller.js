@@ -64,6 +64,7 @@ export const signInFailedController = {
 
     return h.view('regulators/sign-in-failed', {
       pageTitle: translate(locale, 'auth.signInFailed.pageTitle'),
+      hideCookieBanner: true,
       tryAgainPrefix: translate(locale, 'auth.signInFailed.tryAgainPrefix'),
       tryAgainLinkText: translate(locale, 'auth.signInFailed.tryAgainLinkText'),
       tryAgainSuffix: translate(locale, 'auth.signInFailed.tryAgainSuffix'),

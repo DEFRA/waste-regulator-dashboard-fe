@@ -231,6 +231,21 @@ describe('#regulatorsController', () => {
     )
   })
 
+  test('Should not show the cookie banner on the sign-in-failed page', async () => {
+    const signedOut = await server.inject({
+      method: 'GET',
+      url: '/signed-out'
+    })
+    const signInFailed = await server.inject({
+      method: 'GET',
+      url: '/sign-in-failed'
+    })
+
+    // The banner shows on other pages for someone with no cookie preference.
+    expect(signedOut.result).toContain('govuk-cookie-banner')
+    expect(signInFailed.result).not.toContain('govuk-cookie-banner')
+  })
+
   test('Should keep Welsh on the sign-in-failed try-again link, with English text until it is translated', async () => {
     const { result, statusCode } = await server.inject({
       method: 'GET',

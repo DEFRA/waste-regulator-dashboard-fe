@@ -21,12 +21,22 @@ const B2C = vi.hoisted(() => {
     AZURE_AD_B2C_INSTANCE: b2c.instance,
     AZURE_AD_B2C_DOMAIN: b2c.domain,
     AZURE_AD_B2C_USER_FLOW: b2c.userFlow,
-    AUTH_COOKIE_SECURE: 'false'
+    AUTH_COOKIE_SECURE: 'false',
+    // B2C and the Account API are answered by MSW. A proxy from the shell
+    // would route Bell's token exchange past MSW, so it is cleared.
+    MOCK_API: 'true',
+    HTTP_PROXY: undefined
   }
   b2c.previousEnv = Object.fromEntries(
     Object.keys(env).map((key) => [key, process.env[key]])
   )
-  Object.assign(process.env, env)
+  for (const [key, value] of Object.entries(env)) {
+    if (value === undefined) {
+      delete process.env[key]
+    } else {
+      process.env[key] = value
+    }
+  }
   return b2c
 })
 
@@ -168,9 +178,11 @@ describe('/signin-oidc with the real Bell strategy', () => {
   })
 
   test('handles a failed code-for-token exchange', async () => {
-    respondFromTokenEndpoint(() =>
-      HttpResponse.json({ error: 'invalid_grant' }, { status: 400 })
-    )
+    let tokenEndpointCalled = false
+    respondFromTokenEndpoint(() => {
+      tokenEndpointCalled = true
+      return HttpResponse.json({ error: 'invalid_grant' }, { status: 400 })
+    })
     const { cookie, state } = await startSignIn()
 
     const response = await get(
@@ -178,6 +190,9 @@ describe('/signin-oidc with the real Bell strategy', () => {
       cookie
     )
 
+    // Fails because B2C refused the code, not because the request never
+    // reached the mocked token endpoint.
+    expect(tokenEndpointCalled).toBe(true)
     await expectSentToSignInFailed(response)
   })
 
