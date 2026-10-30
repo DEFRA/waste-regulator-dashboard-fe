@@ -42,6 +42,7 @@ const B2C = vi.hoisted(() => {
 
 const AUTHORITY = `${B2C.instance}/${B2C.domain}/${B2C.userFlow}`
 const SIGN_IN_FAILED = 'Sorry, there was a problem signing you in'
+const REGULATOR_OID = '0b6f8f9e-2c4d-4e5a-9b1c-7d3e2f1a0b9c'
 
 function idTokenFor(claims) {
   const encode = (value) =>
@@ -128,7 +129,7 @@ describe('/signin-oidc with the real Bell strategy', () => {
   })
 
   test('signs a regulator in', async () => {
-    issueTokensFor('regulator-oid')
+    issueTokensFor(REGULATOR_OID)
     const { cookie, state } = await startSignIn()
 
     const response = await get(
@@ -196,10 +197,33 @@ describe('/signin-oidc with the real Bell strategy', () => {
     await expectSentToSignInFailed(response)
   })
 
+  // OpenID Connect requires the id_token; without one the fault is B2C's or
+  // our configuration's, so this is the generic problem page, not a 403.
+  test('shows the problem with the service page when B2C returns no id_token', async () => {
+    respondFromTokenEndpoint(() =>
+      HttpResponse.json({
+        access_token: 'secret-access-token',
+        token_type: 'Bearer',
+        expires_in: 3600
+      })
+    )
+    const { cookie, state } = await startSignIn()
+
+    const response = await get(
+      `/signin-oidc?code=auth-code&state=${state}`,
+      cookie
+    )
+
+    expect(response.statusCode).toBe(statusCodes.internalServerError)
+    expect(response.payload).toContain(
+      'Sorry, there is a problem with the service'
+    )
+  })
+
   // A callback that comes back with a state Bell has already spent, as a
   // reload or Back to B2C's sign-in page after signing in can do.
   test('takes a replayed callback on to returnTo once signed in', async () => {
-    issueTokensFor('regulator-oid')
+    issueTokensFor(REGULATOR_OID)
     const { cookie, state } = await startSignIn()
     const callback = `/signin-oidc?code=auth-code&state=${state}`
     const signedIn = await get(callback, cookie)

@@ -1,24 +1,24 @@
 import { signinOidcController } from './controller.js'
 
+function makeYar(initial = {}) {
+  const store = { ...initial }
+  return {
+    id: 'session-id',
+    get: vi.fn((key) => store[key] ?? null),
+    set: vi.fn((key, val) => {
+      store[key] = val
+    }),
+    clear: vi.fn((key) => {
+      delete store[key]
+    })
+  }
+}
+
+function makeH() {
+  return { redirect: vi.fn((url) => `redirect:${url}`) }
+}
+
 describe('signinOidcController when the sign-in callback fails', () => {
-  function makeYar(initial = {}) {
-    const store = { ...initial }
-    return {
-      id: 'session-id',
-      get: vi.fn((key) => store[key] ?? null),
-      set: vi.fn((key, val) => {
-        store[key] = val
-      }),
-      clear: vi.fn((key) => {
-        delete store[key]
-      })
-    }
-  }
-
-  function makeH() {
-    return { redirect: vi.fn((url) => `redirect:${url}`) }
-  }
-
   // What Bell hands the handler in `try` mode: not authenticated, an error
   // naming the cause, and partial credentials that carry no profile.
   function failedRequest({
@@ -243,5 +243,70 @@ describe('signinOidcController when the sign-in callback fails', () => {
     )
 
     expect(h.redirect).toHaveBeenCalledWith('/dashboard/home')
+  })
+})
+
+describe('signinOidcController when B2C signs someone in', () => {
+  const signedIn = (credentials, yar = makeYar()) => ({
+    auth: { isAuthenticated: true, credentials },
+    query: {},
+    headers: {},
+    yar
+  })
+
+  test.each([
+    ['an oid', { oid: '0b6f8f9e-2c4d-4e5a-9b1c-7d3e2f1a0b9c' }],
+    ['only a sub', { sub: '0b6f8f9e-2c4d-4e5a-9b1c-7d3e2f1a0b9c' }]
+  ])(
+    'stores the user and redirects to /home for a profile with %s',
+    (_case, profile) => {
+      const yar = makeYar()
+      const credentials = { token: 'access-token', profile }
+      const result = signinOidcController.handler(
+        signedIn(credentials, yar),
+        makeH()
+      )
+
+      expect(yar.set).toHaveBeenCalledWith('user', credentials)
+      expect(result).toBe('redirect:/home')
+    }
+  )
+
+  test.each([
+    ['no profile, because there was no id_token', undefined],
+    ['no oid or sub', { email: 'person@example.com' }],
+    ['an oid that is not a GUID', { oid: 'not-a-guid' }]
+  ])('responds with a 500 and stores no user for %s', (_case, profile) => {
+    const yar = makeYar()
+    const h = makeH()
+    const result = signinOidcController.handler(
+      signedIn({ token: 'access-token', profile }, yar),
+      h
+    )
+
+    expect(result.isBoom).toBe(true)
+    expect(result.output.statusCode).toBe(500)
+    expect(result.message).toBe(
+      'B2C sign-in returned no usable user id (oid or sub)'
+    )
+    expect(yar.set).not.toHaveBeenCalled()
+    expect(h.redirect).not.toHaveBeenCalled()
+  })
+
+  test('clears a user left in the session by an earlier sign-in, but keeps returnTo and authLocale', () => {
+    const yar = makeYar({
+      user: { profile: { oid: '0b6f8f9e-2c4d-4e5a-9b1c-7d3e2f1a0b9c' } },
+      returnTo: '/dashboard/home',
+      authLocale: 'cy'
+    })
+    const result = signinOidcController.handler(
+      signedIn({ token: 'access-token', profile: undefined }, yar),
+      makeH()
+    )
+
+    expect(result.output.statusCode).toBe(500)
+    expect(yar.get('user')).toBeNull()
+    expect(yar.get('returnTo')).toBe('/dashboard/home')
+    expect(yar.get('authLocale')).toBe('cy')
   })
 })

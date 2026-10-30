@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom'
 import { config } from '../../config/config.js'
 import {
   buildB2cLogoutUrl,
@@ -20,6 +21,7 @@ import {
 } from '../common/helpers/i18n/locale-url.js'
 import { translate } from '../common/helpers/i18n/translate.js'
 import { withForwardedPrefix } from '../common/helpers/proxy/forwarded-prefix.js'
+import { getAccountUserIdFromSessionUser } from '../common/services/account-api.service.js'
 
 const SIGN_IN_FAILED_PATH = '/sign-in-failed'
 
@@ -82,6 +84,19 @@ export const signinOidcController = {
     // they are only stored once it has actually authenticated.
     if (!request.auth?.isAuthenticated) {
       return handleFailedSignin(request, h)
+    }
+
+    // OpenID Connect requires an id_token in this token response, and the
+    // user id is read from it. Without one, B2C or our configuration is at
+    // fault, not the person, so this is a 500 rather than a sign-in to retry
+    // or a 403 on the next page.
+    if (!getAccountUserIdFromSessionUser(request.auth.credentials)) {
+      // B2C has signed someone in, so the service is left signed in as
+      // nobody, not as whoever this browser signed in as before.
+      request.yar.clear('user')
+      return Boom.internal(
+        'B2C sign-in returned no usable user id (oid or sub)'
+      )
     }
 
     request.yar.set('user', request.auth.credentials)
