@@ -1,0 +1,6 @@
+{% extends 'layouts/error-page.njk' %}
+
+{% block errorBody %}
+  <p class="govuk-body">{{ tryAgainPrefix }} <a class="govuk-link" href="{{ tryAgainUrl }}">{{ tryAgainLinkText }}</a>{{ tryAgainSuffix }}</p>
+  <p class="govuk-body">{{ t(locale, 'errors.contactHelpDeskPrefix') }} {{ helpDeskLink() }} {{ t(locale, 'errors.helpDeskEmailText') }}</p>
+{% endblock %}

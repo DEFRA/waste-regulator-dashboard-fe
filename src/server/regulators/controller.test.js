@@ -210,4 +210,66 @@ describe('#regulatorsController', () => {
       expect.stringContaining('href="/manage-waste-dashboard/signin-oidc"')
     )
   })
+
+  test('Should render sign-in-failed page with a link to try again', async () => {
+    const { result, statusCode } = await server.inject({
+      method: 'GET',
+      url: '/sign-in-failed'
+    })
+
+    expect(statusCode).toBe(statusCodes.ok)
+    expect(result).toEqual(
+      expect.stringContaining('Sorry, there was a problem signing you in')
+    )
+    expect(result).toEqual(
+      expect.stringContaining(
+        'Try to <a class="govuk-link" href="/signin-oidc">sign in again</a>.'
+      )
+    )
+    expect(result).toEqual(
+      expect.stringContaining('eprcustomerservice@defra.gov.uk')
+    )
+  })
+
+  test('Should not show the cookie banner on the sign-in-failed page', async () => {
+    const signedOut = await server.inject({
+      method: 'GET',
+      url: '/signed-out'
+    })
+    const signInFailed = await server.inject({
+      method: 'GET',
+      url: '/sign-in-failed'
+    })
+
+    // The banner shows on other pages for someone with no cookie preference.
+    expect(signedOut.result).toContain('govuk-cookie-banner')
+    expect(signInFailed.result).not.toContain('govuk-cookie-banner')
+  })
+
+  test('Should keep Welsh on the sign-in-failed try-again link, with English text until it is translated', async () => {
+    const { result, statusCode } = await server.inject({
+      method: 'GET',
+      url: '/sign-in-failed?lang=cy'
+    })
+
+    expect(statusCode).toBe(statusCodes.ok)
+    expect(result).toEqual(
+      expect.stringContaining('Sorry, there was a problem signing you in')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('href="/signin-oidc?lang=cy"')
+    )
+  })
+
+  test('Should link the sign-in-failed retry to /signin-oidc behind the proxy prefix', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: '/sign-in-failed',
+      headers: { 'x-forwarded-prefix': '/dashboard' }
+    })
+
+    expect(result).toEqual(
+      expect.stringContaining('href="/dashboard/signin-oidc"')
+    )
+  })
 })

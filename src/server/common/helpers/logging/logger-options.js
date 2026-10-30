@@ -7,6 +7,18 @@ const logConfig = config.get('log')
 const serviceName = config.get('serviceName')
 const serviceVersion = config.get('serviceVersion')
 
+// hapi-pino puts `req.query` on every line logged for a request, and the B2C
+// sign-in callback carries the authorisation code and state in its query
+// string, or B2C's free-text error description when sign-in fails. These are
+// always removed, whatever LOG_REDACT is set to.
+export const sensitiveQueryPaths = [
+  'req.query.code',
+  'req.query.state',
+  'req.query.id_token',
+  'req.query.access_token',
+  'req.query.error_description'
+]
+
 const formatters = {
   ecs: {
     ...ecsFormat({
@@ -21,7 +33,7 @@ export const loggerOptions = {
   enabled: logConfig.enabled,
   ignorePaths: ['/health', '/health/all'],
   redact: {
-    paths: logConfig.redact,
+    paths: [...logConfig.redact, ...sensitiveQueryPaths],
     remove: true
   },
   level: logConfig.level,
