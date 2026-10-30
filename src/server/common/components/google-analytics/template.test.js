@@ -37,6 +37,13 @@ describe('Google Analytics Component', () => {
       expect($('script')).toHaveLength(0)
     })
 
+    test('Should render GA4 and GTM scripts when useGoogleAnalytics is omitted (defaults to true)', () => {
+      const { useGoogleAnalytics, ...paramsWithoutFlag } = baseParams
+      const $ = renderComponent('google-analytics', paramsWithoutFlag)
+
+      expect($('script')).toHaveLength(4)
+    })
+
     test('Should render GA4 and GTM scripts with default denied consent when allowGoogleAnalytics is false', () => {
       const $ = renderComponent('google-analytics', baseParams)
       const scripts = $('script')
