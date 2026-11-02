@@ -157,19 +157,14 @@ export default {
     usedExports: true
   },
   plugins: [
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin({
+      cleanStaleWebpackAssets: false
+    }),
     new WebpackAssetsManifest(),
     new CopyPlugin({
       patterns: [
         {
           from: path.join(govukFrontendPath, 'dist/govuk/assets'),
-          to: 'assets',
-          globOptions: {
-            ignore: [path.join(govukFrontendPath, 'dist/govuk/assets/rebrand')]
-          }
-        },
-        {
-          from: path.join(govukFrontendPath, 'dist/govuk/assets/rebrand'),
           to: 'assets'
         },
         {
