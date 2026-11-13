@@ -270,4 +270,16 @@ describe('entra-id', () => {
     })
     expect(entraSignOutUrl()).toBeNull()
   })
+
+  test('there is no Entra sign-out URL when the authority is not a URL', () => {
+    const get = config.get.bind(config)
+    vi.spyOn(config, 'get').mockImplementation((key) => {
+      if (key === 'auth.entraId.authority') {
+        return 'login.microsoftonline.com/tenant'
+      }
+      if (key === 'auth.entraId.externalBaseUrl') return 'http://localhost:7154'
+      return get(key)
+    })
+    expect(entraSignOutUrl()).toBeNull()
+  })
 })

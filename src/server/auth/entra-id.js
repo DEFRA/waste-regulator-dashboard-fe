@@ -177,7 +177,7 @@ export function entraExternalUrls() {
 
 export function entraSignOutUrl() {
   if (
-    !entraAuthority() ||
+    !isValidUrl(entraAuthority()) ||
     !isValidUrl(config.get('auth.entraId.externalBaseUrl'))
   ) {
     return null

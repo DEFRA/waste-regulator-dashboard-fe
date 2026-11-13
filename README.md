@@ -113,7 +113,7 @@ Regulators sign in with Azure AD B2C today. This branch adds **Entra ID** as a s
 
 _The diagram is drawn from [`docs/images/entra-sign-in.mmd`](docs/images/entra-sign-in.mmd) (Mermaid). To change it, edit that file and re-render the PNG with `npx @mermaid-js/mermaid-cli -i docs/images/entra-sign-in.mmd -o docs/images/entra-sign-in.png -s 2 -b white`._
 
-While you are signed in, the dashboard renews the Entra ID token in the background just before it runs out. If renewing fails, you are asked to sign in again. Signing out clears the session and also signs you out of Entra ID.
+While you are signed in, the dashboard renews the Entra ID token in the background just before it runs out. If renewing fails, you are asked to sign in again. Signing out clears the session and then sends you to Entra ID to sign out there, where you may be asked to pick the account first.
 
 ### Turning it on
 
@@ -157,7 +157,7 @@ Anyone without it falls back to their Entra ID id, and is refused until they are
 
 ### Tests
 
-The journey tests run the whole sign-in against a fake Entra ID and a fake AWS STS. They show, among other things, that the token request carries the AWS token and no secret, that renewing and failed renewing behave, that a replayed or forged callback is turned away, and that signing in starts a clean session. Run them with `npm test`.
+The journey tests run the whole sign-in against a fake Entra ID and a fake AWS STS. They show, among other things, that the token request carries the AWS token and no secret, that renewing and failed renewing behave, that a forged callback is turned away, that a replayed callback after signing in just goes on to the page, and that signing in starts a clean session. Run them with `npm test`.
 
 ### Not done yet
 
