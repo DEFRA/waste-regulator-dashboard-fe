@@ -105,11 +105,11 @@ Regulators sign in with Azure AD B2C today. This branch adds **Entra ID** as a s
 - You choose the sign-in with one setting, `AUTH_PROVIDER` (`b2c` is the default, `entra` turns the new one on).
 - On CDP the app proves who it is to Entra ID **without a password**. It asks AWS for a short-lived token and shows that instead of a client secret. This is called a federated credential, and it is how `waste-disposal-fee-frontend` does it too.
 - On your own machine there is no AWS, so you use a client secret instead.
-- Entra ID only has to say who the person is. Whether they are allowed in is still decided by the Account API, as before.
+- Entra ID says who the person is. Whether they are allowed in is still decided by the Account API, as before. The Account API knows people by their **old B2C id**, so that id is copied onto each Entra ID user once, and comes back in the sign-in token (see the yellow note in the diagram).
 
 ### How a sign-in works
 
-![How an Entra ID sign-in works: the regulator opens a page and is sent to Entra ID, comes back with a code, the dashboard gets a short-lived token from AWS STS and swaps the code for tokens, starts a fresh session, asks the Account API whether the person is a regulator, then shows the page](docs/images/entra-sign-in.png)
+![How an Entra ID sign-in works. Set up once beforehand: an admin copies each person's old B2C id onto their Entra ID user. Then the regulator opens a page and is sent to Entra ID, comes back with a code, the dashboard gets a short-lived token from AWS STS and swaps the code for tokens that include the old B2C id, starts a fresh session, asks the Account API whether the person is a regulator using that id, then shows the page](docs/images/entra-sign-in.png)
 
 _The diagram is drawn from [`docs/images/entra-sign-in.mmd`](docs/images/entra-sign-in.mmd) (Mermaid). To change it, edit that file and re-render the PNG with `npx @mermaid-js/mermaid-cli -i docs/images/entra-sign-in.mmd -o docs/images/entra-sign-in.png -s 2 -b white`._
 
@@ -145,9 +145,15 @@ ENTRA_ID_EXTERNAL_BASE_URL=http://localhost:7154 npm run dev
 
 `MOCK_AUTH` is ignored when Entra ID is on. After signing in, `/whoami` shows what Entra ID told us about you (never the tokens).
 
-### The one thing to know about accounts
+### The old B2C id (the yellow note in the diagram)
 
-The Account API, and many tables behind it, identify people by their **B2C object id**. An Entra ID object id is different. The plan is to copy each person's old B2C id onto their Entra ID user as an attribute that comes back as a claim. Set `ENTRA_ID_ACCOUNT_ID_CLAIM` to that claim and the dashboard uses it. Anyone without it falls back to their Entra ID id and is refused until they are fixed. Only admins may ever be able to write that attribute, because it decides whose account loads.
+The Account API, and many tables behind it, identify people by their **B2C object id**. An Entra ID object id is different. So there is a one-off job before anyone can sign in:
+
+1. An admin copies each person's old B2C id onto their Entra ID user, as a custom attribute. Matching is by email, and a person checks the list before anything is written. About 120 internal users.
+2. The app registration is set up to send that attribute back as a claim in the sign-in token.
+3. Set `ENTRA_ID_ACCOUNT_ID_CLAIM` to that claim's name. The dashboard then asks the Account API with that id.
+
+Anyone without it falls back to their Entra ID id, and is refused until they are fixed. Only admins must ever be able to write that attribute, because it decides whose account loads. Draft scripts for steps 1 and 2 are written but have not been run against a real tenant.
 
 ### Tests
 
@@ -156,7 +162,7 @@ The journey tests run the whole sign-in against a fake Entra ID and a fake AWS S
 ### Not done yet
 
 - It has not been run against a real Entra ID tenant or on CDP. That also means nobody has seen Entra ID accept the AWS token yet.
-- Real regulators will not find their account until the B2C id is carried across.
+- The old B2C id is not on the Entra ID users yet, and the claim is not set up on an app registration. Until then real regulators will not find their account.
 - Whether the CDP proxy covers the AWS and Entra ID calls needs checking on a deploy.
 - Role checks are optional and off by default.
 - The app registrations still have to be requested through ServiceNow.

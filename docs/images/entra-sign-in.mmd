@@ -5,6 +5,7 @@ sequenceDiagram
     participant A as AWS STS (CDP only)
     participant API as Account API
 
+    Note over E: Set up once beforehand.<br/>An admin copies each person's old B2C id<br/>onto their Entra ID user
     U->>D: Open a page
     D-->>U: Not signed in, go to Entra ID
     U->>E: Sign in
@@ -13,8 +14,8 @@ sequenceDiagram
     D->>A: Give me a short-lived token
     A-->>D: Token (this replaces a secret)
     D->>E: Swap the code for tokens, proving who we are
-    E-->>D: Tokens and who the person is
+    E-->>D: Tokens, who the person is, and their old B2C id
     D->>D: Start a fresh session
-    D->>API: Is this person a regulator?
+    D->>API: Is this person a regulator? (asks with the old B2C id)
     API-->>D: Yes, here are their details
     D-->>U: Show the page
