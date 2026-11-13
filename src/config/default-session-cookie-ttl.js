@@ -13,5 +13,11 @@ export function defaultSessionCookieTtlMs(env = process.env) {
     return fourHoursMs
   }
 
+  // Entra ID renews the access token with the refresh token, so the session can
+  // last. B2C has no refresh here, which is why it re-runs sign-in every 30s.
+  if (env.AUTH_PROVIDER === 'entra') {
+    return fourHoursMs
+  }
+
   return thirtySecondsMs
 }

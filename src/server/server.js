@@ -24,6 +24,8 @@ import { secureContext } from '@defra/hapi-secure-context'
 import { contentSecurityPolicy } from './common/helpers/content-security-policy.js'
 import { metrics } from '@defra/cdp-metrics'
 import { crumb } from './plugins/crumb.js'
+import { isEntraProvider } from './auth/entra-id.js'
+import { entraAuth } from './plugins/entra-auth.js'
 import { registerSessionUserStrategy } from './auth/session-user.js'
 
 /**
@@ -131,7 +133,9 @@ export async function createServer() {
 
   const azureAdB2cConfig = config.get('auth.azureAdB2c')
 
-  if (config.get('useMockAuth')) {
+  if (isEntraProvider()) {
+    await server.register(entraAuth)
+  } else if (config.get('useMockAuth')) {
     server.auth.scheme('mock', () => ({
       authenticate: (_request, h) =>
         h.authenticated({

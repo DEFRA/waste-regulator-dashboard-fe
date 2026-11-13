@@ -47,4 +47,24 @@ describe('#defaultSessionCookieTtlMs', () => {
       })
     ).toBe(fourHoursMs)
   })
+
+  it('returns 4 hours for production with Entra ID, which refreshes its tokens', () => {
+    expect(
+      defaultSessionCookieTtlMs({
+        NODE_ENV: 'production',
+        MOCK_AUTH: 'false',
+        AUTH_PROVIDER: 'entra'
+      })
+    ).toBe(fourHoursMs)
+  })
+
+  it('still returns 30 seconds for production with B2C when AUTH_PROVIDER is b2c', () => {
+    expect(
+      defaultSessionCookieTtlMs({
+        NODE_ENV: 'production',
+        MOCK_AUTH: 'false',
+        AUTH_PROVIDER: 'b2c'
+      })
+    ).toBe(thirtySecondsMs)
+  })
 })

@@ -189,7 +189,7 @@ export const config = convict({
     },
     cookie: {
       ttl: {
-        doc: 'Session cookie ttl. Real B2C (MOCK_AUTH off) uses 30s so the dashboard re-runs /signin-oidc regularly; mock auth keeps 4 hours for stable local and journey tests. Override with SESSION_COOKIE_TTL.',
+        doc: 'Session cookie ttl. Real B2C (MOCK_AUTH off) uses 30s so the dashboard re-runs /signin-oidc regularly; mock auth and Entra ID (AUTH_PROVIDER=entra, tokens are refreshed) use 4 hours. Override with SESSION_COOKIE_TTL.',
         format: Number,
         default: defaultSessionCookieTtl,
         env: 'SESSION_COOKIE_TTL'
@@ -274,6 +274,69 @@ export const config = convict({
       format: Array,
       default: ['/certificates-of-compliance', '/packaging-waste-regulators'],
       env: 'AUTH_SIBLING_COOKIE_PATHS'
+    },
+    provider: {
+      doc: 'Which identity provider signs regulators in: b2c (Azure AD B2C) or entra (Entra ID)',
+      format: ['b2c', 'entra'],
+      default: 'b2c',
+      env: 'AUTH_PROVIDER'
+    },
+    entraId: {
+      authority: {
+        doc: 'Entra ID authority, i.e. https://login.microsoftonline.com/{tenant-id}',
+        format: String,
+        default: '',
+        env: 'ENTRA_ID_AUTHORITY'
+      },
+      clientId: {
+        doc: 'Entra ID client ID of this frontend',
+        format: String,
+        default: '',
+        env: 'ENTRA_ID_CLIENT_ID'
+      },
+      clientSecret: {
+        doc: 'Entra ID client secret. Only used locally: in production the app uses its federated credential',
+        format: String,
+        default: '',
+        env: 'ENTRA_ID_CLIENT_SECRET',
+        sensitive: true
+      },
+      federatedCredentialsAudience: {
+        doc: 'Audience of the federated credential on the app registration, which production asks AWS STS for',
+        format: String,
+        default: 'waste-regulator-dashboard-fe',
+        env: 'FEDERATED_CREDENTIALS_AUDIENCE'
+      },
+      apiScope: {
+        doc: 'API scope the access token is issued for (carries the roles claim), e.g. api://{client-id}/.default',
+        format: String,
+        default: '',
+        env: 'ENTRA_ID_API_SCOPE'
+      },
+      externalBaseUrl: {
+        doc: 'Public base URL of this app, as the browser sees it. {base}/signin-oidc must be a redirect URI on the app registration',
+        format: String,
+        default: 'http://localhost:7154',
+        env: 'ENTRA_ID_EXTERNAL_BASE_URL'
+      },
+      credentialType: {
+        doc: 'How the app proves its identity to Entra ID: federated (an AWS STS token as a client assertion, no secret; the default on CDP) or secret (ENTRA_ID_CLIENT_SECRET; the default locally). secret is refused whenever NODE_ENV=production',
+        format: ['federated', 'secret'],
+        default: isProduction ? 'federated' : 'secret',
+        env: 'ENTRA_ID_CREDENTIAL_TYPE'
+      },
+      requiredRole: {
+        doc: 'App role a user must hold in the access token to sign in, for example Waste.Regulator.Standard. Empty means no role is required and the Account API alone decides access',
+        format: String,
+        default: '',
+        env: 'ENTRA_ID_REQUIRED_ROLE'
+      },
+      accountIdClaim: {
+        doc: 'ID token claim holding the GUID the Account API knows the user by. oid (the Entra object id) unless accounts are keyed by something else, such as a custom claim carrying the legacy B2C object id. It decides whose account loads, so the attribute behind it must be writable by admins only. A value that is not a GUID is ignored and oid is used',
+        format: String,
+        default: 'oid',
+        env: 'ENTRA_ID_ACCOUNT_ID_CLAIM'
+      }
     },
     azureAdB2c: {
       clientId: {

@@ -12,6 +12,7 @@ import {
   classifySigninFailure
 } from '../auth/signin-callback-failure.js'
 import { buildSiblingLogoutRedirectUrl } from '../auth/sibling-logout-redirect.js'
+import { statusCodes } from '../common/constants/status-codes.js'
 import { getSessionUser } from '../common/helpers/get-session-user.js'
 import { getLocale } from '../common/helpers/i18n/get-locale.js'
 import {
@@ -21,11 +22,19 @@ import {
 } from '../common/helpers/i18n/locale-url.js'
 import { translate } from '../common/helpers/i18n/translate.js'
 import { withForwardedPrefix } from '../common/helpers/proxy/forwarded-prefix.js'
+import {
+  createEntraUserSession,
+  entraExternalUrls,
+  hasRequiredEntraRole,
+  entraSignOutUrl,
+  isEntraProvider,
+  missingEntraIdSettings
+} from '../auth/entra-id.js'
 import { getAccountUserIdFromSessionUser } from '../common/services/account-api.service.js'
 
 const SIGN_IN_FAILED_PATH = '/sign-in-failed'
 
-function redirectToReturnTo(request, h) {
+export function redirectToReturnTo(request, h) {
   const returnTo = request.yar.get('returnTo') || '/home'
   request.yar.clear('returnTo')
   const response = redirectWithLocale(h, request, returnTo)
@@ -104,6 +113,87 @@ export const signinOidcController = {
   }
 }
 
+export const entraSigninController = {
+  async handler(request, h) {
+    if (!request.query.code && !request.query.error) {
+      try {
+        return await request.login(h)
+      } catch (error) {
+        request.logger.warn(error, 'Entra ID sign-in could not start')
+        return redirectWithLocale(h, request, SIGN_IN_FAILED_PATH)
+      }
+    }
+
+    // The proxy strips any path prefix, but the token request must send the
+    // redirect URI used at authorize, and the library derives it from this URL
+    request.url.pathname = entraExternalUrls().callbackPath
+
+    let credentials
+    try {
+      credentials = await request.callback(h)
+    } catch (error) {
+      request.logger.warn(error, 'Entra ID sign-in failed')
+      // A reload or Back after signing in replays a spent callback, as in B2C
+      if (getSessionUser(request)) {
+        return redirectToReturnTo(request, h)
+      }
+      return redirectWithLocale(h, request, SIGN_IN_FAILED_PATH)
+    }
+
+    const user = createEntraUserSession(credentials)
+    if (!getAccountUserIdFromSessionUser(user)) {
+      request.yar.clear('user')
+      return Boom.internal('Entra ID sign-in returned no usable user id')
+    }
+
+    if (!hasRequiredEntraRole(user)) {
+      request.yar.clear('user')
+      return Boom.forbidden('User does not hold the required Entra ID app role')
+    }
+
+    // A new session, so one from before sign-in can't be reused after it
+    const returnTo = request.yar.get('returnTo')
+    const authLocale = request.yar.get('authLocale')
+    request.yar.reset()
+    if (returnTo) {
+      request.yar.set('returnTo', returnTo)
+    }
+    if (authLocale) {
+      request.yar.set('authLocale', authLocale)
+    }
+    request.yar.set('user', user)
+    return redirectToReturnTo(request, h)
+  }
+}
+
+/**
+ * What Entra ID told us about the signed-in user, for the PoC: the claims and
+ * roles kept in the session, never the tokens themselves.
+ */
+export const whoamiController = {
+  handler(request, h) {
+    const { profile } = getSessionUser(request)
+    return h.response({
+      oid: profile.entraOid,
+      accountId: profile.oid,
+      sub: profile.sub,
+      name: profile.name,
+      email: profile.email,
+      roles: profile.roles
+    })
+  }
+}
+
+export const entraNotConfiguredController = {
+  handler(_request, h) {
+    return h
+      .response(
+        `Entra ID sign-in is not configured. Missing: ${missingEntraIdSettings().join(', ')}`
+      )
+      .code(statusCodes.serviceUnavailable)
+  }
+}
+
 export const signOutController = {
   handler(request, h) {
     resetAuthSession(request, h)
@@ -116,6 +206,15 @@ export const signOutController = {
       pathOrUrl,
       azure
     )
+
+    // Ends the Entra ID session. Sibling-service logout chaining is B2C only,
+    // so with Entra ID on it would skip this and leave the user signed in.
+    if (isEntraProvider()) {
+      const entraLogoutUrl = entraSignOutUrl()
+      return entraLogoutUrl
+        ? h.redirect(entraLogoutUrl)
+        : redirectWithLocale(h, request, '/signed-out')
+    }
 
     const siblingLogoutUrl = buildSiblingLogoutRedirectUrl(postLogoutUri)
     if (siblingLogoutUrl) {
