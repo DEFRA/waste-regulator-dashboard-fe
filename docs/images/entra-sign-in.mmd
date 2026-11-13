@@ -1,0 +1,20 @@
+sequenceDiagram
+    actor U as Regulator
+    participant D as Dashboard
+    participant E as Entra ID
+    participant A as AWS STS (CDP only)
+    participant API as Account API
+
+    U->>D: Open a page
+    D-->>U: Not signed in, go to Entra ID
+    U->>E: Sign in
+    E-->>U: Send back to the dashboard with a code
+    U->>D: Here is the code
+    D->>A: Give me a short-lived token
+    A-->>D: Token (this replaces a secret)
+    D->>E: Swap the code for tokens, proving who we are
+    E-->>D: Tokens and who the person is
+    D->>D: Start a fresh session
+    D->>API: Is this person a regulator?
+    API-->>D: Yes, here are their details
+    D-->>U: Show the page

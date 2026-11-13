@@ -109,28 +109,9 @@ Regulators sign in with Azure AD B2C today. This branch adds **Entra ID** as a s
 
 ### How a sign-in works
 
-```mermaid
-sequenceDiagram
-    actor U as Regulator
-    participant D as Dashboard
-    participant E as Entra ID
-    participant A as AWS STS (CDP only)
-    participant API as Account API
+![How an Entra ID sign-in works: the regulator opens a page and is sent to Entra ID, comes back with a code, the dashboard gets a short-lived token from AWS STS and swaps the code for tokens, starts a fresh session, asks the Account API whether the person is a regulator, then shows the page](docs/images/entra-sign-in.png)
 
-    U->>D: Open a page
-    D-->>U: Not signed in, go to Entra ID
-    U->>E: Sign in
-    E-->>U: Send back to the dashboard with a code
-    U->>D: Here is the code
-    D->>A: Give me a short-lived token
-    A-->>D: Token (this replaces a secret)
-    D->>E: Swap the code for tokens, proving who we are
-    E-->>D: Tokens and who the person is
-    D->>D: Start a fresh session
-    D->>API: Is this person a regulator?
-    API-->>D: Yes, here are their details
-    D-->>U: Show the page
-```
+_The diagram is drawn from [`docs/images/entra-sign-in.mmd`](docs/images/entra-sign-in.mmd) (Mermaid). To change it, edit that file and re-render the PNG with `npx @mermaid-js/mermaid-cli -i docs/images/entra-sign-in.mmd -o docs/images/entra-sign-in.png -s 2 -b white`._
 
 While you are signed in, the dashboard renews the Entra ID token in the background just before it runs out. If renewing fails, you are asked to sign in again. Signing out clears the session and also signs you out of Entra ID.
 
