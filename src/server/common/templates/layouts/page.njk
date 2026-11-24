@@ -8,12 +8,12 @@
 {% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
 
 {# Import custom components globally #}
-{% from "heading/macro.njk" import appHeading %}
-{% from "defra-internal-header/macro.njk" import defraInternalHeader %}
-{% from "defra-internal-service-header/macro.njk" import defraInternalServiceHeader %}
-{% from "defra-internal-cookie-banner/macro.njk" import defraInternalCookieBanner %}
-{% from "defra-internal-footer/macro.njk" import defraInternalFooter %}
-{% from "google-analytics/macro.njk" import appGoogleAnalytics %}
+{% from "wrc/components/heading/macro.njk" import wrcHeading %}
+{% from "wrc/components/header/macro.njk" import wrcHeader %}
+{% from "wrc/components/service-header/macro.njk" import wrcServiceHeader %}
+{% from "wrc/components/cookie-banner/macro.njk" import wrcCookieBanner %}
+{% from "wrc/components/footer/macro.njk" import wrcFooter %}
+{% from "wrc/components/google-analytics/macro.njk" import wrcGoogleAnalytics %}
 
 {% block headIcons %}
   <link rel="icon" sizes="48x48" href="{{ assetPath }}/images/favicon.ico?v=2">
@@ -22,10 +22,9 @@
 {% endblock %}
 
 {% block head %}
-  {{ appGoogleAnalytics({
+  {{ wrcGoogleAnalytics({
     ga4: ga4,
     gtm: gtm,
-    useGoogleAnalytics: useGoogleAnalytics,
     allowGoogleAnalytics: allowGoogleAnalytics,
     cspNonce: cspNonce
   }) }}
@@ -40,11 +39,11 @@
 {% endblock %}
 
 {% block header %}
-  {{ defraInternalHeader({
+  {{ wrcHeader({
     organisationName: t(locale, "common.organisationName") | safe,
     navigation: accountNavigation
   }) }}
-  {{ defraInternalServiceHeader({
+  {{ wrcServiceHeader({
     serviceName: serviceName,
     serviceUrl: serviceUrl,
     navigationId: "service-navigation",
@@ -56,14 +55,13 @@
 {% endblock %}
 
 {% block bodyStart %}
-  {{ appGoogleAnalytics({
+  {{ wrcGoogleAnalytics({
     ga4: ga4,
     gtm: gtm,
-    useGoogleAnalytics: useGoogleAnalytics,
     allowGoogleAnalytics: allowGoogleAnalytics,
     noscript: true
   }) }}
-  {{ defraInternalCookieBanner({
+  {{ wrcCookieBanner({
     hideCookieBanner: hideCookieBanner,
     hasCookiePolicy: hasCookiePolicy,
     cookiePreferenceSet: cookiePreferenceSet,
@@ -92,7 +90,7 @@
 {% block content %}{% endblock %}
 
 {% block footer %}
-  {{ defraInternalFooter({
+  {{ wrcFooter({
     getHelp: {
       heading: t(locale, "common.footer.getHelp"),
       email: "eprcustomerservice@defra.gov.uk",

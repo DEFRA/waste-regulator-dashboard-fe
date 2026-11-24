@@ -14,6 +14,9 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 const govukFrontendPath = path.dirname(
   require.resolve('govuk-frontend/package.json')
 )
+const wrcPath = path.dirname(
+  require.resolve('waste-regulator-components-fe/package.json')
+)
 
 const ruleTypeAssetResource = 'asset/resource'
 
@@ -93,7 +96,8 @@ export default {
               sassOptions: {
                 loadPaths: [
                   path.join(dirname, 'src/client/stylesheets'),
-                  path.join(dirname, 'src/server/common/components'),
+                  dirname,
+                  path.join(dirname, 'node_modules'),
                   path.join(dirname, 'src/server/common/templates/partials')
                 ],
                 quietDeps: true,
@@ -166,6 +170,11 @@ export default {
         {
           from: path.join(govukFrontendPath, 'dist/govuk/assets'),
           to: 'assets'
+        },
+        {
+          from: path.join(wrcPath, 'dist/wrc/assets'),
+          to: 'assets',
+          force: true
         },
         {
           from: path.join(dirname, 'src/client/assets'),
