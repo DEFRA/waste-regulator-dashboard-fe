@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
 import path from 'node:path'
 import hapi from '@hapi/hapi'
 import inert from '@hapi/inert'
@@ -6,6 +7,12 @@ import { vi } from 'vitest'
 import { statusCodes } from '../constants/status-codes.js'
 import { config } from '../../../config/config.js'
 import { serveStaticFiles } from './serve-static-files.js'
+
+const require = createRequire(import.meta.url)
+const wrcAssetsImagesDir = path.join(
+  path.dirname(require.resolve('waste-regulator-components-fe/package.json')),
+  'dist/wrc/assets/images'
+)
 
 describe('#serveStaticFiles', () => {
   let server
@@ -67,9 +74,7 @@ describe('#serveStaticFiles', () => {
 
         expect(statusCode).toBe(statusCodes.ok)
         expect(rawPayload).toEqual(
-          readFileSync(
-            path.resolve(config.get('root'), 'src/client/assets/images', icon)
-          )
+          readFileSync(path.join(wrcAssetsImagesDir, icon))
         )
       }
     )
